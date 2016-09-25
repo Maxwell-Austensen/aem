@@ -51,11 +51,20 @@ ps1_ <- "C:/Users/austensen/Box Sync/aem/ps1/"
 
 
 ```{r load-data}
-data <- 
+data_raw <- 
   read_stata(ps1_ %S% "Thornton HIV Testing Data.dta") %>% 
   remove_val_labels
 
-names(data) <- names(data) %>% tolower
+names(data_raw) <- names(data_raw) %>% tolower
+
+main_sample <-
+  data_raw %>% 
+  filter(
+    hiv2004 %notin% c(NA, -1),
+    !is.na(any),
+    !is.na(zone),
+    !is.na(age)
+  )
 ```
 
 ## Part I: Summary Statistics
@@ -66,6 +75,7 @@ get_summary <- function(data){
     summarise(
       `Average Age` = mean(age, na.rm=T),
       `Percentage of Males` = mean(male, na.rm=T)*100,
+      `Average Years of Education` = mean(educ2004, na.rm=T),
       `Percentage with HIV` = mean(hiv2004, na.rm=T)*100
     ) %>% 
     kable(digits = 1)
@@ -74,15 +84,15 @@ get_summary <- function(data){
 
 ### 1. 
 ```{r}
-data %>% get_summary
+main_sample %>% get_summary
 ```
 
 ***
 
 ### 2.
 ```{r}
-data %>% group_by(any) %>% get_summary
-data %>% group_by(under) %>% get_summary
+main_sample %>% group_by(any) %>% get_summary
+main_sample %>% group_by(under) %>% get_summary
 ```
 
 There are no major differences in the variables betweeen treatment and control groups based on either cash recipt or distance. However, those that received some cash were on average about a year old and 2% more likely to be male than the control group.
@@ -92,7 +102,7 @@ There are no major differences in the variables betweeen treatment and control g
 ### 3.
 ```{r results = "asis"}
 grps <- c("any", "under")
-vars <- c("age", "male", "hiv2004")
+vars <- c("age", "male", "hiv2004_2")
 
 ttest_results <- 
   data.frame(
@@ -104,7 +114,7 @@ ttest_results <-
 for(grp in grps) {
   i <- 1
   for(var in vars){
-    result <- t.test(data[[var]] ~ data[[grp]], var.equal = TRUE)$p.value
+    result <- t.test(main_sample[[var]] ~ main_sample[[grp]], var.equal = TRUE)$p.value
     
     ttest_results[i,1] <- var
     ttest_results[i,2] <- result
@@ -123,7 +133,7 @@ for(grp in grps) {
 
 ### 4.
 ```{r}
-data %>% 
+main_sample %>% 
   group_by(any) %>% 
   summarise(got = mean(got, na.rm=T)) %>% 
   ggplot(aes(any, got)) +
@@ -139,7 +149,7 @@ data %>%
 
 ### 5.
 ```{r}
-data %>% 
+main_sample %>% 
   group_by(ti) %>% 
   summarise(got = mean(got, na.rm=T)) %>% 
   ggplot(aes(ti, got)) +
@@ -159,8 +169,8 @@ data %>%
 ### 6.
 ```{r results = "asis"}
 
-any_1 <- lm(got ~ any, data = data)
-any_2 <- lm(got ~ any + age + male + educ2004 + mar, data = data)
+any_1 <- lm(got ~ any, data = main_sample)
+any_2 <- lm(got ~ any + age + male + educ2004 + mar, data = main_sample)
 
 stargazer(any_1, any_2, type = output_type)
 ```
@@ -169,8 +179,7 @@ stargazer(any_1, any_2, type = output_type)
 ### 7.
 ```{r}
 group_diff_any <- 
-  data %>% 
-  filter(!is.na(any)) %>% 
+  main_sample %>% 
   group_by(any) %>% 
   summarise(got = mean(got*100, na.rm=T)) %>% 
   spread(any, got) %>% 
@@ -187,8 +196,8 @@ Since the addition of control variables does not significatly alter the treatmen
 \newpage
 ### 8.
 ```{r results = "asis"}
-ti_1 <- lm(got ~ ti, data = data)
-ti_2 <- lm(got ~ ti + age + male + educ2004 + mar, data = data)
+ti_1 <- lm(got ~ ti, data = main_sample)
+ti_2 <- lm(got ~ ti + age + male + educ2004 + mar, data = main_sample)
 
 stargazer(ti_1, ti_2, type = output_type)
 ```
@@ -206,7 +215,7 @@ stargazer(ti_1, ti_2, type = output_type)
 
 ### 10.
 ```{r results = "asis"}
-any_male <- lm(got ~ any + male + any*male, data = data)
+any_male <- lm(got ~ any + male + any*male, data = main_sample)
 
 stargazer(any_male, type = output_type)
 ```
@@ -219,7 +228,7 @@ This suggests that there is not differential effect of recieving any cash ammoun
 \newpage
 ### 11.
 ```{r results = "asis"}
-any_educ <- lm(got ~ any + educ2004 + any*educ2004, data = data)
+any_educ <- lm(got ~ any + educ2004 + any*educ2004, data = main_sample)
 
 stargazer(any_educ, type = output_type)
 ```
@@ -245,7 +254,7 @@ stargazer(any_educ, type = output_type)
 
 ### 14.
 ```{r}
-sample_1000 <- data %>% sample_n(1000)
+sample_1000 <- main_sample %>% sample_n(1000)
 ```
 
 ### 15.
@@ -267,7 +276,7 @@ stargazer(any_1, any_2, type = output_type)
 
 ### 17.
 ```{r}
-data %>% 
+main_sample %>% 
   filter(!is.na(usecondom04)) %>% 
   ICCbare(site, usecondom04, data = .)
 ```
