@@ -1,0 +1,291 @@
+---
+title: "Problem Set 1"
+author: "Maxwell Austensen"
+date: "September 24, 2016"
+output: html_document
+---
+
+```{r chuck-opts, include=FALSE}
+output_type <- "html" # for Starazer output
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+```{r setup}
+# Utility functions -------------------------------------------------------
+
+`%S%` <- function(x, y) {
+  paste0(x, y)
+}
+
+`%notin%` <- Negate(`%in%`)
+
+################################################################################
+
+# Install packages if needed
+package_list <- c("stargazer", "knitr", "haven", "labelled", "ICC", "scales", "tidyverse")
+new_packages <- package_list[package_list %notin% installed.packages()[,"Package"]]
+if(length(new_packages)) install.packages(new_packages)
+
+library(stargazer)
+library(knitr)
+library(haven)
+library(labelled)
+library(ICC)
+library(scales)
+library(tidyverse)
+
+# Set directories
+repo_ <- "H:/GitHub/aem/"
+ps1_ <- "C:/Users/austensen/Box Sync/aem/ps1/"
+
+################################################################################
+```
+
+
+
+
+```{r load-data}
+data <- 
+  read_stata(ps1_ %S% "Thornton HIV Testing Data.dta") %>% 
+  remove_val_labels
+
+names(data) <- names(data) %>% tolower
+```
+
+## Part I: Summary Statistics
+
+```{r}
+get_summary <- function(data){
+  data %>% 
+    summarise(
+      `Average Age` = mean(age, na.rm=T),
+      `Percentage of Males` = mean(male, na.rm=T)*100,
+      `Percentage with HIV` = mean(hiv2004, na.rm=T)*100
+    ) %>% 
+    kable(digits = 1)
+}
+```
+
+### 1. 
+```{r}
+data %>% get_summary
+```
+
+---
+
+### 2.
+```{r}
+data %>% group_by(any) %>% get_summary
+data %>% group_by(under) %>% get_summary
+```
+
+There are no major differences in the variables betweeen treatment and control groups based on either cash recipt or distance. However, those that received some cash were on average about a year old and 2% more likely to be male than the control group.
+
+---
+
+### 3.
+```{r results = "asis"}
+grps <- c("any", "under")
+vars <- c("age", "male", "hiv2004")
+
+ttest_results <- 
+  data.frame(
+    var = character(), 
+    P.value = double(), 
+    stringsAsFactors=FALSE
+  )
+
+for(grp in grps) {
+  i <- 1
+  for(var in vars){
+    result <- t.test(data[[var]] ~ data[[grp]], var.equal = TRUE)$p.value
+    
+    ttest_results[i,1] <- var
+    ttest_results[i,2] <- result
+    i <- i+1
+  }
+  writeLines("#### t-test: group = " %S% grp)
+  print(kable(ttest_results, digits = 3))
+  writeLines("\n\n\n")
+}
+```
+
+
+---
+
+## Part II: Analysis using graphs
+
+### 4.
+```{r}
+data %>% 
+  group_by(any) %>% 
+  summarise(got = mean(got, na.rm=T)) %>% 
+  ggplot(aes(any, got)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(y = got+0.02, label = round(got*100, 1) %S% "%")) +
+  xlab("Recieved Any Cash") + ylab("Percent that Recieved Test Results") +
+  scale_y_continuous(labels = percent_format()) +
+  scale_x_continuous(breaks = c(0,1), labels = c("No", "Yes"))
+```
+
+
+---
+
+### 5.
+```{r}
+data %>% 
+  group_by(ti) %>% 
+  summarise(got = mean(got, na.rm=T)) %>% 
+  ggplot(aes(ti, got)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(y = got+0.02, label = round(got*100, 1) %S% "%")) +
+  xlab("Amount of Cash Received ($)") + ylab("Percent that Recieved Test Results") +
+  scale_y_continuous(labels = percent_format()) +
+  scale_x_continuous(breaks = c(0,50, 100, 200, 300))
+```
+
+
+---
+
+## Part III: Analysis using linear regression
+
+### 6.
+```{r results = "asis"}
+
+any_1 <- lm(got ~ any, data = data)
+any_2 <- lm(got ~ any + age + male + educ2004 + mar, data = data)
+
+stargazer(any_1, any_2, type = output_type)
+```
+
+### 7.
+```{r}
+group_diff_any <- 
+  data %>% 
+  filter(!is.na(any)) %>% 
+  group_by(any) %>% 
+  summarise(got = mean(got*100, na.rm=T)) %>% 
+  spread(any, got) %>% 
+  transmute(diff = `1` - `0`) %>% 
+  .[[1]]
+```
+
+Using a group means comparison, the estimated treatment effect is `r group_diff_any`.
+This answer does not differ significantly from the OLS coefficent estimate on treatment.
+Since the addition of control variables does not significatly alter the treatment effect estimate, this suggests that the randomization of treatment was successful in balancing the two groups with respect to these other variables.
+
+---
+
+### 8.
+```{r results = "asis"}
+ti_1 <- lm(got ~ ti, data = data)
+ti_2 <- lm(got ~ ti + age + male + educ2004 + mar, data = data)
+
+stargazer(ti_1, ti_2, type = output_type)
+```
+
+
+---
+
+### 9.
+
+
+---
+
+## Part IV: Conditional (Heterogeneous) Treatment Effects
+
+### 10.
+```{r results = "asis"}
+any_male <- lm(got ~ any + male + any*male, data = data)
+
+stargazer(any_male, type = output_type)
+```
+The estimate for the treatment-male interaction term is `r any_male$coefficients[["male"]]`.
+It is not statistically significant.
+This suggests that there is not differential effect of recieving any cash ammount for men and women.
+
+---
+
+### 11.
+```{r results = "asis"}
+any_educ <- lm(got ~ any + educ2004 + any*educ2004, data = data)
+
+stargazer(any_educ, type = output_type)
+```
+
+
+---
+
+## Part V: Policy Implications
+
+### 12.
+
+
+---
+
+### 13.
+
+
+---
+
+## Part VI: A Random Sub-Sample
+
+### 14.
+```{r}
+sample_1000 <- data %>% sample_n(1000)
+```
+
+### 15.
+```{r results = "asis"}
+
+any_1 <- lm(got ~ any, data = sample_1000)
+any_2 <- lm(got ~ any + age + male + educ2004 + mar, data = sample_1000)
+
+stargazer(any_1, any_2, type = output_type)
+```
+
+
+## Part VII: Choosing Sample Size
+
+### 16. 
+
+
+---
+
+### 17.
+```{r}
+data %>% 
+  filter(!is.na(usecondom04)) %>% 
+  ICCbare(site, usecondom04, data = .)
+```
+
+---
+
+## Part VIII: Fisher Randomization Test (bonus)
+
+### 18.
+```{r}
+data %>% 
+  filter(!is.na(any)) %>% 
+  group_by(any) %>% 
+  summarise(got = mean(got, na.rm=T))
+
+oneway_test(got ~ factor(any), data, alternative = "greater")
+independence_test(got ~ factor(any), data, 
+                  alternative = "greater", 
+                  distribution = approximate(B = 1000))
+
+fisher.test(data$got, factor(data$any), alternative = "greater", simulate.p.value = TRUE)
+
+```
+
+---
+
+
+
+
