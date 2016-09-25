@@ -2,11 +2,12 @@
 title: "Problem Set 1"
 author: "Maxwell Austensen"
 date: "September 24, 2016"
-output: html_document
+output: pdf_document
 ---
 
 ```{r chuck-opts, include=FALSE}
-output_type <- "html" # for Starazer output
+# output_type <- "html" # for Starazer output
+output_type <- "latex" # for Starazer output
 knitr::opts_chunk$set(
 	echo = TRUE,
 	message = FALSE,
@@ -76,7 +77,7 @@ get_summary <- function(data){
 data %>% get_summary
 ```
 
----
+***
 
 ### 2.
 ```{r}
@@ -86,7 +87,7 @@ data %>% group_by(under) %>% get_summary
 
 There are no major differences in the variables betweeen treatment and control groups based on either cash recipt or distance. However, those that received some cash were on average about a year old and 2% more likely to be male than the control group.
 
----
+***
 
 ### 3.
 ```{r results = "asis"}
@@ -116,7 +117,7 @@ for(grp in grps) {
 ```
 
 
----
+***
 
 ## Part II: Analysis using graphs
 
@@ -134,7 +135,7 @@ data %>%
 ```
 
 
----
+***
 
 ### 5.
 ```{r}
@@ -150,7 +151,8 @@ data %>%
 ```
 
 
----
+***
+\newpage
 
 ## Part III: Analysis using linear regression
 
@@ -163,6 +165,7 @@ any_2 <- lm(got ~ any + age + male + educ2004 + mar, data = data)
 stargazer(any_1, any_2, type = output_type)
 ```
 
+\newpage
 ### 7.
 ```{r}
 group_diff_any <- 
@@ -179,8 +182,9 @@ Using a group means comparison, the estimated treatment effect is `r group_diff_
 This answer does not differ significantly from the OLS coefficent estimate on treatment.
 Since the addition of control variables does not significatly alter the treatment effect estimate, this suggests that the randomization of treatment was successful in balancing the two groups with respect to these other variables.
 
----
+***
 
+\newpage
 ### 8.
 ```{r results = "asis"}
 ti_1 <- lm(got ~ ti, data = data)
@@ -190,13 +194,14 @@ stargazer(ti_1, ti_2, type = output_type)
 ```
 
 
----
+***
 
 ### 9.
 
 
----
+***
 
+\newpage
 ## Part IV: Conditional (Heterogeneous) Treatment Effects
 
 ### 10.
@@ -209,8 +214,9 @@ The estimate for the treatment-male interaction term is `r any_male$coefficients
 It is not statistically significant.
 This suggests that there is not differential effect of recieving any cash ammount for men and women.
 
----
+***
 
+\newpage
 ### 11.
 ```{r results = "asis"}
 any_educ <- lm(got ~ any + educ2004 + any*educ2004, data = data)
@@ -219,19 +225,21 @@ stargazer(any_educ, type = output_type)
 ```
 
 
----
+***
 
 ## Part V: Policy Implications
 
 ### 12.
 
 
----
+***
 
 ### 13.
 
 
----
+***
+
+\newpage
 
 ## Part VI: A Random Sub-Sample
 
@@ -255,7 +263,7 @@ stargazer(any_1, any_2, type = output_type)
 ### 16. 
 
 
----
+***
 
 ### 17.
 ```{r}
@@ -264,27 +272,27 @@ data %>%
   ICCbare(site, usecondom04, data = .)
 ```
 
----
+***
 
 ## Part VIII: Fisher Randomization Test (bonus)
 
 ### 18.
 ```{r}
-data %>% 
-  filter(!is.na(any)) %>% 
-  group_by(any) %>% 
-  summarise(got = mean(got, na.rm=T))
-
-oneway_test(got ~ factor(any), data, alternative = "greater")
-independence_test(got ~ factor(any), data, 
-                  alternative = "greater", 
-                  distribution = approximate(B = 1000))
-
-fisher.test(data$got, factor(data$any), alternative = "greater", simulate.p.value = TRUE)
+# data %>% 
+#   filter(!is.na(any)) %>% 
+#   group_by(any) %>% 
+#   summarise(got = mean(got, na.rm=T))
+# 
+# oneway_test(got ~ factor(any), data, alternative = "greater")
+# independence_test(got ~ factor(any), data, 
+#                   alternative = "greater", 
+#                   distribution = approximate(B = 1000))
+# 
+# fisher.test(data$got, factor(data$any), alternative = "greater", simulate.p.value = TRUE)
 
 ```
 
----
+***
 
 
 
