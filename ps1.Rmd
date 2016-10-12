@@ -216,19 +216,19 @@ Using a group means comparison, the estimated treatment effect is 0.449, and is 
 
 ### 8.
 ```{r results = "asis"}
-ti_1 <- lm(got ~ ti, data = main_sample)
-ti_2 <- lm(got ~ ti + age + male + educ2004 + mar, data = main_sample)
+ti_1 <- lm(got ~ tinc, data = main_sample)
+ti_2 <- lm(got ~ tinc + age + male + educ2004 + mar, data = main_sample)
 
 stargazer(ti_1, ti_2, type = output_type, header = FALSE)
 ```
 
-The estimate of the treatment effect is 0.002, meaning that, on average, an additional $1.00 in cash incentive is associated with a 2% increase in the likelihood of getting the test results. The addition of control variables does not effect the estimate of the treatment effect at all.
+The estimate of the treatment effect is 0.002, meaning that, on average, an additional 100 kwacha in cash incentive is associated with a 2% increase in the likelihood of getting the test results. The addition of control variables does not effect the estimate of the treatment effect at all.
 
 ***
 
 ### 9.
 
-Receiving any cash incentive increases the likelihood of the recipient getting their HIV test results by 50%. This is quite a large effect. Doubling the cash incentive from $1 to $2 has a relatively small effect compared to that from moving from no incentive to $0.50.
+Receiving any cash incentive increases the likelihood of the recipient getting their HIV test results by 50%. This is quite a large effect. Doubling the cash incentive from 100 to 200 kwacha has a relatively small effect compared to that from moving from no incentive to just 50 kwacha.
 
 ***
 
