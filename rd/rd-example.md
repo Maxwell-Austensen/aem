@@ -33,16 +33,13 @@ rd %>%
 <nav class="ggvis-control"> <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
-Renderer: <a id="plot_id119657816_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id119657816" data-renderer="svg">SVG</a> | <a id="plot_id119657816_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id119657816" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id119657816_download" class="ggvis-download" data-plot-id="plot_id119657816">Download</a>
 </li>
 </ul>
 </nav>
 
 <script type="text/javascript">
-var plot_id119657816_spec = {
   "data": [
     {
       "name": ".0",
@@ -224,6 +221,5 @@ var plot_id119657816_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id119657816").parseSpec(plot_id119657816_spec);
 </script>
 <!--/html_preserve-->

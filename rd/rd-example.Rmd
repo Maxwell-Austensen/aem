@@ -3,7 +3,6 @@ title: "RD Example"
 output:
   md_document:
     variant: markdown_github
-  html_notebook: TRUE
 always_allow_html: yes
 ---
 
