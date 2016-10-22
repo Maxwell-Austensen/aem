@@ -1,16 +1,20 @@
 ---
 title: "RD Example"
-output: html_notebook
+output:
+  md_document:
+    variant: markdown_github
+  html_notebook: TRUE
+always_allow_html: yes
 ---
 
-```{r, message=FALSE, warning=FALSE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(ggvis)
 
 (rd <- read_csv("rd.csv", col_types = cols(Person = col_skip())))
 ```
 
-```{r}
+```{r, echo=TRUE}
 rd %>% 
   ggvis(~x, ~y) %>% 
   layer_points() %>% 
