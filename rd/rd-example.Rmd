@@ -1,0 +1,19 @@
+---
+title: "RD Example"
+output: html_notebook
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(ggvis)
+
+(rd <- read_csv("rd.csv", col_types = cols(Person = col_skip())))
+```
+
+```{r}
+rd %>% 
+  ggvis(~x, ~y) %>% 
+  layer_points() %>% 
+  group_by(z) %>% 
+  layer_model_predictions(model = "lm", formula = y ~ x)
+```
