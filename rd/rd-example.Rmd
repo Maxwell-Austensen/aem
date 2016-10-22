@@ -1,9 +1,9 @@
 ---
 title: "RD Example"
 output:
-  md_document:
-    variant: markdown_github
-always_allow_html: yes
+  html_document:
+    keep_md: yes
+  html_notebook: default
 ---
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}

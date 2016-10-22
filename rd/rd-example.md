@@ -1,26 +1,32 @@
-``` r
+# RD Example
+
+
+```r
 library(tidyverse)
 library(ggvis)
 
 (rd <- read_csv("rd.csv", col_types = cols(Person = col_skip())))
 ```
 
-    ## # A tibble: 30 × 3
-    ##         x     z      y
-    ##     <dbl> <int>  <dbl>
-    ## 1  52.503     1 47.759
-    ## 2  47.579     0 47.777
-    ## 3  53.245     1 48.760
-    ## 4  50.334     1 45.923
-    ## 5  49.511     0 49.841
-    ## 6  50.523     1 45.837
-    ## 7  50.592     1 47.265
-    ## 8  52.531     1 48.283
-    ## 9  48.643     0 47.767
-    ## 10 50.407     1 47.471
-    ## # ... with 20 more rows
+```
+## # A tibble: 30 × 3
+##         x     z      y
+##     <dbl> <int>  <dbl>
+## 1  52.503     1 47.759
+## 2  47.579     0 47.777
+## 3  53.245     1 48.760
+## 4  50.334     1 45.923
+## 5  49.511     0 49.841
+## 6  50.523     1 45.837
+## 7  50.592     1 47.265
+## 8  52.531     1 48.283
+## 9  48.643     0 47.767
+## 10 50.407     1 47.471
+## # ... with 20 more rows
+```
 
-``` r
+
+```r
 rd %>% 
   ggvis(~x, ~y) %>% 
   layer_points() %>% 
@@ -28,18 +34,27 @@ rd %>%
   layer_model_predictions(model = "lm", formula = y ~ x)
 ```
 
-<!--html_preserve-->
-
-<nav class="ggvis-control"> <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
+<!--html_preserve--><div id="plot_id455734184-container" class="ggvis-output-container">
+<div id="plot_id455734184" class="ggvis-output"></div>
+<div class="plot-gear-icon">
+<nav class="ggvis-control">
+<a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
+Renderer: 
+<a id="plot_id455734184_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id455734184" data-renderer="svg">SVG</a>
+ | 
+<a id="plot_id455734184_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id455734184" data-renderer="canvas">Canvas</a>
 </li>
 <li>
+<a id="plot_id455734184_download" class="ggvis-download" data-plot-id="plot_id455734184">Download</a>
 </li>
 </ul>
 </nav>
-
+</div>
+</div>
 <script type="text/javascript">
+var plot_id455734184_spec = {
   "data": [
     {
       "name": ".0",
@@ -221,5 +236,5 @@ rd %>%
   },
   "handlers": null
 };
-</script>
-<!--/html_preserve-->
+ggvis.getPlot("plot_id455734184").parseSpec(plot_id455734184_spec);
+</script><!--/html_preserve-->
