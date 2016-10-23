@@ -1,0 +1,34 @@
+---
+title: "AEM: PS2"
+output: html_notebook
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(haven)
+library(stringr)
+library(stargazer)
+
+# Modification to stargazer() - escapes "*" to prevent html vs markdown confusion
+stargazer_html <- function(...) {
+  capture.output(stargazer(..., type = "html", header = FALSE)) %>%
+  str_replace_all("\\*", "\\\\*") %>% 
+  paste(collapse = "\n") %>%
+  cat("\n")
+}
+```
+
+```{r}
+url <- "http://users.nber.org/~rdehejia/!@$AEM/Problem%20Sets/ps2/generateddata_20120221_sub.dta"
+
+raw <- read_stata(url)
+```
+
+```{r}
+select(raw, noquote(order(colnames(raw)))) %>% names()
+```
+
+```{r results='asis'}
+model <- lm(mpg ~ cyl, data = mtcars)
+stargazer_html(model)
+```
