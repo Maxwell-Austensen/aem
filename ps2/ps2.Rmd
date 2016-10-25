@@ -4,31 +4,43 @@ output: html_notebook
 ---
 
 ```{r, message=FALSE, warning=FALSE}
+library(AER)
 library(tidyverse)
-library(haven)
-library(stringr)
 library(stargazer)
 
 # Modification to stargazer() - escapes "*" to prevent html vs markdown confusion
 stargazer_html <- function(...) {
-  capture.output(stargazer(..., type = "html", header = FALSE)) %>%
-  str_replace_all("\\*", "\\\\*") %>% 
+  capture.output(stargazer::stargazer(..., type = "html", header = FALSE)) %>%
+  stringr::str_replace_all("\\*", "\\\\*") %>% 
   paste(collapse = "\n") %>%
   cat("\n")
 }
 ```
 
+## Stata Comparison Test Example
+
+```{r}
+auto <- haven::read_stata("http://www.stata-press.com/data/r9/auto.dta")
+```
+
+```{r results='asis'}
+first <- lm(mpg ~ displacement, auto)
+stargazer_html(first)
+```
+
+```{r results='asis'}
+iv <- ivreg(formula = price ~ mpg | displacement, data = auto)
+stargazer_html(iv, style = 'aer')
+```
+
+************************************************************************
+
 ```{r}
 url <- "http://users.nber.org/~rdehejia/!@$AEM/Problem%20Sets/ps2/generateddata_20120221_sub.dta"
 
-raw <- read_stata(url)
+raw <- haven::read_stata(url)
 ```
 
 ```{r}
 select(raw, noquote(order(colnames(raw)))) %>% names()
-```
-
-```{r results='asis'}
-model <- lm(mpg ~ cyl, data = mtcars)
-stargazer_html(model)
 ```
