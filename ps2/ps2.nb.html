@@ -9,7 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="Maxwell Austensen" />
 
+<meta name="date" content="2016-10-28" />
 
 <title>AEM: PS2</title>
 
@@ -168,33 +170,330 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">AEM: PS2</h1>
+<h4 class="author"><em>Maxwell Austensen</em></h4>
+<h4 class="date"><em>2016-10-28</em></h4>
 
 </div>
 
 
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-text-begin -->
+<div id="stata-iv-regression-example" class="section level2">
+<h2>1: Stata IV Regression Example</h2>
+<!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGhhdmVuKVxubGlicmFyeShzdHJpbmdyKVxubGlicmFyeShzdGFyZ2F6ZXIpXG4jIE1vZGlmaWNhdGlvbiB0byBzdGFyZ2F6ZXIoKSAtIGVzY2FwZXMgXCIqXCIgdG8gcHJldmVudCBodG1sIHZzIG1hcmtkb3duIGNvbmZ1c2lvblxuc3RhcmdhemVyX2h0bWwgPC0gZnVuY3Rpb24oLi4uKSB7XG4gIGNhcHR1cmUub3V0cHV0KHN0YXJnYXplciguLi4sIHR5cGUgPSBcImh0bWxcIiwgaGVhZGVyID0gRkFMU0UpKSAlPiVcbiAgc3RyX3JlcGxhY2VfYWxsKFwiXFxcXCpcIiwgXCJcXFxcXFxcXCpcIikgJT4lIFxuICBwYXN0ZShjb2xsYXBzZSA9IFwiXFxuXCIpICU+JVxuICBjYXQoXCJcXG5cIilcbn1cbmBgYCJ9 -->
-<pre class="r"><code>library(tidyverse)
-library(haven)
-library(stringr)
-library(stargazer)
-# Modification to stargazer() - escapes &quot;*&quot; to prevent html vs markdown confusion
-stargazer_html &lt;- function(...) {
-  capture.output(stargazer(..., type = &quot;html&quot;, header = FALSE)) %&gt;%
-  str_replace_all(&quot;\\*&quot;, &quot;\\\\*&quot;) %&gt;% 
-  paste(collapse = &quot;\n&quot;) %&gt;%
-  cat(&quot;\n&quot;)
-}</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXV0byA8LSBoYXZlbjo6cmVhZF9zdGF0YShcImh0dHA6Ly93d3cuc3RhdGEtcHJlc3MuY29tL2RhdGEvcjkvYXV0by5kdGFcIilcbmBgYCJ9 -->
+<pre class="r"><code>auto &lt;- haven::read_stata(&quot;http://www.stata-press.com/data/r9/auto.dta&quot;)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudXJsIDwtIFwiaHR0cDovL3VzZXJzLm5iZXIub3JnL35yZGVoZWppYS8hQCRBRU0vUHJvYmxlbSUyMFNldHMvcHMyL2dlbmVyYXRlZGRhdGFfMjAxMjAyMjFfc3ViLmR0YVwiXG5yYXcgPC0gcmVhZF9zdGF0YSh1cmwpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZmlyc3QgPC0gbG0obXBnIH4gZGlzcGxhY2VtZW50LCBhdXRvKVxuc3RhcmdhemVyX2h0bWwoZmlyc3QpXG5gYGAifQ== -->
+<pre class="r"><code>first &lt;- lm(mpg ~ displacement, auto)
+stargazer_html(first)</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+mpg
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+displacement
+</td>
+<td>
+-0.044<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.005)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+30.068<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1.143)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+74
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.498
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.491
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+4.128 (df = 72)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+71.407<sup>***</sup> (df = 1; 72)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2Vjb25kIDwtIGl2cmVnKGZvcm11bGEgPSBwcmljZSB+IG1wZyB8IGRpc3BsYWNlbWVudCwgZGF0YSA9IGF1dG8pXG5zdGFyZ2F6ZXJfaHRtbChzZWNvbmQpXG5gYGAifQ== -->
+<pre class="r"><code>second &lt;- ivreg(formula = price ~ mpg | displacement, data = auto)
+stargazer_html(second)</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+price
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+mpg
+</td>
+<td>
+-357.583<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(77.786)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+13,780.820<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1,686.382)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+74
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.165
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.154
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+2,713.232 (df = 72)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBzZWNvbmQgJT4lIHJvYnVzdC5zZSgpICU+JSBzdGFyZ2F6ZXJfaHRtbCgpXG5ybShhdXRvLCBmaXJzdCwgc2Vjb25kKVxuYGBgIn0= -->
+<pre class="r"><code># second %&gt;% robust.se() %&gt;% stargazer_html()
+rm(auto, first, second)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<hr />
+</div>
+<div id="summary-statistics" class="section level2">
+<h2>2: Summary Statistics</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudXJsIDwtIFwiaHR0cDovL3VzZXJzLm5iZXIub3JnL35yZGVoZWppYS8hQCRBRU0vUHJvYmxlbSUyMFNldHMvcHMyL2dlbmVyYXRlZGRhdGFfMjAxMjAyMjFfc3ViLmR0YVwiXG5yYXcgPC0gaGF2ZW46OnJlYWRfc3RhdGEodXJsKVxuYGBgIn0= -->
 <pre class="r"><code>url &lt;- &quot;http://users.nber.org/~rdehejia/!@$AEM/Problem%20Sets/ps2/generateddata_20120221_sub.dta&quot;
-raw &lt;- read_stata(url)</code></pre>
+raw &lt;- haven::read_stata(url)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSA8LSBcbiAgcmF3ICU+JSBcbiAgc2VsZWN0KFxuICAgIHN0YXRlLFxuICAgIG5pY19pbyA9IE5JQ19pbyxcbiAgICByb3VuZCxcbiAgICB3b3JrZXJzX3RvdGFsID0gVG90YWxfd29ya2VyLFxuICAgIGd2YV95ZWFybHkgPSBZZWFybHlfZ3ZhX3Byb2R1Y3Rpb25fcmVhbCxcbiAgICBndmFfbG5feWVhcmx5ID0gbG5ZZWFybHlfZ3ZhLFxuICAgIGxhYm9yX3JlZyA9IGxhYm9yX3JlZ19iZXNsZXlfZmxleDIsXG4gICAgbWFudV90b3RhbCA9IG1hbnVmYWN0dXJpbmdfdG90YWwsXG4gICAgcG9zdCxcbiAgICBsYWJvcl9tYW51LFxuICAgIG1hbnVfYWxsID0gYWxsbWFudWZhY3R1cmluZyxcbiAgICBtYW51X3Bvc3QsXG4gICAgbWFudV9zaGFyZSA9IG1hbnNoYXJlLFxuICAgIG1hbnVfcG9zdF9zaGFyZSxcbiAgICBsYWJvcl9tYW51X3NoYXJlXG4gIClcbmBgYCJ9 -->
+<pre class="r"><code>india_data &lt;- 
+  raw %&gt;% 
+  select(
+    state,
+    nic_io = NIC_io,
+    round,
+    workers_total = Total_worker,
+    gva_yearly = Yearly_gva_production_real,
+    gva_ln_yearly = lnYearly_gva,
+    labor_reg = labor_reg_besley_flex2,
+    manu_total = manufacturing_total,
+    post,
+    labor_manu,
+    manu_all = allmanufacturing,
+    manu_post,
+    manu_share = manshare,
+    manu_post_share,
+    labor_manu_share
+  )</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -274,9 +573,150 @@ raw &lt;- read_stata(url)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kZWwgPC0gbG0obXBnIH4gY3lsLCBkYXRhID0gbXRjYXJzKVxuc3RhcmdhemVyX2h0bWwobW9kZWwpXG5gYGAifQ== -->
-<pre class="r"><code>model &lt;- lm(mpg ~ cyl, data = mtcars)
-stargazer_html(model)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeV92YXJzIDwtXG4gIGluZGlhX2RhdGEgJT4lIFxuICBzZWxlY3Qocm91bmQsIGd2YV9sbl95ZWFybHksIGxhYm9yX3JlZywgbWFudV9hbGwsIG1hbnVfdG90YWwpXG5gYGAifQ== -->
+<pre class="r"><code>summary_vars &lt;-
+  india_data %&gt;% 
+  select(round, gva_ln_yearly, labor_reg, manu_all, manu_total)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="full-sample" class="section level3">
+<h3>Full Sample</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeV92YXJzICU+JSBzZWxlY3QoLXJvdW5kKSAlPiUgbWFwKHN1bW1hcnkpXG5gYGAifQ== -->
+<pre class="r"><code>summary_vars %&gt;% select(-round) %&gt;% map(summary)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiJGd2YV9sbl95ZWFybHlcbiAgIE1pbi4gMXN0IFF1LiAgTWVkaWFuICAgIE1lYW4gM3JkIFF1LiAgICBNYXguICAgIE5BJ3MgXG4gIDMuOTczICAxMS43NDAgIDEyLjM2MCAgMTIuNTEwICAxMy4wODAgIDI0LjgwMCAgICAgMjEzIFxuXG4kbGFib3JfcmVnXG4gICBNaW4uIDFzdCBRdS4gIE1lZGlhbiAgICBNZWFuIDNyZCBRdS4gICAgTWF4LiBcbiAwLjAwMDAgIDAuMDAwMCAgMC4wMDAwICAwLjQ5NTggIDEuMDAwMCAgMS4wMDAwIFxuXG4kbWFudV9hbGxcbiAgIE1pbi4gMXN0IFF1LiAgTWVkaWFuICAgIE1lYW4gM3JkIFF1LiAgICBNYXguIFxuIC0xLjgwMCAgIDUuODAwICAgNy42MDAgICA3LjgyOSAgMTAuMzAwICAyNi4zMDAgXG5cbiRtYW51X3RvdGFsXG4gICBNaW4uIDFzdCBRdS4gIE1lZGlhbiAgICBNZWFuIDNyZCBRdS4gICAgTWF4LiBcbiAwLjIxMDEgIDEuMjY3MCAgMi40OTMwICAyLjY4NTAgIDMuMTQ5MCAgNi4xNDYwIFxuIn0= -->
+<pre><code>$gva_ln_yearly
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  3.973  11.740  12.360  12.510  13.080  24.800     213 
+
+$labor_reg
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.4958  1.0000  1.0000 
+
+$manu_all
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -1.800   5.800   7.600   7.829  10.300  26.300 
+
+$manu_total
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.2101  1.2670  2.4930  2.6850  3.1490  6.1460 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="round-57-sample" class="section level3">
+<h3>Round 57 Sample</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeV92YXJzICU+JSBmaWx0ZXIocm91bmQgPT0gNTcpICU+JSBzZWxlY3QoLXJvdW5kKSAlPiUgbWFwKHN1bW1hcnkpXG5gYGAifQ== -->
+<pre class="r"><code>summary_vars %&gt;% filter(round == 57) %&gt;% select(-round) %&gt;% map(summary)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiJGd2YV9sbl95ZWFybHlcbiAgIE1pbi4gMXN0IFF1LiAgTWVkaWFuICAgIE1lYW4gM3JkIFF1LiAgICBNYXguICAgIE5BJ3MgXG4gIDMuOTczICAxMS43MTAgIDEyLjMwMCAgMTIuNDAwICAxMi45ODAgIDIwLjQ2MCAgICAgMTM3IFxuXG4kbGFib3JfcmVnXG4gICBNaW4uIDFzdCBRdS4gIE1lZGlhbiAgICBNZWFuIDNyZCBRdS4gICAgTWF4LiBcbiAwLjAwMDAgIDAuMDAwMCAgMC4wMDAwICAwLjQ2MDYgIDEuMDAwMCAgMS4wMDAwIFxuXG4kbWFudV9hbGxcbiAgIE1pbi4gMXN0IFF1LiAgTWVkaWFuICAgIE1lYW4gM3JkIFF1LiAgICBNYXguIFxuICAtMS44MCAgICA1LjgwICAgIDYuNzAgICAgNy42NCAgIDEwLjMwICAgMjYuMzAgXG5cbiRtYW51X3RvdGFsXG4gICBNaW4uIDFzdCBRdS4gIE1lZGlhbiAgICBNZWFuIDNyZCBRdS4gICAgTWF4LiBcbiAwLjIxMDEgIDEuMjY3MCAgMi40OTMwICAyLjY1MzAgIDMuMTQ5MCAgNi4xNDYwIFxuIn0= -->
+<pre><code>$gva_ln_yearly
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  3.973  11.710  12.300  12.400  12.980  20.460     137 
+
+$labor_reg
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.4606  1.0000  1.0000 
+
+$manu_all
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  -1.80    5.80    6.70    7.64   10.30   26.30 
+
+$manu_total
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.2101  1.2670  2.4930  2.6530  3.1490  6.1460 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="round-63-sample" class="section level3">
+<h3>Round 63 Sample</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeV92YXJzICU+JSBmaWx0ZXIocm91bmQgPT0gNjMpICU+JSBzZWxlY3QoLXJvdW5kKSAlPiUgbWFwKHN1bW1hcnkpXG5gYGAifQ== -->
+<pre class="r"><code>summary_vars %&gt;% filter(round == 63) %&gt;% select(-round) %&gt;% map(summary)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiJGd2YV9sbl95ZWFybHlcbiAgIE1pbi4gMXN0IFF1LiAgTWVkaWFuICAgIE1lYW4gM3JkIFF1LiAgICBNYXguICAgIE5BJ3MgXG4gIDUuNDEyICAxMS44ODAgIDEyLjU2MCAgMTIuODIwICAxMy4zODAgIDI0LjgwMCAgICAgIDc2IFxuXG4kbGFib3JfcmVnXG4gICBNaW4uIDFzdCBRdS4gIE1lZGlhbiAgICBNZWFuIDNyZCBRdS4gICAgTWF4LiBcbiAgMC4wMDAgICAwLjAwMCAgIDEuMDAwICAgMC41OTQgICAxLjAwMCAgIDEuMDAwIFxuXG4kbWFudV9hbGxcbiAgIE1pbi4gMXN0IFF1LiAgTWVkaWFuICAgIE1lYW4gM3JkIFF1LiAgICBNYXguIFxuIC0xLjgwMCAgIDYuNDAwICAgNy44MDAgICA4LjM1NyAgMTAuNjAwICAyNi4zMDAgXG5cbiRtYW51X3RvdGFsXG4gICBNaW4uIDFzdCBRdS4gIE1lZGlhbiAgICBNZWFuIDNyZCBRdS4gICAgTWF4LiBcbiAwLjIxMDEgIDEuNDUxMCAgMi40OTMwICAyLjc3MzAgIDMuMTQ5MCAgNi4xNDYwIFxuIn0= -->
+<pre><code>$gva_ln_yearly
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  5.412  11.880  12.560  12.820  13.380  24.800      76 
+
+$labor_reg
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   1.000   0.594   1.000   1.000 
+
+$manu_all
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -1.800   6.400   7.800   8.357  10.600  26.300 
+
+$manu_total
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.2101  1.4510  2.4930  2.7730  3.1490  6.1460 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGdyb3VwX2J5KHJvdW5kKSAlPiUgXG4gIHNlbGVjdChyb3VuZCwgZ3ZhX3llYXJseSwgd29ya2Vyc190b3RhbCkgJT4lIFxuICBzdW1tYXJpc2VfYWxsKG1lYW4sIG5hLnJtID0gVFJVRSkgJT4lIFxuICBnYXRoZXIoXCJ2YXJpYWJsZVwiLCBcInZhbHVlXCIsIC1yb3VuZCkgJT4lIFxuICBzcHJlYWQocm91bmQsIHZhbHVlKSAlPiUgXG4gIHRyYW5zbXV0ZShcbiAgICB2YXJpYWJsZSA9IHZhcmlhYmxlLFxuICAgIGdyb3d0aCA9IChgNjNgIC0gYDU3YCkvYDU3YFxuICApICU+JSBcbiAga25pdHI6OmthYmxlKGRpZ2l0cyA9IDIpXG5gYGAifQ== -->
+<pre class="r"><code>india_data %&gt;% 
+  group_by(round) %&gt;% 
+  select(round, gva_yearly, workers_total) %&gt;% 
+  summarise_all(mean, na.rm = TRUE) %&gt;% 
+  gather(&quot;variable&quot;, &quot;value&quot;, -round) %&gt;% 
+  spread(round, value) %&gt;% 
+  transmute(
+    variable = variable,
+    growth = (`63` - `57`)/`57`
+  ) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<!-- rnb-source-end -->
+
+<!-- rnb-html-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImtuaXRfYXNpcyJdfX0= -->
+
+<table>
+<thead>
+<tr class="header">
+<th align="left">variable</th>
+<th align="right">growth</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gva_yearly</td>
+<td align="right">43.09</td>
+</tr>
+<tr class="even">
+<td align="left">workers_total</td>
+<td align="right">3.74</td>
+</tr>
+</tbody>
+</table>
+
+
+<!-- rnb-html-end -->
+
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<hr />
+</div>
+</div>
+<div id="reduced-form-regressions" class="section level2">
+<h2>3: Reduced-form Regressions</h2>
+<div id="a." class="section level3">
+<h3>a.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSA8LSBpbmRpYV9kYXRhICU+JSBtdXRhdGUocm91bmRfNjMgPSBpZmVsc2Uocm91bmQ9PTYzLCAxLCAwKSlcbmluZGlhX2RhdGEgJT4lIFxuICBmaWx0ZXIocm91bmQgPT0gNTcpICU+JSBcbiAgbG0oZ3ZhX2xuX3llYXJseSB+IGxhYm9yX3JlZywgZGF0YSA9IC4pICU+JSBcbiAgc3RhcmdhemVyX2h0bWwoKVxuYGBgIn0= -->
+<pre class="r"><code>india_data &lt;- india_data %&gt;% mutate(round_63 = ifelse(round==63, 1, 0))
+india_data %&gt;% 
+  filter(round == 57) %&gt;% 
+  lm(gva_ln_yearly ~ labor_reg, data = .) %&gt;% 
+  stargazer_html()</code></pre>
 <!-- rnb-source-end -->
 <table style="text-align:center">
 <tr>
@@ -300,7 +740,7 @@ stargazer_html(model)</code></pre>
 <td style="text-align:left">
 </td>
 <td>
-mpg
+gva_ln_yearly
 </td>
 </tr>
 <tr>
@@ -309,17 +749,17 @@ mpg
 </tr>
 <tr>
 <td style="text-align:left">
-cyl
+labor_reg
 </td>
 <td>
--2.876<sup>***</sup>
+0.359<sup>***</sup>
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-(0.322)
+(0.016)
 </td>
 </tr>
 <tr>
@@ -333,14 +773,14 @@ cyl
 Constant
 </td>
 <td>
-37.885<sup>***</sup>
+12.235<sup>***</sup>
 </td>
 </tr>
 <tr>
 <td style="text-align:left">
 </td>
 <td>
-(2.074)
+(0.011)
 </td>
 </tr>
 <tr>
@@ -358,7 +798,7 @@ Constant
 Observations
 </td>
 <td>
-32
+21,097
 </td>
 </tr>
 <tr>
@@ -366,7 +806,7 @@ Observations
 R<sup>2</sup>
 </td>
 <td>
-0.726
+0.022
 </td>
 </tr>
 <tr>
@@ -374,7 +814,7 @@ R<sup>2</sup>
 Adjusted R<sup>2</sup>
 </td>
 <td>
-0.717
+0.022
 </td>
 </tr>
 <tr>
@@ -382,7 +822,7 @@ Adjusted R<sup>2</sup>
 Residual Std. Error
 </td>
 <td>
-3.206 (df = 30)
+1.184 (df = 21095)
 </td>
 </tr>
 <tr>
@@ -390,7 +830,7 @@ Residual Std. Error
 F Statistic
 </td>
 <td>
-79.561<sup>***</sup> (df = 1; 30)
+481.979<sup>***</sup> (df = 1; 21095)
 </td>
 </tr>
 <tr>
@@ -407,8 +847,1590 @@ F Statistic
 </tr>
 </table>
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="b." class="section level3">
+<h3>b.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGZpbHRlcihyb3VuZCA9PSA2MykgJT4lIFxuICBsbShndmFfbG5feWVhcmx5IH4gbGFib3JfcmVnLCBkYXRhID0gLikgJT4lIFxuICBzdGFyZ2F6ZXJfaHRtbCgpXG5gYGAifQ== -->
+<pre class="r"><code>india_data %&gt;% 
+  filter(round == 63) %&gt;% 
+  lm(gva_ln_yearly ~ labor_reg, data = .) %&gt;% 
+  stargazer_html()</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg
+</td>
+<td>
+0.729<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.038)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+12.383<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.029)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+7,549
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.047
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.047
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.612 (df = 7547)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+371.898<sup>***</sup> (df = 1; 7547)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="c." class="section level3">
+<h3>c.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGxtKGd2YV9sbl95ZWFybHkgfiBsYWJvcl9yZWcgKyByb3VuZF82MywgZGF0YSA9IC4pICU+JSBcbiAgc3RhcmdhemVyX2h0bWwoKVxuYGBgIn0= -->
+<pre class="r"><code>india_data %&gt;% 
+  lm(gva_ln_yearly ~ labor_reg + round_63, data = .) %&gt;% 
+  stargazer_html()</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg
+</td>
+<td>
+0.454<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.016)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+round_63
+</td>
+<td>
+0.355<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.018)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+12.191<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.012)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+28,646
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.047
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.047
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.313 (df = 28643)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+700.947<sup>***</sup> (df = 2; 28643)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="d." class="section level3">
+<h3>d.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGxtKGd2YV9sbl95ZWFybHkgfiBsYWJvcl9yZWcqcm91bmRfNjMsIGRhdGEgPSAuKSAlPiUgXG4gIHN0YXJnYXplcl9odG1sKClcbmBgYCJ9 -->
+<pre class="r"><code>india_data %&gt;% 
+  lm(gva_ln_yearly ~ labor_reg*round_63, data = .) %&gt;% 
+  stargazer_html()</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg
+</td>
+<td>
+0.359<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.018)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+round_63
+</td>
+<td>
+0.148<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.027)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg:round_63
+</td>
+<td>
+0.370<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.036)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+12.235<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.012)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+28,646
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.050
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.050
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.310 (df = 28642)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+504.887<sup>***</sup> (df = 3; 28642)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="e." class="section level2">
+<h2>e.</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGZlbG0oZ3ZhX2xuX3llYXJseSB+IGxhYm9yX3JlZyArIHJvdW5kXzYzIHwgc3RhdGUgKyBuaWNfaW8sIGRhdGEgPSAuKSAlPiUgXG4gIHN0YXJnYXplcl9odG1sKFxuICAgIGFkZC5saW5lcyA9IGxpc3QoYyhcIlN0YXRlIEZpeGVkIEVmZmVjdHNcIiwgXCJZZXNcIiksXG4gICAgICAgICAgICAgICAgICAgICBjKFwiSW5kdXN0cnkgRml4ZWQgRWZmZWN0c1wiLCBcIlllc1wiKSlcbiAgKVxuYGBgIn0= -->
+<pre class="r"><code>india_data %&gt;% 
+  felm(gva_ln_yearly ~ labor_reg + round_63 | state + nic_io, data = .) %&gt;% 
+  stargazer_html(
+    add.lines = list(c(&quot;State Fixed Effects&quot;, &quot;Yes&quot;),
+                     c(&quot;Industry Fixed Effects&quot;, &quot;Yes&quot;))
+  )</code></pre>
+<!-- rnb-source-end -->
+the matrix is either rank-deficient or indefinitethe matrix is either rank-deficient or indefinite
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+round_63
+</td>
+<td>
+0.310<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.017)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+State Fixed Effects
+</td>
+<td>
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Industry Fixed Effects
+</td>
+<td>
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+25,487
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.128
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.128
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.193 (df = 25464)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGZlbG0oZ3ZhX2xuX3llYXJseSB+IGxhYm9yX3JlZypyb3VuZF82MyB8IHN0YXRlICsgbmljX2lvLCBkYXRhID0gLikgJT4lIFxuICBzdGFyZ2F6ZXJfaHRtbChcbiAgICBhZGQubGluZXMgPSBsaXN0KGMoXCJTdGF0ZSBGaXhlZCBFZmZlY3RzXCIsIFwiWWVzXCIpLFxuICAgICAgICAgICAgICAgICAgICAgYyhcIkluZHVzdHJ5IEZpeGVkIEVmZmVjdHNcIiwgXCJZZXNcIikpXG4gIClcbmBgYCJ9 -->
+<pre class="r"><code>india_data %&gt;% 
+  felm(gva_ln_yearly ~ labor_reg*round_63 | state + nic_io, data = .) %&gt;% 
+  stargazer_html(
+    add.lines = list(c(&quot;State Fixed Effects&quot;, &quot;Yes&quot;),
+                     c(&quot;Industry Fixed Effects&quot;, &quot;Yes&quot;))
+  )</code></pre>
+<!-- rnb-source-end -->
+the matrix is either rank-deficient or indefinitethe matrix is either rank-deficient or indefinite
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+round_63
+</td>
+<td>
+0.131<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.026)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg:round_63
+</td>
+<td>
+0.318<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.035)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+State Fixed Effects
+</td>
+<td>
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Industry Fixed Effects
+</td>
+<td>
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+25,487
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.131
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.131
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.191 (df = 25463)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<hr />
+</div>
+<div id="main-regression-of-interest" class="section level2">
+<h2>4: Main regression of Interest</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGxtKGd2YV9sbl95ZWFybHkgfiBtYW51X2FsbCArIG1hbnVfcG9zdCArIHBvc3QsIGRhdGEgPSAuKSAlPiUgXG4gIHN0YXJnYXplcl9odG1sKClcbmBgYCJ9 -->
+<pre class="r"><code>india_data %&gt;% 
+  lm(gva_ln_yearly ~ manu_all + manu_post + post, data = .) %&gt;% 
+  stargazer_html()</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+manu_all
+</td>
+<td>
+0.023<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.002)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+manu_post
+</td>
+<td>
+0.022<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.004)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+post
+</td>
+<td>
+0.213<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.037)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+12.227<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.018)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+28,646
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.029
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.029
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.325 (df = 28642)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+281.805<sup>***</sup> (df = 3; 28642)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="a.-1" class="section level3">
+<h3>a.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGxtKGd2YV9sbl95ZWFybHkgfiBtYW51X2FsbCArIG1hbnVfcG9zdCArIHBvc3QgKyBsYWJvcl9yZWcsIGRhdGEgPSAuKSAlPiUgXG4gIHN0YXJnYXplcl9odG1sKClcbmBgYCJ9 -->
+<pre class="r"><code>india_data %&gt;% 
+  lm(gva_ln_yearly ~ manu_all + manu_post + post + labor_reg, data = .) %&gt;% 
+  stargazer_html()</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+manu_all
+</td>
+<td>
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.002)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+manu_post
+</td>
+<td>
+0.023<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.004)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+post
+</td>
+<td>
+0.165<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.037)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg
+</td>
+<td>
+0.420<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.017)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+12.181<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.018)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+28,646
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.049
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.048
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.312 (df = 28641)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+365.601<sup>***</sup> (df = 4; 28641)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="b.-1" class="section level3">
+<h3>b.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGxtKGd2YV9sbl95ZWFybHkgfiBtYW51X2FsbCArIG1hbnVfcG9zdCArIHBvc3QqbGFib3JfcmVnLCBkYXRhID0gLikgJT4lIFxuICBzdGFyZ2F6ZXJfaHRtbCgpXG5gYGAifQ== -->
+<pre class="r"><code>india_data %&gt;% 
+  lm(gva_ln_yearly ~ manu_all + manu_post + post*labor_reg, data = .) %&gt;% 
+  stargazer_html()</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+manu_all
+</td>
+<td>
+0.008<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.002)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+manu_post
+</td>
+<td>
+0.007<sup>*</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.004)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+post
+</td>
+<td>
+0.099<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.037)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+labor_reg
+</td>
+<td>
+0.330<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.020)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+post:labor_reg
+</td>
+<td>
+0.344<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.039)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+12.191<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.018)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+28,646
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.051
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.051
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.310 (df = 28640)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+308.825<sup>***</sup> (df = 5; 28640)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="c.-1" class="section level3">
+<h3>c.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGZlbG0oZ3ZhX2xuX3llYXJseSB+IG1hbnVfYWxsICsgbWFudV9wb3N0ICsgcG9zdCpsYWJvcl9yZWcgfCBzdGF0ZSArIG5pY19pbywgZGF0YSA9IC4pICU+JSBcbiAgc3RhcmdhemVyX2h0bWwoXG4gICAgYWRkLmxpbmVzID0gbGlzdChjKFwiU3RhdGUgRml4ZWQgRWZmZWN0c1wiLCBcIlllc1wiKSxcbiAgICAgICAgICAgICAgICAgICAgIGMoXCJJbmR1c3RyeSBGaXhlZCBFZmZlY3RzXCIsIFwiWWVzXCIpKVxuICApXG5gYGAifQ== -->
+<pre class="r"><code>india_data %&gt;% 
+  felm(gva_ln_yearly ~ manu_all + manu_post + post*labor_reg | state + nic_io, data = .) %&gt;% 
+  stargazer_html(
+    add.lines = list(c(&quot;State Fixed Effects&quot;, &quot;Yes&quot;),
+                     c(&quot;Industry Fixed Effects&quot;, &quot;Yes&quot;))
+  )</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<hr />
+</div>
+</div>
+<div id="instrumental-variables-specifications" class="section level2">
+<h2>5: Instrumental Variables Specifications</h2>
+<div id="a.-2" class="section level3">
+<h3>a.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGl2cmVnKGd2YV9sbl95ZWFybHkgfiBtYW51X2FsbCB8IGxhYm9yX3JlZywgZGF0YSA9IC4pICU+JSBcbiAgIyByb2J1c3Quc2UoKSAlPiVcbiAgc3RhcmdhemVyX2h0bWwoKVxuYGBgIn0= -->
+<pre class="r"><code>india_data %&gt;% 
+  ivreg(gva_ln_yearly ~ manu_all | labor_reg, data = .) %&gt;% 
+  # robust.se() %&gt;%
+  stargazer_html()</code></pre>
+<!-- rnb-source-end -->
+<table style="text-align:center">
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="1" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+gva_ln_yearly
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+manu_all
+</td>
+<td>
+0.129<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.004)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+11.499<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.035)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+28,646
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+-0.098
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+-0.098
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+1.409 (df = 28644)
+</td>
+</tr>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td style="text-align:right">
+<sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="b.-2" class="section level3">
+<h3>b.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaW5kaWFfZGF0YSAlPiUgXG4gIGZlbG0oZ3ZhX2xuX3llYXJseSB+IG1hbnVfYWxsICsgbGFib3JfcmVnIHwgc3RhdGUgKyBuaWNfaW8gfCAobWFudV9hbGwgfiBsYWJvcl9yZWcpLCBkYXRhID0gLikgJT4lIFxuICAjIHJvYnVzdC5zZSgpICU+JVxuICBzdGFyZ2F6ZXJfaHRtbCgpXG5gYGAifQ== -->
+<pre class="r"><code>india_data %&gt;% 
+  felm(gva_ln_yearly ~ manu_all + labor_reg | state + nic_io | (manu_all ~ labor_reg), data = .) %&gt;% 
+  # robust.se() %&gt;%
+  stargazer_html()</code></pre>
+<!-- rnb-source-end -->
+<p>the matrix is either rank-deficient or indefiniteError in chol2inv(ch) : element (1, 1) is zero, so the inverse cannot be computed</p>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkFFTTogUFMyIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KYGBge3IsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9DQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkoaGF2ZW4pDQpsaWJyYXJ5KHN0cmluZ3IpDQpsaWJyYXJ5KHN0YXJnYXplcikNCg0KIyBNb2RpZmljYXRpb24gdG8gc3RhcmdhemVyKCkgLSBlc2NhcGVzICIqIiB0byBwcmV2ZW50IGh0bWwgdnMgbWFya2Rvd24gY29uZnVzaW9uDQpzdGFyZ2F6ZXJfaHRtbCA8LSBmdW5jdGlvbiguLi4pIHsNCiAgY2FwdHVyZS5vdXRwdXQoc3RhcmdhemVyKC4uLiwgdHlwZSA9ICJodG1sIiwgaGVhZGVyID0gRkFMU0UpKSAlPiUNCiAgc3RyX3JlcGxhY2VfYWxsKCJcXCoiLCAiXFxcXCoiKSAlPiUgDQogIHBhc3RlKGNvbGxhcHNlID0gIlxuIikgJT4lDQogIGNhdCgiXG4iKQ0KfQ0KYGBgDQoNCmBgYHtyfQ0KdXJsIDwtICJodHRwOi8vdXNlcnMubmJlci5vcmcvfnJkZWhlamlhLyFAJEFFTS9Qcm9ibGVtJTIwU2V0cy9wczIvZ2VuZXJhdGVkZGF0YV8yMDEyMDIyMV9zdWIuZHRhIg0KDQpyYXcgPC0gcmVhZF9zdGF0YSh1cmwpDQpgYGANCg0KYGBge3J9DQpzZWxlY3QocmF3LCBub3F1b3RlKG9yZGVyKGNvbG5hbWVzKHJhdykpKSkgJT4lIG5hbWVzKCkNCmBgYA0KDQpgYGB7ciByZXN1bHRzPSdhc2lzJ30NCm1vZGVsIDwtIGxtKG1wZyB+IGN5bCwgZGF0YSA9IG10Y2FycykNCnN0YXJnYXplcl9odG1sKG1vZGVsKQ0KYGBgDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkFFTTogUFMyIg0KYXV0aG9yOiAiTWF4d2VsbCBBdXN0ZW5zZW4iDQpkYXRlOiAiYHIgU3lzLkRhdGUoKWAiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpgYGB7ciwgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRSwgaW5jbHVkZT1GQUxTRX0NCg0KIyBJbnN0YWxsIHBhY2thZ2VzIGlmIG5lZWRlZA0KcGFja2FnZV9saXN0IDwtIGMoIkFFUiIsICJpdnBhY2siLCAibGZlIiwgInN0YXJnYXplciIsICJrbml0ciIsICJoYXZlbiIsICJ0aWR5dmVyc2UiLCAic3RyaW5nciIpDQpuZXdfcGFja2FnZXMgPC0gcGFja2FnZV9saXN0WyEgcGFja2FnZV9saXN0ICVpbiUgaW5zdGFsbGVkLnBhY2thZ2VzKClbLCJQYWNrYWdlIl1dDQppZihsZW5ndGgobmV3X3BhY2thZ2VzKSkgaW5zdGFsbC5wYWNrYWdlcyhuZXdfcGFja2FnZXMpDQoNCmxpYnJhcnkoQUVSKQ0KbGlicmFyeShpdnBhY2spDQpsaWJyYXJ5KGxmZSkNCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShzdGFyZ2F6ZXIpDQoNCiMgTW9kaWZpY2F0aW9uIHRvIHN0YXJnYXplcigpIC0gZXNjYXBlcyAiKiIgdG8gcHJldmVudCBodG1sIHZzIG1hcmtkb3duIGNvbmZ1c2lvbg0Kc3RhcmdhemVyX2h0bWwgPC0gZnVuY3Rpb24oLi4uKSB7DQogIGNhcHR1cmUub3V0cHV0KHN0YXJnYXplcjo6c3RhcmdhemVyKC4uLiwgdHlwZSA9ICJodG1sIiwgaGVhZGVyID0gRkFMU0UpKSAlPiUNCiAgc3RyaW5ncjo6c3RyX3JlcGxhY2VfYWxsKCJcXCoiLCAiXFxcXCoiKSAlPiUgDQogIHBhc3RlKGNvbGxhcHNlID0gIlxuIikgJT4lDQogIGNhdCgiXG4iKQ0KfQ0KYGBgDQoNCiMjIDE6IFN0YXRhIElWIFJlZ3Jlc3Npb24gRXhhbXBsZQ0KDQpgYGB7cn0NCmF1dG8gPC0gaGF2ZW46OnJlYWRfc3RhdGEoImh0dHA6Ly93d3cuc3RhdGEtcHJlc3MuY29tL2RhdGEvcjkvYXV0by5kdGEiKQ0KYGBgDQoNCmBgYHtyLCByZXN1bHRzPSdhc2lzJ30NCmZpcnN0IDwtIGxtKG1wZyB+IGRpc3BsYWNlbWVudCwgYXV0bykNCnN0YXJnYXplcl9odG1sKGZpcnN0KQ0KYGBgDQoNCmBgYHtyLCByZXN1bHRzPSdhc2lzJ30NCnNlY29uZCA8LSBpdnJlZyhmb3JtdWxhID0gcHJpY2UgfiBtcGcgfCBkaXNwbGFjZW1lbnQsIGRhdGEgPSBhdXRvKQ0Kc3RhcmdhemVyX2h0bWwoc2Vjb25kKQ0KYGBgDQoNCmBgYHtyfQ0KIyBzZWNvbmQgJT4lIHJvYnVzdC5zZSgpICU+JSBzdGFyZ2F6ZXJfaHRtbCgpDQpybShhdXRvLCBmaXJzdCwgc2Vjb25kKQ0KYGBgDQoNCi0tLQ0KDQojIyAyOiBTdW1tYXJ5IFN0YXRpc3RpY3MNCg0KDQpgYGB7cn0NCnVybCA8LSAiaHR0cDovL3VzZXJzLm5iZXIub3JnL35yZGVoZWppYS8hQCRBRU0vUHJvYmxlbSUyMFNldHMvcHMyL2dlbmVyYXRlZGRhdGFfMjAxMjAyMjFfc3ViLmR0YSINCg0KcmF3IDwtIGhhdmVuOjpyZWFkX3N0YXRhKHVybCkNCmBgYA0KDQpgYGB7cn0NCmluZGlhX2RhdGEgPC0gDQogIHJhdyAlPiUgDQogIHNlbGVjdCgNCiAgICBzdGF0ZSwNCiAgICBuaWNfaW8gPSBOSUNfaW8sDQogICAgcm91bmQsDQogICAgd29ya2Vyc190b3RhbCA9IFRvdGFsX3dvcmtlciwNCiAgICBndmFfeWVhcmx5ID0gWWVhcmx5X2d2YV9wcm9kdWN0aW9uX3JlYWwsDQogICAgZ3ZhX2xuX3llYXJseSA9IGxuWWVhcmx5X2d2YSwNCiAgICBsYWJvcl9yZWcgPSBsYWJvcl9yZWdfYmVzbGV5X2ZsZXgyLA0KICAgIG1hbnVfdG90YWwgPSBtYW51ZmFjdHVyaW5nX3RvdGFsLA0KICAgIHBvc3QsDQogICAgbGFib3JfbWFudSwNCiAgICBtYW51X2FsbCA9IGFsbG1hbnVmYWN0dXJpbmcsDQogICAgbWFudV9wb3N0LA0KICAgIG1hbnVfc2hhcmUgPSBtYW5zaGFyZSwNCiAgICBtYW51X3Bvc3Rfc2hhcmUsDQogICAgbGFib3JfbWFudV9zaGFyZQ0KICApDQpgYGANCg0KDQpgYGB7cn0NCnNlbGVjdChyYXcsIG5vcXVvdGUob3JkZXIoY29sbmFtZXMocmF3KSkpKSAlPiUgbmFtZXMoKQ0KYGBgDQoNCmBgYHtyfQ0Kc3VtbWFyeV92YXJzIDwtDQogIGluZGlhX2RhdGEgJT4lIA0KICBzZWxlY3Qocm91bmQsIGd2YV9sbl95ZWFybHksIGxhYm9yX3JlZywgbWFudV9hbGwsIG1hbnVfdG90YWwpDQpgYGANCg0KIyMjIEZ1bGwgU2FtcGxlDQpgYGB7cn0NCnN1bW1hcnlfdmFycyAlPiUgc2VsZWN0KC1yb3VuZCkgJT4lIG1hcChzdW1tYXJ5KQ0KYGBgDQoNCiMjIyBSb3VuZCA1NyBTYW1wbGUNCmBgYHtyfQ0Kc3VtbWFyeV92YXJzICU+JSBmaWx0ZXIocm91bmQgPT0gNTcpICU+JSBzZWxlY3QoLXJvdW5kKSAlPiUgbWFwKHN1bW1hcnkpDQpgYGANCg0KIyMjIFJvdW5kIDYzIFNhbXBsZQ0KYGBge3J9DQpzdW1tYXJ5X3ZhcnMgJT4lIGZpbHRlcihyb3VuZCA9PSA2MykgJT4lIHNlbGVjdCgtcm91bmQpICU+JSBtYXAoc3VtbWFyeSkNCmBgYA0KDQpgYGB7cn0NCmluZGlhX2RhdGEgJT4lIA0KICBncm91cF9ieShyb3VuZCkgJT4lIA0KICBzZWxlY3Qocm91bmQsIGd2YV95ZWFybHksIHdvcmtlcnNfdG90YWwpICU+JSANCiAgc3VtbWFyaXNlX2FsbChtZWFuLCBuYS5ybSA9IFRSVUUpICU+JSANCiAgZ2F0aGVyKCJ2YXJpYWJsZSIsICJ2YWx1ZSIsIC1yb3VuZCkgJT4lIA0KICBzcHJlYWQocm91bmQsIHZhbHVlKSAlPiUgDQogIHRyYW5zbXV0ZSgNCiAgICB2YXJpYWJsZSA9IHZhcmlhYmxlLA0KICAgIGdyb3d0aCA9IChgNjNgIC0gYDU3YCkvYDU3YA0KICApICU+JSANCiAga25pdHI6OmthYmxlKGRpZ2l0cyA9IDIpDQpgYGANCg0KDQoNCi0tLQ0KDQoNCiMjIDM6IFJlZHVjZWQtZm9ybSBSZWdyZXNzaW9ucw0KDQojIyMgYS4NCmBgYHtyLCByZXN1bHRzPSdhc2lzJ30NCmluZGlhX2RhdGEgPC0gaW5kaWFfZGF0YSAlPiUgbXV0YXRlKHJvdW5kXzYzID0gaWZlbHNlKHJvdW5kPT02MywgMSwgMCkpDQoNCmluZGlhX2RhdGEgJT4lIA0KICBmaWx0ZXIocm91bmQgPT0gNTcpICU+JSANCiAgbG0oZ3ZhX2xuX3llYXJseSB+IGxhYm9yX3JlZywgZGF0YSA9IC4pICU+JSANCiAgc3RhcmdhemVyX2h0bWwoKQ0KYGBgDQoNCiMjIyBiLg0KYGBge3IsIHJlc3VsdHM9J2FzaXMnfQ0KaW5kaWFfZGF0YSAlPiUgDQogIGZpbHRlcihyb3VuZCA9PSA2MykgJT4lIA0KICBsbShndmFfbG5feWVhcmx5IH4gbGFib3JfcmVnLCBkYXRhID0gLikgJT4lIA0KICBzdGFyZ2F6ZXJfaHRtbCgpDQpgYGANCg0KDQojIyMgYy4NCmBgYHtyLCByZXN1bHRzPSdhc2lzJ30NCmluZGlhX2RhdGEgJT4lIA0KICBsbShndmFfbG5feWVhcmx5IH4gbGFib3JfcmVnICsgcm91bmRfNjMsIGRhdGEgPSAuKSAlPiUgDQogIHN0YXJnYXplcl9odG1sKCkNCmBgYA0KDQoNCiMjIyBkLg0KYGBge3IsIHJlc3VsdHM9J2FzaXMnfQ0KaW5kaWFfZGF0YSAlPiUgDQogIGxtKGd2YV9sbl95ZWFybHkgfiBsYWJvcl9yZWcqcm91bmRfNjMsIGRhdGEgPSAuKSAlPiUgDQogIHN0YXJnYXplcl9odG1sKCkNCmBgYA0KDQojIyBlLg0KDQpgYGB7ciwgcmVzdWx0cz0nYXNpcyd9DQppbmRpYV9kYXRhICU+JSANCiAgZmVsbShndmFfbG5feWVhcmx5IH4gbGFib3JfcmVnICsgcm91bmRfNjMgfCBzdGF0ZSArIG5pY19pbywgZGF0YSA9IC4pICU+JSANCiAgc3RhcmdhemVyX2h0bWwoDQogICAgYWRkLmxpbmVzID0gbGlzdChjKCJTdGF0ZSBGaXhlZCBFZmZlY3RzIiwgIlllcyIpLA0KICAgICAgICAgICAgICAgICAgICAgYygiSW5kdXN0cnkgRml4ZWQgRWZmZWN0cyIsICJZZXMiKSkNCiAgKQ0KYGBgDQoNCmBgYHtyLCByZXN1bHRzPSdhc2lzJ30NCmluZGlhX2RhdGEgJT4lIA0KICBmZWxtKGd2YV9sbl95ZWFybHkgfiBsYWJvcl9yZWcqcm91bmRfNjMgfCBzdGF0ZSArIG5pY19pbywgZGF0YSA9IC4pICU+JSANCiAgc3RhcmdhemVyX2h0bWwoDQogICAgYWRkLmxpbmVzID0gbGlzdChjKCJTdGF0ZSBGaXhlZCBFZmZlY3RzIiwgIlllcyIpLA0KICAgICAgICAgICAgICAgICAgICAgYygiSW5kdXN0cnkgRml4ZWQgRWZmZWN0cyIsICJZZXMiKSkNCiAgKQ0KYGBgDQoNCg0KLS0tDQoNCg0KIyMgNDogTWFpbiByZWdyZXNzaW9uIG9mIEludGVyZXN0DQoNCmBgYHtyLCByZXN1bHRzID0nYXNpcyd9DQppbmRpYV9kYXRhICU+JSANCiAgbG0oZ3ZhX2xuX3llYXJseSB+IG1hbnVfYWxsICsgbWFudV9wb3N0ICsgcG9zdCwgZGF0YSA9IC4pICU+JSANCiAgc3RhcmdhemVyX2h0bWwoKQ0KYGBgDQoNCiMjIyBhLg0KYGBge3IsIHJlc3VsdHMgPSdhc2lzJ30NCmluZGlhX2RhdGEgJT4lIA0KICBsbShndmFfbG5feWVhcmx5IH4gbWFudV9hbGwgKyBtYW51X3Bvc3QgKyBwb3N0ICsgbGFib3JfcmVnLCBkYXRhID0gLikgJT4lIA0KICBzdGFyZ2F6ZXJfaHRtbCgpDQpgYGANCg0KIyMjIGIuDQpgYGB7ciwgcmVzdWx0cyA9J2FzaXMnfQ0KaW5kaWFfZGF0YSAlPiUgDQogIGxtKGd2YV9sbl95ZWFybHkgfiBtYW51X2FsbCArIG1hbnVfcG9zdCArIHBvc3QqbGFib3JfcmVnLCBkYXRhID0gLikgJT4lIA0KICBzdGFyZ2F6ZXJfaHRtbCgpDQpgYGANCg0KIyMjIGMuDQpgYGB7ciwgcmVzdWx0cyA9J2FzaXMnfQ0KaW5kaWFfZGF0YSAlPiUgDQogIGZlbG0oZ3ZhX2xuX3llYXJseSB+IG1hbnVfYWxsICsgbWFudV9wb3N0ICsgcG9zdCpsYWJvcl9yZWcgfCBzdGF0ZSArIG5pY19pbywgZGF0YSA9IC4pICU+JSANCiAgc3RhcmdhemVyX2h0bWwoDQogICAgYWRkLmxpbmVzID0gbGlzdChjKCJTdGF0ZSBGaXhlZCBFZmZlY3RzIiwgIlllcyIpLA0KICAgICAgICAgICAgICAgICAgICAgYygiSW5kdXN0cnkgRml4ZWQgRWZmZWN0cyIsICJZZXMiKSkNCiAgKQ0KYGBgDQotLS0NCg0KDQoNCiMjIDU6IEluc3RydW1lbnRhbCBWYXJpYWJsZXMgU3BlY2lmaWNhdGlvbnMNCg0KIyMjIGEuDQpgYGB7ciwgcmVzdWx0cz0nYXNpcyd9DQppbmRpYV9kYXRhICU+JSANCiAgaXZyZWcoZ3ZhX2xuX3llYXJseSB+IG1hbnVfYWxsIHwgbGFib3JfcmVnLCBkYXRhID0gLikgJT4lIA0KICAjIHJvYnVzdC5zZSgpICU+JQ0KICBzdGFyZ2F6ZXJfaHRtbCgpDQpgYGANCg0KIyMjIGIuDQpgYGB7ciwgcmVzdWx0cz0nYXNpcyd9DQppbmRpYV9kYXRhICU+JSANCiAgZmVsbShndmFfbG5feWVhcmx5IH4gbWFudV9hbGwgKyBsYWJvcl9yZWcgfCBzdGF0ZSArIG5pY19pbyB8IChtYW51X2FsbCB+IGxhYm9yX3JlZyksIGRhdGEgPSAuKSAlPiUgDQogICMgcm9idXN0LnNlKCkgJT4lDQogIHN0YXJnYXplcl9odG1sKCkNCmBgYA0KDQoNCg0KDQoNCg0KDQo=</div>
 
 
 
