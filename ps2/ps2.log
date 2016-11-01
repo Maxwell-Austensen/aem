@@ -1,0 +1,565 @@
+-------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  H:\GitHub\aem\ps2\ps2.log
+  log type:  text
+ opened on:  31 Oct 2016, 22:21:23
+
+. /****************************************************************************
+> Program Name:   ps2.do
+> Location:       GitHub\aem\ps2
+> Author:         Maxwell Austensen
+> Date Created:   31 Oct 2016
+> Project:        Problem Set 2 - Instrumental Variables
+> Class:          Advanced Empirical Methods
+> ****************************************************************************/
+. 
+. clear all
+
+. clear matrix
+
+. macro drop _all
+
+. set more off, perm
+(set more preference recorded)
+
+. set maxvar 10000
+
+
+. 
+. global root "C:\Users\austensen\Box Sync\aem"
+
+. 
+. 
+. * Part 1
+. *********
+. 
+. sysuse auto, clear
+(1978 Automobile Data)
+
+. ivreg price (mpg = displacement),first
+
+First-stage regressions
+-----------------------
+
+      Source |       SS           df       MS      Number of obs   =        74
+-------------+----------------------------------   F(1, 72)        =     71.41
+       Model |  1216.67534         1  1216.67534   Prob > F        =    0.0000
+    Residual |  1226.78412        72  17.0386683   R-squared       =    0.4979
+-------------+----------------------------------   Adj R-squared   =    0.4910
+       Total |  2443.45946        73  33.4720474   Root MSE        =    4.1278
+
+------------------------------------------------------------------------------
+         mpg |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+displacement |  -.0444536   .0052606    -8.45   0.000    -.0549405   -.0339668
+       _cons |   30.06788   1.143462    26.30   0.000     27.78843    32.34733
+------------------------------------------------------------------------------
+
+
+Instrumental variables (2SLS) regression
+
+      Source |       SS           df       MS      Number of obs   =        74
+-------------+----------------------------------   F(1, 72)        =     21.13
+       Model |   105028215         1   105028215   Prob > F        =    0.0000
+    Residual |   530037181        72  7361627.51   R-squared       =    0.1654
+-------------+----------------------------------   Adj R-squared   =    0.1538
+       Total |   635065396        73  8699525.97   Root MSE        =    2713.2
+
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         mpg |  -357.5834   77.78566    -4.60   0.000    -512.6463   -202.5205
+       _cons |   13780.82   1686.382     8.17   0.000     10419.08    17142.56
+------------------------------------------------------------------------------
+Instrumented:  mpg
+Instruments:   displacement
+------------------------------------------------------------------------------
+
+. 
+. qui {
+
+. di (b * dis_sd)/mpg_sd
+-.70564259
+
+. 
+. 
+. * Set up data
+. **************
+. 
+. use "$root\ps2\generateddata_20120221_sub.dta", clear
+
+. 
+. #delimit ;
+delimiter now ;
+. rename 
+>         (NIC_io
+>         Total_worker
+>         Yearly_gva_production_real
+>         lnYearly_gva
+>         labor_reg_besley_flex2
+>         manufacturing_total
+>         allmanufacturing
+>         manshare)
+>         (nic_io
+>         workers_total
+>         gva_yearly
+>         gva_ln_yearly
+>         labor_reg
+>         manu_total
+>         manu_all
+>         manu_share);
+
+. keep 
+>         nic_io
+>         workers_total
+>         gva_yearly
+>         gva_ln_yearly
+>         labor_reg
+>         manu_total
+>         state
+>         round
+>         post
+>         labor_manu
+>         manu_post
+>         manu_post_share
+>         labor_manu_share
+>         manu_all
+>         manu_share;
+
+. #delimit cr;
+delimiter now cr
+. 
+. 
+. * Part 2
+. *********
+. qui{
+
+. 
+. di "Summary stats - Full Sample"
+Summary stats - Full Sample
+
+. matrix list sum_full
+
+sum_full[2,5]
+      gva_ln_yea~y     labor_reg      manu_all    manu_total    manu_share
+mean     12.509704     .49582453     7.8292423     2.6845689      .0684644
+  sd      1.344549     .49999123     4.5256091     1.8300772     .13283238
+
+. 
+. di "Summary stats - Round 57"
+Summary stats - Round 57
+
+. matrix list sum_57
+
+sum_57[2,5]
+      gva_ln_yea~y     labor_reg      manu_all    manu_total    manu_share
+mean     12.400266     .46058209     7.6397854     2.6528597     .06928194
+  sd     1.1973546     .49845554     4.5469403     1.8116154      .1341951
+
+. 
+. di "Summary stats - Round 63"
+Summary stats - Round 63
+
+. matrix list sum_63
+
+sum_63[2,5]
+      gva_ln_yea~y     labor_reg      manu_all    manu_total    manu_share
+mean     12.815545     .59396721     8.3568395     2.7728722     .06618772
+  sd     1.6512882     .49112299     4.4234011     1.8778356     .12894298
+
+. 
+. 
+. 
+. qui{
+
+. 
+. di "Growth in GVA, round 57 to 63 = "(mean_63 - mean_57) / mean_57
+Growth in GVA, round 57 to 63 = 43.08934
+
+. 
+. qui{
+
+. 
+. di "Growth in employees, round 57 to 63 = "(mean_63 - mean_57) / mean_57
+Growth in employees, round 57 to 63 = 3.7407331
+
+. 
+. 
+. * Part 3
+. *********
+. eststo clear
+
+. 
+. * a
+. qui eststo: reg gva_ln_yearly labor_reg if round==57
+
+. 
+. * b
+. qui eststo: reg gva_ln_yearly labor_reg if round==63
+
+. 
+. * c
+. 
+. gen round_63 = 1 if round==63
+(21,234 missing values generated)
+
+. recode round_63 missing = 0
+(round_63: 21234 changes made)
+
+. 
+. qui eststo: reg gva_ln_yearly labor_reg round_63
+
+. 
+. * d
+. 
+. gen labor_reg_round_63 = 1 if labor_reg==1 & round==63
+(24,330 missing values generated)
+
+. recode labor_reg_round_63 missing = 0
+(labor_reg_round_63: 24330 changes made)
+
+. 
+. qui eststo: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63
+
+. 
+. * e
+. qui eststo: xi: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63 i.state i.nic_io
+
+. 
+. esttab
+
+--------------------------------------------------------------------------------------------
+                      (1)             (2)             (3)             (4)             (5)   
+             gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y   
+--------------------------------------------------------------------------------------------
+labor_reg           0.359***        0.729***        0.454***        0.359***        0.345***
+                  (21.95)         (19.28)         (29.08)         (19.84)          (6.10)   
+
+round_63                                            0.355***        0.148***        0.131***
+                                                  (20.02)          (5.55)          (5.07)   
+
+labor_reg~63                                                        0.370***        0.318***
+                                                                  (10.37)          (9.22)   
+
+_Istate_2                                                                           0.258***
+                                                                                   (3.69)   
+
+_Istate_3                                                                        0.000885   
+                                                                                   (0.01)   
+
+_Istate_4                                                                           0.175***
+                                                                                   (3.91)   
+
+_Istate_5                                                                           0.477***
+                                                                                   (6.88)   
+
+_Istate_6                                                                           0.224***
+                                                                                   (5.46)   
+
+_Istate_7                                                                           0.785***
+                                                                                  (13.08)   
+
+_Istate_8                                                                          0.0920   
+                                                                                   (1.60)   
+
+_Istate_9                                                                           0.495***
+                                                                                  (16.70)   
+
+_Istate_10                                                                              0   
+                                                                                      (.)   
+
+_Istate_11                                                                          0.535***
+                                                                                   (8.29)   
+
+_Istate_12                                                                        -0.0215   
+                                                                                  (-0.48)   
+
+_Istate_13                                                                         0.0109   
+                                                                                   (0.32)   
+
+_Istate_14                                                                         0.0797   
+                                                                                   (1.46)   
+
+_Istate_15                                                                          0.294***
+                                                                                   (5.20)   
+
+_Inic_io_2                                                                         -0.221** 
+                                                                                  (-2.65)   
+
+_Inic_io_3                                                                          0.111   
+                                                                                   (1.30)   
+
+_Inic_io_4                                                                         -0.528***
+                                                                                  (-5.85)   
+
+_Inic_io_6                                                                         -0.892***
+                                                                                 (-11.29)   
+
+_Inic_io_7                                                                         -0.614***
+                                                                                  (-5.81)   
+
+_Inic_io_8                                                                         -0.762***
+                                                                                  (-9.63)   
+
+_Inic_io_9                                                                         -0.335***
+                                                                                  (-4.12)   
+
+_cons               12.23***        12.38***        12.19***        12.23***        12.73***
+                (1101.66)        (425.16)       (1054.59)        (995.33)        (137.05)   
+--------------------------------------------------------------------------------------------
+N                   21097            7549           28646           28646           25487   
+--------------------------------------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. * Part 4
+. *********
+. 
+. eststo clear
+
+. 
+. qui eststo: reg gva_ln_yearly manu_all manu_post post
+
+. 
+. * a
+. qui eststo: reg gva_ln_yearly manu_all manu_post post labor_reg
+
+. 
+. * b
+. qui eststo: reg gva_ln_yearly manu_all manu_post post labor_reg labor_reg#post
+
+. 
+. * c
+. qui eststo: xi: reg gva_ln_yearly manu_all manu_post post labor_reg labor_reg#post i.state i.nic_io
+
+. 
+. esttab
+
+----------------------------------------------------------------------------
+                      (1)             (2)             (3)             (4)   
+             gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y   
+----------------------------------------------------------------------------
+manu_all           0.0227***      0.00338         0.00752***        0.355***
+                  (11.32)          (1.58)          (3.44)          (6.48)   
+
+manu_post          0.0222***       0.0229***      0.00745          0.0128** 
+                   (5.59)          (5.81)          (1.73)          (3.04)   
+
+post                0.213***        0.165***        0.443***        0.324***
+                   (5.73)          (4.50)          (9.16)          (6.86)   
+
+labor_reg                           0.420***        0.330***       -0.437***
+                                  (24.48)         (16.56)         (-4.31)   
+
+0.labor_re~t                                            0               0   
+                                                      (.)             (.)   
+
+0.labor_re~t                                       -0.344***       -0.271***
+                                                  (-8.82)         (-7.16)   
+
+1.labor_re~t                                            0               0   
+                                                      (.)             (.)   
+
+1.labor_re~t                                            0               0   
+                                                      (.)             (.)   
+
+_Istate_2                                                          -1.435***
+                                                                  (-6.01)   
+
+_Istate_3                                                           0.742***
+                                                                   (5.17)   
+
+_Istate_4                                                          -2.451***
+                                                                  (-6.09)   
+
+_Istate_5                                                          -0.822***
+                                                                  (-4.55)   
+
+_Istate_6                                                           0.296***
+                                                                   (6.95)   
+
+_Istate_7                                                           0.562***
+                                                                  (15.09)   
+
+_Istate_8                                                           2.736***
+                                                                   (6.35)   
+
+_Istate_9                                                          -0.510** 
+                                                                  (-3.27)   
+
+_Istate_10                                                         -7.425***
+                                                                  (-6.68)   
+
+_Istate_11                                                          0.133*  
+                                                                   (2.35)   
+
+_Istate_12                                                          0.372***
+                                                                   (4.96)   
+
+_Istate_13                                                         -0.888***
+                                                                  (-6.29)   
+
+_Istate_14                                                              0   
+                                                                      (.)   
+
+_Istate_15                                                              0   
+                                                                      (.)   
+
+_Inic_io_2                                                         -0.221** 
+                                                                  (-2.65)   
+
+_Inic_io_3                                                          0.111   
+                                                                   (1.30)   
+
+_Inic_io_4                                                         -0.526***
+                                                                  (-5.84)   
+
+_Inic_io_6                                                         -0.891***
+                                                                 (-11.28)   
+
+_Inic_io_7                                                         -0.613***
+                                                                  (-5.80)   
+
+_Inic_io_8                                                         -0.761***
+                                                                  (-9.62)   
+
+_Inic_io_9                                                         -0.334***
+                                                                  (-4.11)   
+
+_cons               12.23***        12.18***        12.19***        10.75***
+                 (685.04)        (685.71)        (685.84)         (31.43)   
+----------------------------------------------------------------------------
+N                   28646           28646           28646           25487   
+----------------------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. * Part 5
+. *********
+. 
+. eststo clear
+
+. * a
+. qui eststo: ivreg gva_ln_yearly (manu_all = labor_reg), first
+
+. 
+. * b
+. qui eststo: xi: ivreg gva_ln_yearly (manu_all = labor_reg) i.state i.nic_io, first
+
+. 
+. * c
+. gen labor_reg_post = labor_reg * post
+
+. 
+. qui eststo: xi: ivreg gva_ln_yearly labor_reg manu_all post (manu_post = labor_reg_post) i.state i.nic_io, 
+> first
+
+. 
+. esttab 
+
+------------------------------------------------------------
+                      (1)             (2)             (3)   
+             gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y   
+------------------------------------------------------------
+manu_all            0.129***      -0.0244***      -0.0242***
+                  (29.48)         (-8.04)         (-7.86)   
+
+_Istate_2                          -0.129*          0.195***
+                                  (-2.40)          (3.49)   
+
+_Istate_3                          -0.575***      -0.0995*  
+                                 (-12.56)         (-2.40)   
+
+_Istate_4                           0.374***        0.132** 
+                                   (8.20)          (2.73)   
+
+_Istate_5                          0.0588           0.411***
+                                   (1.11)          (7.53)   
+
+_Istate_6                           0.216***        0.222***
+                                   (5.19)          (5.38)   
+
+_Istate_7                           0.282***        0.719***
+                                   (6.71)         (17.53)   
+
+_Istate_8                          -0.596***            0   
+                                 (-11.21)             (.)   
+
+_Istate_9                           0.551***        0.489***
+                                  (19.60)         (16.07)   
+
+_Istate_10                              0               0   
+                                      (.)             (.)   
+
+_Istate_11                         0.0566           0.469***
+                                   (1.18)          (9.87)   
+
+_Istate_12                        -0.0713         -0.0317   
+                                  (-1.55)         (-0.71)   
+
+_Istate_13                         0.0912**       0.00107   
+                                   (2.73)          (0.03)   
+
+_Istate_14                         -0.433***       0.0112   
+                                 (-12.65)          (0.35)   
+
+_Istate_15                         -0.201***        0.230***
+                                  (-5.46)          (6.41)   
+
+_Inic_io_2                         -0.208*         -0.217** 
+                                  (-2.47)         (-2.58)   
+
+_Inic_io_3                          0.167           0.108   
+                                   (1.94)          (1.26)   
+
+_Inic_io_4                         -0.494***       -0.519***
+                                  (-5.44)         (-5.72)   
+
+_Inic_io_6                         -0.879***       -0.888***
+                                 (-11.04)        (-11.17)   
+
+_Inic_io_7                         -0.527***       -0.609***
+                                  (-4.95)         (-5.72)   
+
+_Inic_io_8                         -0.733***       -0.759***
+                                  (-9.19)         (-9.53)   
+
+_Inic_io_9                         -0.307***       -0.329***
+                                  (-3.76)         (-4.03)   
+
+manu_post                                          0.0864***
+                                                   (9.17)   
+
+labor_reg                                           0.374***
+                                                  (10.70)   
+
+post                                               -0.396***
+                                                  (-5.02)   
+
+_cons               11.50***        13.38***        12.94***
+                 (325.90)        (150.80)        (154.08)   
+------------------------------------------------------------
+N                   28646           25487           25487   
+------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. * d
+. 
+. * (see write up)
+. 
+. 
+. ************************************************************
+. ************************************************************
+. ********************    END PROGRAM    *********************
+. ************************************************************
+. ************************************************************
+. log close
+      name:  <unnamed>
+       log:  H:\GitHub\aem\ps2\ps2.log
+  log type:  text
+ closed on:  31 Oct 2016, 22:21:26
+-------------------------------------------------------------------------------------------------------------
