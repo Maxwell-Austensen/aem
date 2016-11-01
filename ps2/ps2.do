@@ -1,9 +1,47 @@
+capture log close
+log using "ps2", text replace
+/****************************************************************************
+Program Name:   ps2.do
+Location:       GitHub\aem\ps2
+Author:         Maxwell Austensen
+Date Created:   31 Oct 2016
+Project:        Problem Set 2 - Instrumental Variables
+Class:        	Advanced Empirical Methods
+****************************************************************************/
 
-* sysuse auto
-* ivreg price (mpg = displacement),first
+clear all
+clear matrix
+macro drop _all
+set more off, perm
+set maxvar 10000
+
+global root "C:\Users\austensen\Box Sync\aem"
 
 
-use "C:\Users\austensen\Box Sync\aem\ps2\generateddata_20120221_sub.dta", clear
+* Part 1
+*********
+
+sysuse auto, clear
+ivreg price (mpg = displacement),first
+
+qui {
+	reg mpg displacement
+	matrix coefficients = e(b)
+	scalar b = coefficients[1,1]
+
+	sum mpg, d
+	scalar mpg_sd = r(sd)
+
+	sum displacement, d
+	scalar dis_sd = r(sd)
+}
+di (b * dis_sd)/mpg_sd
+
+
+* Set up data
+**************
+
+use "$root\ps2\generateddata_20120221_sub.dta", clear
 
 #delimit ;
 rename 
@@ -43,7 +81,8 @@ keep
 
 #delimit cr;
 
-* Summary stats
+* Part 2
+*********
 qui{
 	matrix sum_full = J(2, 5, .)
 	matrix colnames sum_full = gva_ln_yearly labor_reg manu_all manu_total manu_share
@@ -103,26 +142,78 @@ qui{
 di "Growth in employees, round 57 to 63 = "(mean_63 - mean_57) / mean_57
 
 
+* Part 3
+*********
+eststo clear
 
 * a
-reg gva_ln_yearly labor_reg if round==57
+qui eststo: reg gva_ln_yearly labor_reg if round==57
 
 * b
-reg gva_ln_yearly labor_reg if round==63
+qui eststo: reg gva_ln_yearly labor_reg if round==63
 
 * c
-reg gva_ln_yearly labor_reg
 
 gen round_63 = 1 if round==63
 recode round_63 missing = 0
 
+qui eststo: reg gva_ln_yearly labor_reg round_63
+
+* d
+
 gen labor_reg_round_63 = 1 if labor_reg==1 & round==63
 recode labor_reg_round_63 missing = 0
 
-* d
-reg gva_ln_yearly labor_reg round_63 labor_reg_round_63
+qui eststo: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63
 
 * e
-xi: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63 i.state i.nic_io
+qui eststo: xi: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63 i.state i.nic_io
+
+esttab
+
+* Part 4
+*********
+
+eststo clear
+
+qui eststo: reg gva_ln_yearly manu_all manu_post post
+
+* a
+qui eststo: reg gva_ln_yearly manu_all manu_post post labor_reg
+
+* b
+qui eststo: reg gva_ln_yearly manu_all manu_post post labor_reg labor_reg#post
+
+* c
+qui eststo: xi: reg gva_ln_yearly manu_all manu_post post labor_reg labor_reg#post i.state i.nic_io
+
+esttab
+
+* Part 5
+*********
+
+eststo clear
+* a
+qui eststo: ivreg gva_ln_yearly (manu_all = labor_reg), first
+
+* b
+qui eststo: xi: ivreg gva_ln_yearly (manu_all = labor_reg) i.state i.nic_io, first
+
+* c
+gen labor_reg_post = labor_reg * post
+
+qui eststo: xi: ivreg gva_ln_yearly labor_reg manu_all post (manu_post = labor_reg_post) i.state i.nic_io, first
+
+esttab 
+
+* d
+
+* (see write up)
 
 
+************************************************************
+************************************************************
+********************    END PROGRAM    *********************
+************************************************************
+************************************************************
+log close
