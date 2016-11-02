@@ -127,9 +127,9 @@ qui{
 
 	sum gva_yearly if round==63
 	scalar mean_63 = r(mean)
-*}
+}
 
-di "Growth in GVA, round 57 to 63 = "(mean_63 - mean_57)/5
+di "Growth in GVA, round 57 to 63 = "(mean_63 - mean_57)/ mean_57
 
 qui{
 	sum workers_total if round==57
@@ -139,7 +139,7 @@ qui{
 	scalar mean_63 = r(mean)
 }
 
-di "Growth in employees, round 57 to 63 = "((mean_63 - mean_57) / mean_57)/5
+di "Growth in employees, round 57 to 63 = "(mean_63 - mean_57) / mean_57
 
 
 * Part 3
@@ -147,64 +147,73 @@ di "Growth in employees, round 57 to 63 = "((mean_63 - mean_57) / mean_57)/5
 eststo clear
 
 * a
-qui eststo: reg gva_ln_yearly labor_reg if round==57
+eststo: reg gva_ln_yearly labor_reg if round==57
 
 * b
-qui eststo: reg gva_ln_yearly labor_reg if round==63
+eststo: reg gva_ln_yearly labor_reg if round==63
 
 * c
 
 gen round_63 = 1 if round==63
 recode round_63 missing = 0
 
-qui eststo: reg gva_ln_yearly labor_reg round_63
+eststo: reg gva_ln_yearly labor_reg round_63
 
 * d
 
 gen labor_reg_round_63 = 1 if labor_reg==1 & round==63
 recode labor_reg_round_63 missing = 0
 
-qui eststo: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63
+eststo: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63
 
 * e
-qui eststo: xi: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63 i.state i.nic_io
+eststo: xi: reg gva_ln_yearly labor_reg round_63 i.state i.nic_io
+
+
+eststo: xi: reg gva_ln_yearly labor_reg round_63 labor_reg_round_63 i.state i.nic_io
+
 
 esttab
+
 
 * Part 4
 *********
 
 eststo clear
 
-qui eststo: reg gva_ln_yearly manu_all manu_post post
+eststo: reg gva_ln_yearly manu_all manu_post post
 
 * a
-qui eststo: reg gva_ln_yearly manu_all manu_post post labor_reg
+eststo: reg gva_ln_yearly manu_all manu_post post labor_reg
 
 * b
-qui eststo: reg gva_ln_yearly manu_all manu_post post labor_reg labor_reg#post
+gen labor_reg_post = labor_reg * post
+
+eststo: reg gva_ln_yearly manu_all manu_post post labor_reg labor_reg_post
 
 * c
-qui eststo: xi: reg gva_ln_yearly manu_all manu_post post labor_reg labor_reg#post i.state i.nic_io
+eststo: xi: reg gva_ln_yearly manu_all manu_post post labor_reg labor_reg_post i.state i.nic_io
 
 esttab
+
 
 * Part 5
 *********
 
 eststo clear
 * a
-qui eststo: ivreg gva_ln_yearly (manu_all = labor_reg), first
+eststo: ivreg gva_ln_yearly (manu_all = labor_reg), first robust
 
 * b
-qui eststo: xi: ivreg gva_ln_yearly (manu_all = labor_reg) i.state i.nic_io, first
+eststo: xi: ivreg gva_ln_yearly (manu_all = labor_reg) i.state, first robust
 
 * c
-gen labor_reg_post = labor_reg * post
-
-qui eststo: xi: ivreg gva_ln_yearly labor_reg manu_all post (manu_post = labor_reg_post) i.state i.nic_io, first
+eststo: xi: ivreg gva_ln_yearly labor_reg manu_all post (manu_post = labor_reg_post) i.state i.nic_io, first robust
 
 esttab 
+
+xi: ivreg2 gva_ln_yearly labor_reg manu_all post (manu_post = labor_reg_post) i.state i.nic_io, first robust
+
 
 * d
 
