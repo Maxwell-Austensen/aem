@@ -18,99 +18,18 @@ While displacement is clearly relevant to mpg, it is less clear whether it can b
 
 ### 3
 
-Eventually labor regulations will be used as an instrument for growth in manufacturing to examine spillover effects of manufacturing on service sector. Here it is helpful to first examine some reduced-form regressions of service sector growth on labor regulations directly. In these specifications we see that the association between labor regulations and growth in the service sector is positive and statistically significant at the 1% level. This hold for each round separately, with the effect being more than twice as large in the later round. When we use the full sample and include both an indicator for the later round and that round interacted with labor regulations we see that the association between labor regulations and service sector growth was greater in the later round and this differential association is statistically significant at the 1% level. Finally, when we include fixed effects for state and 2-digit industry codes, we find that the magnitude of the effect of labor regulations decreases only slightly (as do the other coefficients) and remains positive and statistically significant at the 1% level. 
-
-
---------------------------------------------------------------------------------------------
-                      (1)             (2)             (3)             (4)             (5)   
-             gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y   
---------------------------------------------------------------------------------------------
-labor_reg           0.359***        0.729***        0.454***        0.359***        0.345***
-                  (21.95)         (19.28)         (29.08)         (19.84)          (6.10)   
-
-round_63                                            0.355***        0.148***        0.131***
-                                                  (20.02)          (5.55)          (5.07)   
-
-labor_reg~63                                                        0.370***        0.318***
-                                                                  (10.37)          (9.22)   
-
-
-
+Eventually labor regulations will be used as an instrument for growth in manufacturing to examine spillover effects of manufacturing on service sector. Here it is helpful to first examine some reduced-form regressions of productivity in the service sector on labor regulations directly. In these specifications we see that the association between labor regulations and productivity in the service sector is positive and statistically significant at the 1% level. This hold for each round separately, with the effect being more than twice as large in the later round. When we use the full sample and include both an indicator for the later round and that round interacted with labor regulations we see that the association between labor regulations and productivity in the service sector was greater in the later round and this differential association is statistically significant at the 1% level. Finally, when we include fixed effects for state and 2-digit industry codes, we find that the magnitude of the effect of labor regulations decreases only slightly (as do the other coefficients) and remains positive and statistically significant at the 1% level. 
 
 
 ### 4
 
-
-
-----------------------------------------------------------------------------
-                      (1)             (2)             (3)             (4)   
-             gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y   
-----------------------------------------------------------------------------
-manu_all           0.0227***      0.00338         0.00752***        0.355***
-                  (11.32)          (1.58)          (3.44)          (6.48)   
-
-manu_post          0.0222***       0.0229***      0.00745          0.0128** 
-                   (5.59)          (5.81)          (1.73)          (3.04)   
-
-post                0.213***        0.165***        0.443***        0.324***
-                   (5.73)          (4.50)          (9.16)          (6.86)   
-
-labor_reg                           0.420***        0.330***       -0.437***
-                                  (24.48)         (16.56)         (-4.31)   
-
-0.labor_re~t                                            0               0   
-                                                      (.)             (.)   
-
-0.labor_re~t                                       -0.344***       -0.271***
-                                                  (-8.82)         (-7.16)   
-
-1.labor_re~t                                            0               0   
-                                                      (.)             (.)   
-
-1.labor_re~t                                            0               0   
-                                                      (.)             (.)   
-
-
-
-
-
-
-
+In the first specification we see that growth in manufacturing has a significant positive association with productivity in service sector. This association weakens with the inclusion of labor regulation in the specification, and labor regulations is significantly and positively correlated with service sector productivity - as is the interaction of labor regulations on the round 63 indicator. However, when the state and industry fixed effects are included the association between all manufacturing and service sector productivity tips to be negative. Since manufacturing growth is simultaneously determined with growth in the service sector these associations between manufacturing and services productivity cannot be interpreted as a causal relationship. For this reason we use labor regulations to instrument for manufacturing growth in the following instrumental variables specifications.
 
 
 ### 5
 
+In the first-stage of the first instrumental variables specification the r-squared in .18 and the f-statistic is well above the 10 and 24 thresholds discussed above, suggesting that labor regulations is sufficiently relevant as an instrument for growth in manufacturing. And in the second-stage regression for this specification the instrumented manufacturing growth variable has a positive effect on productivity in the service sector of .129 and is statistically significant at the 1% level.
 
-# a
+In the first-stage regression of the second specification, when state fixed-effects are added, there is a problem of multicollinearity with the states and the labor regulations instrument because the labor regulations are at state level and are measured at a single time and thus do not vary within states. This prevents us from successfully completing the second stage for this specification.
 
-
-# b
-
-
-# c
-
-
-# d
-
-
-------------------------------------------------------------
-                      (1)             (2)             (3)   
-             gva_ln_yea~y    gva_ln_yea~y    gva_ln_yea~y   
-------------------------------------------------------------
-manu_all            0.129***      -0.0244***      -0.0242***
-                  (29.48)         (-8.04)         (-7.86)   
-
-manu_post                                          0.0864***
-                                                   (9.17)   
-
-labor_reg                                           0.374***
-                                                  (10.70)   
-
-post                                               -0.396***
-                                                  (-5.02)   
-
-_cons               11.50***        13.38***        12.94***
-                 (325.90)        (150.80)        (154.08)   
-
-
-FIXED effects 		NO             YES              YES
+In the final specification, the first stage instruments growth in manufacturing interacted with the post period with labor regulations interacted with the post period and including the un-interacted labor regulation, manufacturing growth, and post period as well as state and industry fixed effects. In this first-stage we find that the r-squared is quite high, at .83 and the f-statistic is 5464, suggesting that the instrument is relevant and quite strong. In the second stage regression the effect of the instrumented growth in manufacturing interacted with the post period on service sector productivity is 0.086, slightly smaller than in the first instrumental variables specification, but is still statistically significant at the 1% level.
