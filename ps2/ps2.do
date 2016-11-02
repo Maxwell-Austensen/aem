@@ -127,9 +127,9 @@ qui{
 
 	sum gva_yearly if round==63
 	scalar mean_63 = r(mean)
-}
+*}
 
-di "Growth in GVA, round 57 to 63 = "(mean_63 - mean_57) / mean_57
+di "Growth in GVA, round 57 to 63 = "(mean_63 - mean_57)/5
 
 qui{
 	sum workers_total if round==57
@@ -139,7 +139,7 @@ qui{
 	scalar mean_63 = r(mean)
 }
 
-di "Growth in employees, round 57 to 63 = "(mean_63 - mean_57) / mean_57
+di "Growth in employees, round 57 to 63 = "((mean_63 - mean_57) / mean_57)/5
 
 
 * Part 3
