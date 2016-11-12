@@ -5,17 +5,14 @@ date: "November 16, 2016"
 output: html_notebook
 ---
 
-```{r, message=FALSE, warning=FALSE, include=FALSE}
+```{r, message=FALSE, warning=FALSE}
 
 # Install packages if needed
-package_list <- c("tidyverse", "stargazer", "knitr", "haven", "stringr", "sandwich" , "rdd")
+package_list <- c("tidyverse", "stargazer", "knitr", "haven", "stringr", "sandwich", "rdd")
 new_packages <- package_list[! package_list %in% installed.packages()[,"Package"]]
 if(length(new_packages)) install.packages(new_packages)
 
 library(tidyverse)
-library(stargazer)
-library(haven)
-library(sandwich)
 library(rdd)
 
 # Modification to stargazer() - escapes "*" to prevent html vs markdown confusion
@@ -25,22 +22,26 @@ stargazer_html <- function(...) {
   paste(collapse = "\n") %>%
   cat("\n")
 }
-
-# Between operator
-`%between%` <- function(x, rng) x >= rng[1] & x <= rng[2]
 ```
 
 
+## Part 1
+
+![](./ps3_q1.png)
+
+
+***
+
+
 ```{r}
-clark <- read_stata("http://users.nber.org/~rdehejia/!@$AEM/Problem%20Sets/ps3/PS%203%20-%20Clark.dta")
+clark <- haven::read_stata("http://users.nber.org/~rdehejia/!@$AEM/Problem%20Sets/ps3/PS%203%20-%20Clark.dta")
 glimpse(clark)
 ```
 
-
-## Part 2
+***
 
 ```{r}
-
+# Helper function to add scatter plot points and format graphs
 points_and_format <- function() {
   list(
     geom_point(aes(color = factor(win)), alpha = 0.5),
@@ -52,7 +53,11 @@ points_and_format <- function() {
     theme_minimal()
   )
 }
+```
 
+## Part 2
+
+```{r}
 clark %>% 
   ggplot(aes(vote, dpass)) +
   geom_smooth(
@@ -91,8 +96,6 @@ clark %>%
 ```
 
 
-
-
 ```{r}
 clark %>% 
   ggplot(aes(vote, dpass, group = factor(win))) +
@@ -118,16 +121,20 @@ clark %>%
   points_and_format()
 ```
 
+***
 
-## Part 3
 
-```{r, results = 'asis'}
-model_prep <- function(rng){
+```{r}
+# Helper function to fit model and get robust standard errors
+model_prep <- function(.data, dep_var, rng){
+  # construct formula
+  f <- paste0(substitute(dep_var), " ~ win")
+  
   # fit model on subset fo data defined by range of vote share
   m <-
-    clark %>% 
+    .data %>% 
     filter(between(vote, rng[1], rng[2])) %>% 
-    lm(formula = dpass ~ win, data = .)
+    lm(formula = f, data = .)
   
   # Robust stanadard errors (replicating Stat's robust option)
   robust_se <- 
@@ -138,10 +145,14 @@ model_prep <- function(rng){
   
   return(list(m, robust_se))
 }
+```
 
-m1 <- model_prep(c(15, 85))
-m2 <- model_prep(c(25, 75))
-m3 <- model_prep(c(33.33, 66.66))
+## Part 3
+
+```{r, results = 'asis'}
+m1 <- clark %>% model_prep(dpass, c(15, 85))
+m2 <- clark %>% model_prep(dpass, c(25, 75))
+m3 <- clark %>% model_prep(dpass, c(33.33, 66.66))
 
 stargazer_html(
   m1[1], m2[1], m3[1], 
@@ -150,32 +161,14 @@ stargazer_html(
 )
 ```
 
-
-
+***
 
 ## Part 4
 
 ```{r, results = 'asis'}
-model_prep <- function(rng){
-  # fit model on subset fo data defined by range of vote share
-  m <-
-    clark %>% 
-    filter(between(vote, rng[1], rng[2])) %>% 
-    lm(formula = passrate2 ~ win, data = .)
-  
-  # Robust stanadard errors (replicating Stat's robust option)
-  robust_se <- 
-    m %>% 
-    vcovHC(type = "HC1") %>% 
-    diag() %>% 
-    sqrt()
-  
-  return(list(m, robust_se))
-}
-
-m1 <- model_prep(c(15, 85))
-m2 <- model_prep(c(25, 75))
-m3 <- model_prep(c(33.33, 66.66))
+m1 <- clark %>% model_prep(passrate2, c(15, 85))
+m2 <- clark %>% model_prep(passrate2, c(25, 75))
+m3 <- clark %>% model_prep(passrate2, c(33.33, 66.66))
 
 stargazer_html(
   m1[1], m2[1], m3[1], 
@@ -185,9 +178,11 @@ stargazer_html(
 ```
 
 ```{r}
-clark %>% RDestimate(data = ., formula = dpass ~ vote, cutpoint = 50)
+rd_obj <- clark %>% RDestimate(data = ., formula = dpass ~ vote, cutpoint = 50)
+rd_obj
 ```
 
+***
 
 ## Part 5
 
@@ -207,24 +202,7 @@ clark %>%
 
 
 ```{r, results = 'asis'}
-model_prep <- function(rng){
-  # fit model on subset fo data defined by range of vote share
-  m <-
-    clark %>% 
-    filter(between(vote, rng[1], rng[2])) %>% 
-    lm(formula = passrate0 ~ win, data = .)
-  
-  # Robust stanadard errors (replicating Stat's robust option)
-  robust_se <- 
-    m %>% 
-    vcovHC(type = "HC1") %>% 
-    diag() %>% 
-    sqrt()
-  
-  return(list(m, robust_se))
-}
-
-m1 <- model_prep(c(0, 100))
+m1 <- clark %>% model_prep(passrate0, c(0, 100))
 
 stargazer_html(
   m1[[1]],
@@ -233,12 +211,40 @@ stargazer_html(
 )
 ```
 
+***
+
 ## Part 6
-```{r}
-DCdensity(clark$vote, cutpoint = 50, verbose = TRUE, plot = FALSE)
-```
 
 ```{r}
-DCdensity(clark$vote, cutpoint = 50)
+DCdensity(clark$vote, cutpoint = 50, verbose = TRUE, plot = TRUE)
 ```
+
+***
+
+## Part 7
+
+```{r}
+bandwidths <- seq(0.75, 1.25, 0.10) %>% map_dbl(~ .x * rd_obj$bw[[1]])
+
+rd_robust <- 
+  clark %>% 
+  RDestimate(data = ., formula = dpass ~ vote, cutpoint = 50, bw = bandwidths)
+
+tibble(
+  Bandwidth = rd_robust$bw, 
+  `% of Optimal Bandwidth` = seq(75, 125, 10),
+  Observations = rd_robust$obs,
+  `LATE Estimate` = rd_robust$est,
+  `Standard Error` = rd_robust$se,
+  `P Value` = rd_robust$p,
+  `95% Confidence Interval` = map2_chr(rd_robust$ci[, 1], rd_robust$ci[, 2], 
+                                ~ stringr::str_c(round(.x, 3), round(.y, 3), sep = ", "))
+) %>% 
+knitr::kable(digits = 3)
+```
+
+
+
+
+
 
