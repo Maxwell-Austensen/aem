@@ -1,0 +1,244 @@
+---
+title: "AEM: PS3"
+author: "Maxwell Austensen"
+date: "November 16, 2016"
+output: html_notebook
+---
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+
+# Install packages if needed
+package_list <- c("tidyverse", "stargazer", "knitr", "haven", "stringr", "sandwich" , "rdd")
+new_packages <- package_list[! package_list %in% installed.packages()[,"Package"]]
+if(length(new_packages)) install.packages(new_packages)
+
+library(tidyverse)
+library(stargazer)
+library(haven)
+library(sandwich)
+library(rdd)
+
+# Modification to stargazer() - escapes "*" to prevent html vs markdown confusion
+stargazer_html <- function(...) {
+  capture.output(stargazer::stargazer(..., type = "html", header = FALSE)) %>%
+  stringr::str_replace_all("\\*", "\\\\*") %>% 
+  paste(collapse = "\n") %>%
+  cat("\n")
+}
+
+# Between operator
+`%between%` <- function(x, rng) x >= rng[1] & x <= rng[2]
+```
+
+
+```{r}
+clark <- read_stata("http://users.nber.org/~rdehejia/!@$AEM/Problem%20Sets/ps3/PS%203%20-%20Clark.dta")
+glimpse(clark)
+```
+
+
+## Part 2
+
+```{r}
+
+points_and_format <- function() {
+  list(
+    geom_point(aes(color = factor(win)), alpha = 0.5),
+    guides(color = FALSE, alpha = FALSE),
+    labs(
+      y = "Change in pass rate of pupils \n(year immediately prior and two years after vote)",
+      x = "Percentage vote in favour of the GM status"
+    ),
+    theme_minimal()
+  )
+}
+
+clark %>% 
+  ggplot(aes(vote, dpass)) +
+  geom_smooth(
+    method = "lm", 
+    formula = y ~ (x > 50) + poly(x, 2, raw = TRUE), 
+    color = "black",
+    level = .95
+  ) +
+  points_and_format()
+```
+
+```{r}
+clark %>% 
+  ggplot(aes(vote, dpass)) +
+  geom_smooth(
+    method = "lm", 
+    formula = y ~ (x > 50) + poly(x, 3, raw = TRUE), 
+    color = "black",
+    level = .95
+  ) +
+  points_and_format()
+```
+
+
+```{r}
+clark %>% 
+  ggplot(aes(vote, dpass)) +
+  geom_smooth(
+    data = filter(clark, between(vote, 40, 60)),
+    aes(vote, dpass), 
+    method = "lm", formula = y ~ (x > 50) + poly(x, 3, raw = TRUE), 
+    color = "black",
+    level = .95
+  ) +
+  points_and_format()
+```
+
+
+
+
+```{r}
+clark %>% 
+  ggplot(aes(vote, dpass, group = factor(win))) +
+  geom_smooth(
+    method = "loess", 
+    color = "black", 
+    level = .95
+  ) +
+  points_and_format()
+```
+
+
+```{r}
+clark %>% 
+  ggplot(aes(vote, dpass, group = factor(win))) +
+  geom_smooth(
+    data = filter(clark, between(vote, 40, 60)),
+    aes(vote, dpass), 
+    method = "loess", 
+    color = "black", 
+    level = .95
+  ) +
+  points_and_format()
+```
+
+
+## Part 3
+
+```{r, results = 'asis'}
+model_prep <- function(rng){
+  # fit model on subset fo data defined by range of vote share
+  m <-
+    clark %>% 
+    filter(between(vote, rng[1], rng[2])) %>% 
+    lm(formula = dpass ~ win, data = .)
+  
+  # Robust stanadard errors (replicating Stat's robust option)
+  robust_se <- 
+    m %>% 
+    vcovHC(type = "HC1") %>% 
+    diag() %>% 
+    sqrt()
+  
+  return(list(m, robust_se))
+}
+
+m1 <- model_prep(c(15, 85))
+m2 <- model_prep(c(25, 75))
+m3 <- model_prep(c(33.33, 66.66))
+
+stargazer_html(
+  m1[1], m2[1], m3[1], 
+  se = list(m1[[2]], m2[[2]], m3[[2]]),
+  keep.stat = c("n", "rsq")
+)
+```
+
+
+
+
+## Part 4
+
+```{r, results = 'asis'}
+model_prep <- function(rng){
+  # fit model on subset fo data defined by range of vote share
+  m <-
+    clark %>% 
+    filter(between(vote, rng[1], rng[2])) %>% 
+    lm(formula = passrate2 ~ win, data = .)
+  
+  # Robust stanadard errors (replicating Stat's robust option)
+  robust_se <- 
+    m %>% 
+    vcovHC(type = "HC1") %>% 
+    diag() %>% 
+    sqrt()
+  
+  return(list(m, robust_se))
+}
+
+m1 <- model_prep(c(15, 85))
+m2 <- model_prep(c(25, 75))
+m3 <- model_prep(c(33.33, 66.66))
+
+stargazer_html(
+  m1[1], m2[1], m3[1], 
+  se = list(m1[[2]], m2[[2]], m3[[2]]),
+  keep.stat = c("n", "rsq")
+)
+```
+
+```{r}
+clark %>% RDestimate(data = ., formula = dpass ~ vote, cutpoint = 50)
+```
+
+
+## Part 5
+
+
+```{r}
+
+clark %>% 
+  ggplot(aes(vote, passrate0, group = factor(win))) +
+  geom_smooth(
+    method = "loess", 
+    color = "black", 
+    level = .95
+  ) +
+  points_and_format()
+```
+
+
+
+```{r, results = 'asis'}
+model_prep <- function(rng){
+  # fit model on subset fo data defined by range of vote share
+  m <-
+    clark %>% 
+    filter(between(vote, rng[1], rng[2])) %>% 
+    lm(formula = passrate0 ~ win, data = .)
+  
+  # Robust stanadard errors (replicating Stat's robust option)
+  robust_se <- 
+    m %>% 
+    vcovHC(type = "HC1") %>% 
+    diag() %>% 
+    sqrt()
+  
+  return(list(m, robust_se))
+}
+
+m1 <- model_prep(c(0, 100))
+
+stargazer_html(
+  m1[[1]],
+  se = list(m1[[2]]),
+  keep.stat = c("n", "rsq")
+)
+```
+
+## Part 6
+```{r}
+DCdensity(clark$vote, cutpoint = 50, verbose = TRUE, plot = FALSE)
+```
+
+```{r}
+DCdensity(clark$vote, cutpoint = 50)
+```
+
