@@ -29,9 +29,19 @@ stargazer_html <- function(...) {
 
 ![](./ps3_q1.png)
 
+```{r}
+lne_win <- (1.294888*1) + (.3392861*.50) + (2.533112*.50*1) + (-2.428141*(.50^2)*1) + (.233716*(.50^2))
+
+lne_lose <- (1.294888*0) + (.3392861*.50) + (2.533112*.50*0) + (-2.428141*(.50^2)*0) + (.233716*(.50^2))
+
+lne_win - lne_lose
+```
+
 <br>
 
-Answer 1
+1\*win + .50\*voteshare + 1\*.50\*win_vote + 1\*.50^2\*win_vote_2 + .50^2\*vote_2
+
+The exact value of the jump in the natural logarithm of federal expenditure within the district at 0.50 is 1.954409. 
 
 
 ```{r}
@@ -182,11 +192,11 @@ Clark chose the sample restriction (15, 85) because he believed that, after the 
 Why do subsequent columns of Table 3a include functions of the voteshare, both on
 their own and interacted with the win/lose variable? 
 
-With all the different ranges the effect estimates remained fairly close, and all were statistically significant at the 1% level using robust standard errors, except for the smallest range (40, 60) where hte estiamte was significant at the 5% level.
+With all the different ranges the effect estimates remained fairly close, and all were statistically significant at the 1% level using robust standard errors, except for the smallest range (40, 60) where the estimate was significant at the 5% level.
 
 As Clark notes in his paper, there is a trade-off to consider between lack of precision of the estimate (which is of more concern when using only the close elections) and the risk of mispecification of the model when using votes that are further from the win threshold.
 
-The scatter plots are helpful when deciding on the specification because they allow one to get a sense of what functional form the data approximate. For example, here the data appears to be apprximately linear and parralell on either side of the thresshold. Furthermore, the plots help to identify what range around the threshold might be appropriate for sample selection. In these plots it seems as though at less than 25% and greater than 85% the variance increases significantly and the form differs from the range closer to the threshold.
+The scatter plots are helpful when deciding on the specification because they allow one to get a sense of what functional form the data approximate. For example, here the data appears to be approximately linear and parallel on either side of the threshold. Furthermore, the plots help to identify what range around the threshold might be appropriate for sample selection. In these plots it seems as though at less than 25% and greater than 85% the variance increases significantly and the form differs from the range closer to the threshold.
 
 
 ***
@@ -222,7 +232,7 @@ stargazer_html(
 
 <br>
 
-The results using `passrate2` differ substantially from those using `dpass`, most notably in that they are not statistically significant using any of the four sample ranges. The positive and significant results for the change from baseline and the lack of significant results for the post intervention outcomes suggests that schools on either side of the win threshold differed in their outcome variable at baseline. This in theory would seem to violate the requirement for regression dicontinuity design that the schools on either side of the threshold do not differ significantly on any pre-treatment variables relevant to the post-treatment outcome. However, in practice, Clark suggests the fact that the pass rates are uniformly higher reflects "the general increase in pass rates seen over the 1990s."
+The results using `passrate2` differ substantially from those using `dpass`, most notably in that they are not statistically significant using any of the four sample ranges. The positive and significant results for the change from baseline and the lack of significant results for the post intervention outcomes suggests that schools on either side of the win threshold differed in their outcome variable at baseline. This in theory would seem to violate the requirement for regression discontinuity design that the schools on either side of the threshold do not differ significantly on any pre-treatment variables relevant to the post-treatment outcome. However, in practice, Clark suggests the fact that the pass rates are uniformly higher reflects "the general increase in pass rates seen over the 1990s."
 
 ```{r}
 rd_df <- function(dep_var, bw = NULL) {
@@ -247,9 +257,9 @@ bind_rows(rd_df("dpass"), rd_df("passrate2")) %>%
 
 <br>
 
-The results from the sharp RD local linear regressions using `dpass` as the outcome differ from the first specification using the sample 15-85 and only athe binary `win` indicator, in that the estimate is larger, but most importatantly in that it is not signifciant. The results using `passrate2` as the dependant variable also differ when using the local linear regression: the estimates are still not significant, but the effect estimate is negative where before it was positive. the Imbens-Kalyanaraman optimal bandwidths used for both outcome variables is small and thus includes only 105 and 157 observations for `dpass` and `passrate2`, respectively which limits the percision of the estimate considerably compared to the first specifications that include 524 observations in the sample voteshare range (15, 85).
+The results from the sharp RD local linear regressions using `dpass` as the outcome differ from the first specification using the sample 15-85 and only the binary `win` indicator, in that the estimate is larger, but most importantly in that it is not significant. The results using `passrate2` as the dependent variable also differ when using the local linear regression: the estimates are still not significant, but the effect estimate is negative where before it was positive. the Imbens-Kalyanaraman optimal bandwidths used for both outcome variables is small and thus includes only 105 and 157 observations for `dpass` and `passrate2`, respectively which limits the precision of the estimate considerably compared to the first specifications that include 524 observations in the sample voteshare range (15, 85).
 
-The fact that the effect estimates are not significant in the local linear model raises some doubts about the robustness of the results from the polynomial specifications used by Clark. However, looking at the plot below, it does not appear that the third-order polynomial used by Clark is exagerating the disconinutiy at the threshold
+The fact that the effect estimates are not significant in the local linear model raises some doubts about the robustness of the results from the polynomial specifications used by Clark. However, looking at the plot below, it does not appear that the third-order polynomial used by Clark is exaggerating the discontinuity at the threshold
 
 
 ```{r}
@@ -304,7 +314,7 @@ stargazer_html(
 
 <br>
 
-It is true that among all the schools there is a negative and significant effect of a winning vote for GM and baseline pass rates, however this effect is not significant among subsamples that exclude schools with voteshares furthest from the cutoff. It is still somewhat concerning that even though the estimates are not significant, the sign remains negative in all subsamples considered above including the Imbens-Kalyanaraman optimal bandwidth used in the local linear models.
+It is true that among all the schools there is a negative and significant effect of a winning vote for GM and baseline pass rates, however this effect is not significant among sub samples that exclude schools with vote shares furthest from the cutoff. It is still somewhat concerning that even though the estimates are not significant, the sign remains negative in all sub samples considered above including the Imbens-Kalyanaraman optimal bandwidth used in the local linear models.
 
 ***
 
