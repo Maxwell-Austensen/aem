@@ -6,9 +6,9 @@ output: html_notebook
 ---
 
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, include=FALSE}
 # Install packages if needed
-package_list <- c("haven", "stringr", "tidyverse")
+package_list <- c("haven", "stringr", "tidyverse", "janitor", "feather", "knitr", "rmarkdown")
 new_packages <- package_list[!package_list %in% installed.packages()[,"Package"]]
 if(length(new_packages)) install.packages(new_packages)
 
@@ -16,9 +16,10 @@ library(haven)
 library(stringr)
 library(tidyverse)
 library(janitor)
+library(feather)
 
 # Set directories
-data_dir <- "C:/Users/austensen/Dropbox/aem/replication/"
+data_dir <- "C:/Users/austensen/Downloads/"
 ```
 
 ```{r}
@@ -30,9 +31,10 @@ raw %>% select(noquote(order(colnames(raw)))) %>% glimpse()
 ```
 
 ```{r, women_exclusions}
-women_sample <-
+mothers <-
   raw %>%
   mutate(
+    head_spouse = if_else(relate %in% c(1, 2), 1, 0),
     us_born = if_else(bpl < 56, 1, 0),
     white = if_else(race == 1, 1, 0),
     women = if_else(sex ==2, 1, 0),
@@ -51,6 +53,7 @@ women_sample <-
       not_allocated = if_else(qsex %in% c(0, 3), 1, not_allocated)
   ) %>% 
   filter(
+    head_spouse,
     us_born,
     white,
     women,
@@ -61,24 +64,55 @@ women_sample <-
     non_widow,
     not_allocated
   )
+# no dupes
 ```
 
 ```{r}
-women_sample %>% tabyl(relate)
-```
-
-```{r}
-women_sample_slim <- women_sample %>% select(serial, pernum)
-
 fathers <-
   raw %>% 
   filter(sex == 1, relate %in% c(1, 2)) %>% 
-  semi_join(women_sample, by = "serial") %>% 
-  anti_join(women_sample, by = c("serial", "pernum"))
+  semi_join(mothers, by = "serial") %>% # in households /w sample mothers
+  anti_join(mothers, by = c("serial", "pernum")) # not sample mothers
+# no dupes
 
 children <-
-  women_sample %>% 
-  filter(relate == 3)
+  raw %>% 
+  filter(relate == 3) %>% 
+  semi_join(mothers, by = "serial") %>% 
+  group_by(serial) %>% 
+  mutate(
+    oldest = if_else(age == max(age), 1, 0), # Should test with birth month also
+    not_twin = if_else(sum(oldest) == 1, 1, 0)
+  ) %>% 
+  arrange(desc(age)) %>% 
+  distinct(.keep_all = TRUE) %>% 
+  ungroup() %>% 
+  mutate(
+    not_allocated = 0,
+      not_allocated = if_else(qage == 0, 1, not_allocated),
+      not_allocated = if_else(qsex %in% c(0, 3), 1, not_allocated),
+      not_allocated = if_else(qrelate %in% c(0, 3), 1, not_allocated), # why not qrelate2 ?
+      not_allocated = if_else(qbirthmo == 0, 1, not_allocated)
+  )
+# no dupes
 ```
+
+```{r}
+families <-
+  mothers %>% 
+  left_join(fathers, by = "serial") %>% 
+  left_join(children, by = "serial") %>% 
+  filter(
+    not_twin,
+    not_allocated.y
+  )
+# no dupes
+```
+
+
+```{r}
+write_feather(families, str_c(data_dir, "families.feather"))
+```
+
 
 
