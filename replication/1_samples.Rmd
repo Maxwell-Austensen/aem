@@ -1,0 +1,84 @@
+---
+title: "AEM Replication"
+author: "Maxwell Austensen"
+date: "`r Sys.Date()`"
+output: html_notebook
+---
+
+
+```{r, message=FALSE, warning=FALSE}
+# Install packages if needed
+package_list <- c("haven", "stringr", "tidyverse")
+new_packages <- package_list[!package_list %in% installed.packages()[,"Package"]]
+if(length(new_packages)) install.packages(new_packages)
+
+library(haven)
+library(stringr)
+library(tidyverse)
+library(janitor)
+
+# Set directories
+data_dir <- "C:/Users/austensen/Dropbox/aem/replication/"
+```
+
+```{r}
+raw <- read_stata(str_c(data_dir, "usa_00005.dta"))
+```
+
+```{r}
+raw %>% select(noquote(order(colnames(raw)))) %>% glimpse()
+```
+
+```{r, women_exclusions}
+women_sample <-
+  raw %>%
+  mutate(
+    us_born = if_else(bpl < 56, 1, 0),
+    white = if_else(race == 1, 1, 0),
+    women = if_else(sex ==2, 1, 0),
+    age_21_40 = if_else(between(age, 21, 40), 1, 0),
+    ever_married = if_else(between(marrno, 1, 6), 1, 0),
+    married_17_26 = if_else(between(agemarr, 17, 26), 1, 0),
+    ever_child = if_else(chborn > 1, 1, 0),
+    non_widow = if_else(marst != 5, 1, 0),
+    not_allocated = 0,
+      not_allocated = if_else(qage == 0, 1, not_allocated),
+      not_allocated = if_else(qmarrno %in% c(0, 3), 1, not_allocated),
+      not_allocated = if_else(qmarst %in% c(0, 3), 1, not_allocated),
+      not_allocated = if_else(qagemarr %in% c(0, 3), 1, not_allocated),
+      not_allocated = if_else(qchborn == 0, 1, not_allocated),
+      not_allocated = if_else(qrelate %in% c(0, 3), 1, not_allocated), # why not qrelate2 ?
+      not_allocated = if_else(qsex %in% c(0, 3), 1, not_allocated)
+  ) %>% 
+  filter(
+    us_born,
+    white,
+    women,
+    age_21_40,
+    ever_married,
+    married_17_26,
+    ever_child,
+    non_widow,
+    not_allocated
+  )
+```
+
+```{r}
+women_sample %>% tabyl(relate)
+```
+
+```{r}
+women_sample_slim <- women_sample %>% select(serial, pernum)
+
+fathers <-
+  raw %>% 
+  filter(sex == 1, relate %in% c(1, 2)) %>% 
+  semi_join(women_sample, by = "serial") %>% 
+  anti_join(women_sample, by = c("serial", "pernum"))
+
+children <-
+  women_sample %>% 
+  filter(relate == 3)
+```
+
+
