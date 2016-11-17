@@ -1,5 +1,5 @@
 ---
-title: "AEM Replication"
+title: "AEM Replication: 1"
 author: "Maxwell Austensen"
 date: "`r Sys.Date()`"
 output: html_notebook
@@ -34,7 +34,7 @@ raw %>% select(noquote(order(colnames(raw)))) %>% glimpse()
 mothers <-
   raw %>%
   mutate(
-    head_spouse = if_else(relate %in% c(1, 2), 1, 0),
+    # keep all relates
     us_born = if_else(bpl < 56, 1, 0),
     white = if_else(race == 1, 1, 0),
     women = if_else(sex ==2, 1, 0),
@@ -70,19 +70,20 @@ mothers <-
 ```{r}
 fathers <-
   raw %>% 
-  filter(sex == 1, relate %in% c(1, 2)) %>% 
+  filter(sex == 1) %>% # keep all relates, use sloc to: keep only if wife in household and merege fathers with mothers
   semi_join(mothers, by = "serial") %>% # in households /w sample mothers
   anti_join(mothers, by = c("serial", "pernum")) # not sample mothers
 # no dupes
 
 children <-
   raw %>% 
-  filter(relate == 3) %>% 
+  # Keep all relates, use mloc to: keep kids with mothers, get sibling groups, and to merge with mothers
   semi_join(mothers, by = "serial") %>% 
   group_by(serial) %>% 
   mutate(
     oldest = if_else(age == max(age), 1, 0), # Should test with birth month also
-    not_twin = if_else(sum(oldest) == 1, 1, 0)
+    not_twin = if_else(sum(oldest) == 1, 1, 0),
+    children_home = n()
   ) %>% 
   arrange(desc(age)) %>% 
   distinct(.keep_all = TRUE) %>% 
