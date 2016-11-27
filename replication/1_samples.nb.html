@@ -11,7 +11,7 @@
 
 <meta name="author" content="Maxwell Austensen" />
 
-<meta name="date" content="2016-11-16" />
+<meta name="date" content="2016-11-26" />
 
 <title>AEM Replication: 1</title>
 
@@ -171,7 +171,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">AEM Replication: 1</h1>
 <h4 class="author"><em>Maxwell Austensen</em></h4>
-<h4 class="date"><em>2016-11-16</em></h4>
+<h4 class="date"><em>2016-11-26</em></h4>
 
 </div>
 
@@ -188,98 +188,98 @@ $(document).ready(function () {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmF3ICU+JSBzZWxlY3Qobm9xdW90ZShvcmRlcihjb2xuYW1lcyhyYXcpKSkpICU+JSBnbGltcHNlKClcbmBgYCJ9 -->
-<pre class="r"><code>raw %&gt;% select(noquote(order(colnames(raw)))) %&gt;% glimpse()</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXMocmF3KSA8LSBuYW1lcyhyYXcpICU+JSBzdHJfdG9fbG93ZXIoKVxucmF3ICU+JSBzZWxlY3Qobm9xdW90ZShvcmRlcihjb2xuYW1lcyhyYXcpKSkpICU+JSBnbGltcHNlKClcbmBgYCJ9 -->
+<pre class="r"><code>names(raw) &lt;- names(raw) %&gt;% str_to_lower()
+raw %&gt;% select(noquote(order(colnames(raw)))) %&gt;% glimpse()</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW90aGVycyA8LVxuICByYXcgJT4lXG4gIG11dGF0ZShcbiAgICBoZWFkX3Nwb3VzZSA9IGlmX2Vsc2UocmVsYXRlICVpbiUgYygxLCAyKSwgMSwgMCksXG4gICAgdXNfYm9ybiA9IGlmX2Vsc2UoYnBsIDwgNTYsIDEsIDApLFxuICAgIHdoaXRlID0gaWZfZWxzZShyYWNlID09IDEsIDEsIDApLFxuICAgIHdvbWVuID0gaWZfZWxzZShzZXggPT0yLCAxLCAwKSxcbiAgICBhZ2VfMjFfNDAgPSBpZl9lbHNlKGJldHdlZW4oYWdlLCAyMSwgNDApLCAxLCAwKSxcbiAgICBldmVyX21hcnJpZWQgPSBpZl9lbHNlKGJldHdlZW4obWFycm5vLCAxLCA2KSwgMSwgMCksXG4gICAgbWFycmllZF8xN18yNiA9IGlmX2Vsc2UoYmV0d2VlbihhZ2VtYXJyLCAxNywgMjYpLCAxLCAwKSxcbiAgICBldmVyX2NoaWxkID0gaWZfZWxzZShjaGJvcm4gPiAxLCAxLCAwKSxcbiAgICBub25fd2lkb3cgPSBpZl9lbHNlKG1hcnN0ICE9IDUsIDEsIDApLFxuICAgIG5vdF9hbGxvY2F0ZWQgPSAwLFxuICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocWFnZSA9PSAwLCAxLCBub3RfYWxsb2NhdGVkKSxcbiAgICAgIG5vdF9hbGxvY2F0ZWQgPSBpZl9lbHNlKHFtYXJybm8gJWluJSBjKDAsIDMpLCAxLCBub3RfYWxsb2NhdGVkKSxcbiAgICAgIG5vdF9hbGxvY2F0ZWQgPSBpZl9lbHNlKHFtYXJzdCAlaW4lIGMoMCwgMyksIDEsIG5vdF9hbGxvY2F0ZWQpLFxuICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocWFnZW1hcnIgJWluJSBjKDAsIDMpLCAxLCBub3RfYWxsb2NhdGVkKSxcbiAgICAgIG5vdF9hbGxvY2F0ZWQgPSBpZl9lbHNlKHFjaGJvcm4gPT0gMCwgMSwgbm90X2FsbG9jYXRlZCksXG4gICAgICBub3RfYWxsb2NhdGVkID0gaWZfZWxzZShxcmVsYXRlICVpbiUgYygwLCAzKSwgMSwgbm90X2FsbG9jYXRlZCksICMgd2h5IG5vdCBxcmVsYXRlMiA/XG4gICAgICBub3RfYWxsb2NhdGVkID0gaWZfZWxzZShxc2V4ICVpbiUgYygwLCAzKSwgMSwgbm90X2FsbG9jYXRlZClcbiAgKSAlPiUgXG4gIGZpbHRlcihcbiAgICBoZWFkX3Nwb3VzZSxcbiAgICB1c19ib3JuLFxuICAgIHdoaXRlLFxuICAgIHdvbWVuLFxuICAgIGFnZV8yMV80MCxcbiAgICBldmVyX21hcnJpZWQsXG4gICAgbWFycmllZF8xN18yNixcbiAgICBldmVyX2NoaWxkLFxuICAgIG5vbl93aWRvdyxcbiAgICBub3RfYWxsb2NhdGVkXG4gIClcbiMgbm8gZHVwZXNcbmBgYCJ9 -->
-<pre class="r"><code>mothers &lt;-
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW90aGVycyA8LSBcbiAgcmF3ICU+JVxuICBncm91cF9ieShzZXJpYWwpICU+JSBcbiAgbXV0YXRlKCAjIENyZWF0ZSBzdGFuZGFyZGl6ZWQgaG91c2Vob2xkIGluY29tZSAtIG5lZWRzIGluZm8gb24gYWxsIGhoIG1lbWJlcnNcbiAgICBhZHVsdHMgPSBzdW0oYWdlID49IDE4LCBuYS5ybSA9IFRSVUUpLFxuICAgIGNoaWxkcmVuID0gc3VtKGFnZSA8IDE4LCBuYS5ybSA9IFRSVUUpLFxuICAgIGluY19hZGp1c3RlciA9ICgoYWR1bHRzICsgKDAuNyAqIGNoaWxkcmVuKSkgXiAwLjcpLFxuICAgIGhoaW5jb21lX3N0ZCA9IGhoaW5jb21lIC8gaW5jX2FkanVzdGVyXG4gICkgJT4lIFxuICB1bmdyb3VwKCkgJT4lIFxuICBmaWx0ZXIoXG4gICAgYmV0d2VlbihicGwsIDEsIDEyMCksICMgVVMgYm9ybiAoaW5jJ2wgdXMgdGVycml0b3JpZXMgZXRjLilcbiAgICByYWNlID09IDEsICMgd2hpdGVcbiAgICBzZXggPT0gMiwgIyBmZW1hbGVcbiAgICBiZXR3ZWVuKGFnZSwgMjEsIDQwKSwgIyBhZ2UgMjEtNDBcbiAgICBiZXR3ZWVuKG1hcnJubywgMSwgMiksICMgZXZlciBtYXJyaWVkXG4gICAgYmV0d2VlbihhZ2VtYXJyLCAxNywgMjYpLCAjIG1hcnJpZWQgYWdlIDE3LTI2XG4gICAgYmV0d2VlbihjaGJvcm4sIDIsIDEzKSwgIyBldmVyIGNoaWxkXG4gICAgYmV0d2VlbihtYXJzdCwgMSwgNCksICMgZXZlciBtYXJyaWVkIGJ1dCBub3Qgd2lkb3dcbiAgICBxYWdlID09IDAsICMgbm90IGFsbG9jYXRlZDogYWdlXG4gICAgcWNoYm9ybiA9PSAwLCAjIG5vdCBhbGxvY2F0ZWQ6IGNoaWxyZW4gYm9yblxuICAgIHFtYXJybm8gICVpbiUgYygwLCAzKSwgIyBub3QgYWxsb2NhdGVkOiBtYXJyaWVkXG4gICAgIyBxbWFycm5vID09IDAsICMgbm90IGFsbG9jYXRlZDogbWFycmllZFxuICAgIHFtYXJzdCAgJWluJSBjKDAsIDMpLCAjIG5vdCBhbGxvY2F0ZWQ6IG1hcml0YWwgc3RhdHVzXG4gICAgIyBxbWFyc3QgPT0gMCwgIyBub3QgYWxsb2NhdGVkOiBtYXJpdGFsIHN0YXR1c1xuICAgIHFhZ2VtYXJyICVpbiUgYygwLCAzKSwgIyBub3QgYWxsb2NhdGVkOiBtYXJyaWVkIGFnZVxuICAgICMgcWFnZW1hcnIgPT0gMCwgIyBub3QgYWxsb2NhdGVkOiBtYXJyaWVkIGFnZVxuICAgIHFyZWxhdGUgICVpbiUgYygwLCAzKSwgIyBub3QgYWxsb2NhdGVkOiByZWxhdGlvbiB0byBob3VzZWhvbGQgaGVhZFxuICAgICMgcXJlbGF0ZSA9PSAwLCAjIG5vdCBhbGxvY2F0ZWQ6IHJlbGF0aW9uIHRvIGhvdXNlaG9sZCBoZWFkXG4gICAgcXNleCAgJWluJSBjKDAsIDMpICMgbm90IGFsbG9jYXRlZDogc2V4XG4gICAgIyBxc2V4ID09IDAgIyBub3QgYWxsb2NhdGVkOiBzZXhcbiAgKVxubnJvdyhtb3RoZXJzKVxuYGBgIn0= -->
+<pre class="r"><code>mothers &lt;- 
   raw %&gt;%
-  mutate(
-    head_spouse = if_else(relate %in% c(1, 2), 1, 0),
-    us_born = if_else(bpl &lt; 56, 1, 0),
-    white = if_else(race == 1, 1, 0),
-    women = if_else(sex ==2, 1, 0),
-    age_21_40 = if_else(between(age, 21, 40), 1, 0),
-    ever_married = if_else(between(marrno, 1, 6), 1, 0),
-    married_17_26 = if_else(between(agemarr, 17, 26), 1, 0),
-    ever_child = if_else(chborn &gt; 1, 1, 0),
-    non_widow = if_else(marst != 5, 1, 0),
-    not_allocated = 0,
-      not_allocated = if_else(qage == 0, 1, not_allocated),
-      not_allocated = if_else(qmarrno %in% c(0, 3), 1, not_allocated),
-      not_allocated = if_else(qmarst %in% c(0, 3), 1, not_allocated),
-      not_allocated = if_else(qagemarr %in% c(0, 3), 1, not_allocated),
-      not_allocated = if_else(qchborn == 0, 1, not_allocated),
-      not_allocated = if_else(qrelate %in% c(0, 3), 1, not_allocated), # why not qrelate2 ?
-      not_allocated = if_else(qsex %in% c(0, 3), 1, not_allocated)
-  ) %&gt;% 
-  filter(
-    head_spouse,
-    us_born,
-    white,
-    women,
-    age_21_40,
-    ever_married,
-    married_17_26,
-    ever_child,
-    non_widow,
-    not_allocated
-  )
-# no dupes</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZmF0aGVycyA8LVxuICByYXcgJT4lIFxuICBmaWx0ZXIoc2V4ID09IDEsIHJlbGF0ZSAlaW4lIGMoMSwgMikpICU+JSBcbiAgc2VtaV9qb2luKG1vdGhlcnMsIGJ5ID0gXCJzZXJpYWxcIikgJT4lICMgaW4gaG91c2Vob2xkcyAvdyBzYW1wbGUgbW90aGVyc1xuICBhbnRpX2pvaW4obW90aGVycywgYnkgPSBjKFwic2VyaWFsXCIsIFwicGVybnVtXCIpKSAjIG5vdCBzYW1wbGUgbW90aGVyc1xuIyBubyBkdXBlc1xuXG5jaGlsZHJlbiA8LVxuICByYXcgJT4lIFxuICBmaWx0ZXIocmVsYXRlID09IDMpICU+JSBcbiAgc2VtaV9qb2luKG1vdGhlcnMsIGJ5ID0gXCJzZXJpYWxcIikgJT4lIFxuICBncm91cF9ieShzZXJpYWwpICU+JSBcbiAgbXV0YXRlKFxuICAgIG9sZGVzdCA9IGlmX2Vsc2UoYWdlID09IG1heChhZ2UpLCAxLCAwKSwgIyBTaG91bGQgdGVzdCB3aXRoIGJpcnRoIG1vbnRoIGFsc29cbiAgICBub3RfdHdpbiA9IGlmX2Vsc2Uoc3VtKG9sZGVzdCkgPT0gMSwgMSwgMCksXG4gICAgY2hpbGRyZW5faG9tZSA9IG4oKVxuICApICU+JSBcbiAgYXJyYW5nZShkZXNjKGFnZSkpICU+JSBcbiAgZGlzdGluY3QoLmtlZXBfYWxsID0gVFJVRSkgJT4lIFxuICB1bmdyb3VwKCkgJT4lIFxuICBtdXRhdGUoXG4gICAgbm90X2FsbG9jYXRlZCA9IDAsXG4gICAgICBub3RfYWxsb2NhdGVkID0gaWZfZWxzZShxYWdlID09IDAsIDEsIG5vdF9hbGxvY2F0ZWQpLFxuICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocXNleCAlaW4lIGMoMCwgMyksIDEsIG5vdF9hbGxvY2F0ZWQpLFxuICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocXJlbGF0ZSAlaW4lIGMoMCwgMyksIDEsIG5vdF9hbGxvY2F0ZWQpLCAjIHdoeSBub3QgcXJlbGF0ZTIgP1xuICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocWJpcnRobW8gPT0gMCwgMSwgbm90X2FsbG9jYXRlZClcbiAgKVxuIyBubyBkdXBlc1xuYGBgIn0= -->
-<pre class="r"><code>fathers &lt;-
-  raw %&gt;% 
-  filter(sex == 1, relate %in% c(1, 2)) %&gt;% 
-  semi_join(mothers, by = &quot;serial&quot;) %&gt;% # in households /w sample mothers
-  anti_join(mothers, by = c(&quot;serial&quot;, &quot;pernum&quot;)) # not sample mothers
-# no dupes
-
-children &lt;-
-  raw %&gt;% 
-  filter(relate == 3) %&gt;% 
-  semi_join(mothers, by = &quot;serial&quot;) %&gt;% 
   group_by(serial) %&gt;% 
-  mutate(
-    oldest = if_else(age == max(age), 1, 0), # Should test with birth month also
-    not_twin = if_else(sum(oldest) == 1, 1, 0),
-    children_home = n()
+  mutate( # Create standardized household income - needs info on all hh members
+    adults = sum(age &gt;= 18, na.rm = TRUE),
+    children = sum(age &lt; 18, na.rm = TRUE),
+    inc_adjuster = ((adults + (0.7 * children)) ^ 0.7),
+    hhincome_std = hhincome / inc_adjuster
   ) %&gt;% 
-  arrange(desc(age)) %&gt;% 
-  distinct(.keep_all = TRUE) %&gt;% 
   ungroup() %&gt;% 
-  mutate(
-    not_allocated = 0,
-      not_allocated = if_else(qage == 0, 1, not_allocated),
-      not_allocated = if_else(qsex %in% c(0, 3), 1, not_allocated),
-      not_allocated = if_else(qrelate %in% c(0, 3), 1, not_allocated), # why not qrelate2 ?
-      not_allocated = if_else(qbirthmo == 0, 1, not_allocated)
+  filter(
+    between(bpl, 1, 120), # US born (inc'l us territories etc.)
+    race == 1, # white
+    sex == 2, # female
+    between(age, 21, 40), # age 21-40
+    between(marrno, 1, 2), # ever married
+    between(agemarr, 17, 26), # married age 17-26
+    between(chborn, 2, 13), # ever child
+    between(marst, 1, 4), # ever married but not widow
+    qage == 0, # not allocated: age
+    qchborn == 0, # not allocated: chilren born
+    qmarrno  %in% c(0, 3), # not allocated: married
+    # qmarrno == 0, # not allocated: married
+    qmarst  %in% c(0, 3), # not allocated: marital status
+    # qmarst == 0, # not allocated: marital status
+    qagemarr %in% c(0, 3), # not allocated: married age
+    # qagemarr == 0, # not allocated: married age
+    qrelate  %in% c(0, 3), # not allocated: relation to household head
+    # qrelate == 0, # not allocated: relation to household head
+    qsex  %in% c(0, 3) # not allocated: sex
+    # qsex == 0 # not allocated: sex
   )
-# no dupes</code></pre>
+nrow(mothers)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDcyODEzNVxuIn0= -->
+<pre><code>[1] 728135</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZmFtaWxpZXMgPC1cbiAgbW90aGVycyAlPiUgXG4gIGxlZnRfam9pbihmYXRoZXJzLCBieSA9IFwic2VyaWFsXCIpICU+JSBcbiAgbGVmdF9qb2luKGNoaWxkcmVuLCBieSA9IFwic2VyaWFsXCIpICU+JSBcbiAgZmlsdGVyKFxuICAgIG5vdF90d2luLFxuICAgIG5vdF9hbGxvY2F0ZWQueVxuICApXG4jIG5vIGR1cGVzXG5gYGAifQ== -->
-<pre class="r"><code>families &lt;-
-  mothers %&gt;% 
-  left_join(fathers, by = &quot;serial&quot;) %&gt;% 
-  left_join(children, by = &quot;serial&quot;) %&gt;% 
-  filter(
-    not_twin,
-    not_allocated.y
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2hpbGRyZW4gPC1cbiAgcmF3ICU+JSBcbiAgZmlsdGVyKG1vbWxvYyAhPSAwKSAlPiUgXG4gIGdyb3VwX2J5KHNlcmlhbCwgbW9tbG9jKSAlPiUgXG4gIG11dGF0ZShjaGlsZHJlbl9oaCAgPSBuKCkpICU+JSAjIG51bWJlciBvZiBtb3RoZXIncyBjaGlsZHJlbiBpbiBob3VzZWhvbGRcbiAgZmlsdGVyKGFnZSA9PSBtYXgoYWdlKSkgJT4lICMgS2VlcCBvbmx5IHRoZSBvbGRlc3QgKGNhbiBiZSBtdWx0aXBsZSBvbGRlc3QgaWYgc2FtZSBhZ2UgaW4geWVhcnMpXG4gIG11dGF0ZShcbiAgICBtYXhfYWdlID0gbWF4KGFnZSksXG4gICAgc2FtZV9xdHIgPSBzdW0oYmlydGhxdHIgPT0gbGFnKGJpcnRocXRyKSwgbmEucm0gPSBUUlVFKSxcbiAgICB0d2luMSA9IGlmX2Vsc2UobigpID4gMSwgMSwgMCksICMgdHdpbiBiYXNlZCBvbmx5IG9uIGFnZSBpbiB5ZWFyc1xuICAgIHR3aW4yID0gaWZfZWxzZShzYW1lX3F0ciA+IDAsIDEsIDApICMgdHdpbiBiYXNlZCBvbiBhZ2UgaW4geWVhcnMgYW5kIHF1YXJ0ZXJcbiAgICAjIG5vdGU6IFwidHdpblwiIGFsc28gaW5jbHVkZXMgb3RoZXIgbXVsdGlwbGVzIChlZy4gdHJpcGxldHMpXG4gICkgJT4lIFxuICBhcnJhbmdlKHNlcmlhbCwgZGVzYyhhZ2UpLCBiaXJ0aHF0cikgJT4lIFxuICBmaWx0ZXIocm93X251bWJlcigpID09IDEpICU+JSAjIGtlZXAgb25seSBvbmUgY2hpbGQgaWYgdHdpblxuICB1bmdyb3VwKCkgJT4lIFxuICBzZWxlY3QoXG4gICAgc2VyaWFsLCBtb21sb2NfYyA9IG1vbWxvYywgdHdpbjEsIHR3aW4yLCBjaGlsZHJlbl9oaCwgYWdlX2MgPSBhZ2UsIFxuICAgIHFhZ2VfYyA9IHFhZ2UsIHFzZXhfYyA9IHFzZXgsIHFyZWxhdGVfYyA9IHFyZWxhdGUsIHFiaXJ0aG1vX2MgPSBxYmlydGhtb1xuICApXG4jIGNoaWxkcmVuICU+JSBnZXRfZHVwZXMoc2VyaWFsLCBtb21sb2MpICMgbm8gZHVwZXNcbm5yb3coY2hpbGRyZW4pXG5gYGAifQ== -->
+<pre class="r"><code>children &lt;-
+  raw %&gt;% 
+  filter(momloc != 0) %&gt;% 
+  group_by(serial, momloc) %&gt;% 
+  mutate(children_hh  = n()) %&gt;% # number of mother's children in household
+  filter(age == max(age)) %&gt;% # Keep only the oldest (can be multiple oldest if same age in years)
+  mutate(
+    max_age = max(age),
+    same_qtr = sum(birthqtr == lag(birthqtr), na.rm = TRUE),
+    twin1 = if_else(n() &gt; 1, 1, 0), # twin based only on age in years
+    twin2 = if_else(same_qtr &gt; 0, 1, 0) # twin based on age in years and quarter
+    # note: &quot;twin&quot; also includes other multiples (eg. triplets)
+  ) %&gt;% 
+  arrange(serial, desc(age), birthqtr) %&gt;% 
+  filter(row_number() == 1) %&gt;% # keep only one child if twin
+  ungroup() %&gt;% 
+  select(
+    serial, momloc_c = momloc, twin1, twin2, children_hh, age_c = age, 
+    qage_c = qage, qsex_c = qsex, qrelate_c = qrelate, qbirthmo_c = qbirthmo
   )
-# no dupes</code></pre>
+# children %&gt;% get_dupes(serial, momloc) # no dupes
+nrow(children)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDE5ODQxNjlcbiJ9 -->
+<pre><code>[1] 1984169</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnJvdyhzYW1wbGUxYSlcblxuYGBgIn0= -->
+<pre class="r"><code>nrow(sample1a)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDY2MDcwNVxuIn0= -->
+<pre><code>[1] 660705</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -291,7 +291,7 @@ children &lt;-
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkFFTSBSZXBsaWNhdGlvbjogMSINCmF1dGhvcjogIk1heHdlbGwgQXVzdGVuc2VuIg0KZGF0ZTogImByIFN5cy5EYXRlKClgIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KDQpgYGB7ciwgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRSwgaW5jbHVkZT1GQUxTRX0NCiMgSW5zdGFsbCBwYWNrYWdlcyBpZiBuZWVkZWQNCnBhY2thZ2VfbGlzdCA8LSBjKCJoYXZlbiIsICJzdHJpbmdyIiwgInRpZHl2ZXJzZSIsICJqYW5pdG9yIiwgImZlYXRoZXIiLCAia25pdHIiLCAicm1hcmtkb3duIikNCm5ld19wYWNrYWdlcyA8LSBwYWNrYWdlX2xpc3RbIXBhY2thZ2VfbGlzdCAlaW4lIGluc3RhbGxlZC5wYWNrYWdlcygpWywiUGFja2FnZSJdXQ0KaWYobGVuZ3RoKG5ld19wYWNrYWdlcykpIGluc3RhbGwucGFja2FnZXMobmV3X3BhY2thZ2VzKQ0KDQpsaWJyYXJ5KGhhdmVuKQ0KbGlicmFyeShzdHJpbmdyKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KGphbml0b3IpDQpsaWJyYXJ5KGZlYXRoZXIpDQoNCiMgU2V0IGRpcmVjdG9yaWVzDQpkYXRhX2RpciA8LSAiQzovVXNlcnMvYXVzdGVuc2VuL0Rvd25sb2Fkcy8iDQpgYGANCg0KYGBge3J9DQpyYXcgPC0gcmVhZF9zdGF0YShzdHJfYyhkYXRhX2RpciwgInVzYV8wMDAwNS5kdGEiKSkNCmBgYA0KDQpgYGB7cn0NCnJhdyAlPiUgc2VsZWN0KG5vcXVvdGUob3JkZXIoY29sbmFtZXMocmF3KSkpKSAlPiUgZ2xpbXBzZSgpDQpgYGANCg0KYGBge3IsIHdvbWVuX2V4Y2x1c2lvbnN9DQptb3RoZXJzIDwtDQogIHJhdyAlPiUNCiAgbXV0YXRlKA0KICAgIGhlYWRfc3BvdXNlID0gaWZfZWxzZShyZWxhdGUgJWluJSBjKDEsIDIpLCAxLCAwKSwNCiAgICB1c19ib3JuID0gaWZfZWxzZShicGwgPCA1NiwgMSwgMCksDQogICAgd2hpdGUgPSBpZl9lbHNlKHJhY2UgPT0gMSwgMSwgMCksDQogICAgd29tZW4gPSBpZl9lbHNlKHNleCA9PTIsIDEsIDApLA0KICAgIGFnZV8yMV80MCA9IGlmX2Vsc2UoYmV0d2VlbihhZ2UsIDIxLCA0MCksIDEsIDApLA0KICAgIGV2ZXJfbWFycmllZCA9IGlmX2Vsc2UoYmV0d2VlbihtYXJybm8sIDEsIDYpLCAxLCAwKSwNCiAgICBtYXJyaWVkXzE3XzI2ID0gaWZfZWxzZShiZXR3ZWVuKGFnZW1hcnIsIDE3LCAyNiksIDEsIDApLA0KICAgIGV2ZXJfY2hpbGQgPSBpZl9lbHNlKGNoYm9ybiA+IDEsIDEsIDApLA0KICAgIG5vbl93aWRvdyA9IGlmX2Vsc2UobWFyc3QgIT0gNSwgMSwgMCksDQogICAgbm90X2FsbG9jYXRlZCA9IDAsDQogICAgICBub3RfYWxsb2NhdGVkID0gaWZfZWxzZShxYWdlID09IDAsIDEsIG5vdF9hbGxvY2F0ZWQpLA0KICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocW1hcnJubyAlaW4lIGMoMCwgMyksIDEsIG5vdF9hbGxvY2F0ZWQpLA0KICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocW1hcnN0ICVpbiUgYygwLCAzKSwgMSwgbm90X2FsbG9jYXRlZCksDQogICAgICBub3RfYWxsb2NhdGVkID0gaWZfZWxzZShxYWdlbWFyciAlaW4lIGMoMCwgMyksIDEsIG5vdF9hbGxvY2F0ZWQpLA0KICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocWNoYm9ybiA9PSAwLCAxLCBub3RfYWxsb2NhdGVkKSwNCiAgICAgIG5vdF9hbGxvY2F0ZWQgPSBpZl9lbHNlKHFyZWxhdGUgJWluJSBjKDAsIDMpLCAxLCBub3RfYWxsb2NhdGVkKSwgIyB3aHkgbm90IHFyZWxhdGUyID8NCiAgICAgIG5vdF9hbGxvY2F0ZWQgPSBpZl9lbHNlKHFzZXggJWluJSBjKDAsIDMpLCAxLCBub3RfYWxsb2NhdGVkKQ0KICApICU+JSANCiAgZmlsdGVyKA0KICAgIGhlYWRfc3BvdXNlLA0KICAgIHVzX2Jvcm4sDQogICAgd2hpdGUsDQogICAgd29tZW4sDQogICAgYWdlXzIxXzQwLA0KICAgIGV2ZXJfbWFycmllZCwNCiAgICBtYXJyaWVkXzE3XzI2LA0KICAgIGV2ZXJfY2hpbGQsDQogICAgbm9uX3dpZG93LA0KICAgIG5vdF9hbGxvY2F0ZWQNCiAgKQ0KIyBubyBkdXBlcw0KYGBgDQoNCmBgYHtyfQ0KZmF0aGVycyA8LQ0KICByYXcgJT4lIA0KICBmaWx0ZXIoc2V4ID09IDEsIHJlbGF0ZSAlaW4lIGMoMSwgMikpICU+JSANCiAgc2VtaV9qb2luKG1vdGhlcnMsIGJ5ID0gInNlcmlhbCIpICU+JSAjIGluIGhvdXNlaG9sZHMgL3cgc2FtcGxlIG1vdGhlcnMNCiAgYW50aV9qb2luKG1vdGhlcnMsIGJ5ID0gYygic2VyaWFsIiwgInBlcm51bSIpKSAjIG5vdCBzYW1wbGUgbW90aGVycw0KIyBubyBkdXBlcw0KDQpjaGlsZHJlbiA8LQ0KICByYXcgJT4lIA0KICBmaWx0ZXIocmVsYXRlID09IDMpICU+JSANCiAgc2VtaV9qb2luKG1vdGhlcnMsIGJ5ID0gInNlcmlhbCIpICU+JSANCiAgZ3JvdXBfYnkoc2VyaWFsKSAlPiUgDQogIG11dGF0ZSgNCiAgICBvbGRlc3QgPSBpZl9lbHNlKGFnZSA9PSBtYXgoYWdlKSwgMSwgMCksICMgU2hvdWxkIHRlc3Qgd2l0aCBiaXJ0aCBtb250aCBhbHNvDQogICAgbm90X3R3aW4gPSBpZl9lbHNlKHN1bShvbGRlc3QpID09IDEsIDEsIDApLA0KICAgIGNoaWxkcmVuX2hvbWUgPSBuKCkNCiAgKSAlPiUgDQogIGFycmFuZ2UoZGVzYyhhZ2UpKSAlPiUgDQogIGRpc3RpbmN0KC5rZWVwX2FsbCA9IFRSVUUpICU+JSANCiAgdW5ncm91cCgpICU+JSANCiAgbXV0YXRlKA0KICAgIG5vdF9hbGxvY2F0ZWQgPSAwLA0KICAgICAgbm90X2FsbG9jYXRlZCA9IGlmX2Vsc2UocWFnZSA9PSAwLCAxLCBub3RfYWxsb2NhdGVkKSwNCiAgICAgIG5vdF9hbGxvY2F0ZWQgPSBpZl9lbHNlKHFzZXggJWluJSBjKDAsIDMpLCAxLCBub3RfYWxsb2NhdGVkKSwNCiAgICAgIG5vdF9hbGxvY2F0ZWQgPSBpZl9lbHNlKHFyZWxhdGUgJWluJSBjKDAsIDMpLCAxLCBub3RfYWxsb2NhdGVkKSwgIyB3aHkgbm90IHFyZWxhdGUyID8NCiAgICAgIG5vdF9hbGxvY2F0ZWQgPSBpZl9lbHNlKHFiaXJ0aG1vID09IDAsIDEsIG5vdF9hbGxvY2F0ZWQpDQogICkNCiMgbm8gZHVwZXMNCmBgYA0KDQpgYGB7cn0NCmZhbWlsaWVzIDwtDQogIG1vdGhlcnMgJT4lIA0KICBsZWZ0X2pvaW4oZmF0aGVycywgYnkgPSAic2VyaWFsIikgJT4lIA0KICBsZWZ0X2pvaW4oY2hpbGRyZW4sIGJ5ID0gInNlcmlhbCIpICU+JSANCiAgZmlsdGVyKA0KICAgIG5vdF90d2luLA0KICAgIG5vdF9hbGxvY2F0ZWQueQ0KICApDQojIG5vIGR1cGVzDQpgYGANCg0KDQpgYGB7cn0NCndyaXRlX2ZlYXRoZXIoZmFtaWxpZXMsIHN0cl9jKGRhdGFfZGlyLCAiZmFtaWxpZXMuZmVhdGhlciIpKQ0KYGBgDQoNCg0KDQo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQUVNIFJlcGxpY2F0aW9uOiAxIgphdXRob3I6ICJNYXh3ZWxsIEF1c3RlbnNlbiIKZGF0ZTogImByIFN5cy5EYXRlKClgIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgoKYGBge3IsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0UsIGluY2x1ZGU9RkFMU0V9CiMgSW5zdGFsbCBwYWNrYWdlcyBpZiBuZWVkZWQKcGFja2FnZV9saXN0IDwtIGMoImhhdmVuIiwgInN0cmluZ3IiLCAidGlkeXZlcnNlIiwgImphbml0b3IiLCAiZmVhdGhlciIsICJrbml0ciIsICJybWFya2Rvd24iKQpuZXdfcGFja2FnZXMgPC0gcGFja2FnZV9saXN0WyFwYWNrYWdlX2xpc3QgJWluJSBpbnN0YWxsZWQucGFja2FnZXMoKVssIlBhY2thZ2UiXV0KaWYobGVuZ3RoKG5ld19wYWNrYWdlcykpIGluc3RhbGwucGFja2FnZXMobmV3X3BhY2thZ2VzKQoKbGlicmFyeShoYXZlbikKbGlicmFyeShzdHJpbmdyKQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShqYW5pdG9yKQpsaWJyYXJ5KGZlYXRoZXIpCgojIFNldCBkaXJlY3RvcmllcwpkYXRhX2RpciA8LSAiL1VzZXJzL01heHdlbGwvQm94IFN5bmMvYWVtL3JlcGxpY2F0aW9uL2RhdGEvcmF3LyIKYGBgCgpgYGB7cn0KcmF3IDwtIHJlYWRfc3RhdGEoc3RyX2MoZGF0YV9kaXIsICJ1c2FfMDAwMDUuZHRhIikpCmBgYAoKYGBge3J9Cm5hbWVzKHJhdykgPC0gbmFtZXMocmF3KSAlPiUgc3RyX3RvX2xvd2VyKCkKcmF3ICU+JSBzZWxlY3Qobm9xdW90ZShvcmRlcihjb2xuYW1lcyhyYXcpKSkpICU+JSBnbGltcHNlKCkKYGBgCgpgYGB7cn0KbW90aGVycyA8LSAKICByYXcgJT4lCiAgZ3JvdXBfYnkoc2VyaWFsKSAlPiUgCiAgbXV0YXRlKCAjIENyZWF0ZSBzdGFuZGFyZGl6ZWQgaG91c2Vob2xkIGluY29tZSAtIG5lZWRzIGluZm8gb24gYWxsIGhoIG1lbWJlcnMKICAgIGFkdWx0cyA9IHN1bShhZ2UgPj0gMTgsIG5hLnJtID0gVFJVRSksCiAgICBjaGlsZHJlbiA9IHN1bShhZ2UgPCAxOCwgbmEucm0gPSBUUlVFKSwKICAgIGluY19hZGp1c3RlciA9ICgoYWR1bHRzICsgKDAuNyAqIGNoaWxkcmVuKSkgXiAwLjcpLAogICAgaGhpbmNvbWVfc3RkID0gaGhpbmNvbWUgLyBpbmNfYWRqdXN0ZXIKICApICU+JSAKICB1bmdyb3VwKCkgJT4lIAogIGZpbHRlcigKICAgIGJldHdlZW4oYnBsLCAxLCAxMjApLCAjIFVTIGJvcm4gKGluYydsIHVzIHRlcnJpdG9yaWVzIGV0Yy4pCiAgICByYWNlID09IDEsICMgd2hpdGUKICAgIHNleCA9PSAyLCAjIGZlbWFsZQogICAgYmV0d2VlbihhZ2UsIDIxLCA0MCksICMgYWdlIDIxLTQwCiAgICBiZXR3ZWVuKG1hcnJubywgMSwgMiksICMgZXZlciBtYXJyaWVkCiAgICBiZXR3ZWVuKGFnZW1hcnIsIDE3LCAyNiksICMgbWFycmllZCBhZ2UgMTctMjYKICAgIGJldHdlZW4oY2hib3JuLCAyLCAxMyksICMgZXZlciBjaGlsZAogICAgYmV0d2VlbihtYXJzdCwgMSwgNCksICMgZXZlciBtYXJyaWVkIGJ1dCBub3Qgd2lkb3cKICAgIHFhZ2UgPT0gMCwgIyBub3QgYWxsb2NhdGVkOiBhZ2UKICAgIHFjaGJvcm4gPT0gMCwgIyBub3QgYWxsb2NhdGVkOiBjaGlscmVuIGJvcm4KICAgIHFtYXJybm8gICVpbiUgYygwLCAzKSwgIyBub3QgYWxsb2NhdGVkOiBtYXJyaWVkCiAgICAjIHFtYXJybm8gPT0gMCwgIyBub3QgYWxsb2NhdGVkOiBtYXJyaWVkCiAgICBxbWFyc3QgICVpbiUgYygwLCAzKSwgIyBub3QgYWxsb2NhdGVkOiBtYXJpdGFsIHN0YXR1cwogICAgIyBxbWFyc3QgPT0gMCwgIyBub3QgYWxsb2NhdGVkOiBtYXJpdGFsIHN0YXR1cwogICAgcWFnZW1hcnIgJWluJSBjKDAsIDMpLCAjIG5vdCBhbGxvY2F0ZWQ6IG1hcnJpZWQgYWdlCiAgICAjIHFhZ2VtYXJyID09IDAsICMgbm90IGFsbG9jYXRlZDogbWFycmllZCBhZ2UKICAgIHFyZWxhdGUgICVpbiUgYygwLCAzKSwgIyBub3QgYWxsb2NhdGVkOiByZWxhdGlvbiB0byBob3VzZWhvbGQgaGVhZAogICAgIyBxcmVsYXRlID09IDAsICMgbm90IGFsbG9jYXRlZDogcmVsYXRpb24gdG8gaG91c2Vob2xkIGhlYWQKICAgIHFzZXggICVpbiUgYygwLCAzKSAjIG5vdCBhbGxvY2F0ZWQ6IHNleAogICAgIyBxc2V4ID09IDAgIyBub3QgYWxsb2NhdGVkOiBzZXgKICApCgpucm93KG1vdGhlcnMpCmBgYAoKYGBge3J9CmNoaWxkcmVuIDwtCiAgcmF3ICU+JSAKICBmaWx0ZXIobW9tbG9jICE9IDApICU+JSAKICBncm91cF9ieShzZXJpYWwsIG1vbWxvYykgJT4lIAogIG11dGF0ZShjaGlsZHJlbl9oaCAgPSBuKCkpICU+JSAjIG51bWJlciBvZiBtb3RoZXIncyBjaGlsZHJlbiBpbiBob3VzZWhvbGQKICBmaWx0ZXIoYWdlID09IG1heChhZ2UpKSAlPiUgIyBLZWVwIG9ubHkgdGhlIG9sZGVzdCAoY2FuIGJlIG11bHRpcGxlIG9sZGVzdCBpZiBzYW1lIGFnZSBpbiB5ZWFycykKICBtdXRhdGUoCiAgICBtYXhfYWdlID0gbWF4KGFnZSksCiAgICBzYW1lX3F0ciA9IHN1bShiaXJ0aHF0ciA9PSBsYWcoYmlydGhxdHIpLCBuYS5ybSA9IFRSVUUpLAogICAgdHdpbjEgPSBpZl9lbHNlKG4oKSA+IDEsIDEsIDApLCAjIHR3aW4gYmFzZWQgb25seSBvbiBhZ2UgaW4geWVhcnMKICAgIHR3aW4yID0gaWZfZWxzZShzYW1lX3F0ciA+IDAsIDEsIDApICMgdHdpbiBiYXNlZCBvbiBhZ2UgaW4geWVhcnMgYW5kIHF1YXJ0ZXIKICAgICMgbm90ZTogInR3aW4iIGFsc28gaW5jbHVkZXMgb3RoZXIgbXVsdGlwbGVzIChlZy4gdHJpcGxldHMpCiAgKSAlPiUgCiAgYXJyYW5nZShzZXJpYWwsIGRlc2MoYWdlKSwgYmlydGhxdHIpICU+JSAKICBmaWx0ZXIocm93X251bWJlcigpID09IDEpICU+JSAjIGtlZXAgb25seSBvbmUgY2hpbGQgaWYgdHdpbgogIHVuZ3JvdXAoKSAlPiUgCiAgc2VsZWN0KAogICAgc2VyaWFsLCBtb21sb2NfYyA9IG1vbWxvYywgdHdpbjEsIHR3aW4yLCBjaGlsZHJlbl9oaCwgYWdlX2MgPSBhZ2UsIAogICAgcWFnZV9jID0gcWFnZSwgcXNleF9jID0gcXNleCwgcXJlbGF0ZV9jID0gcXJlbGF0ZSwgcWJpcnRobW9fYyA9IHFiaXJ0aG1vCiAgKQoKIyBjaGlsZHJlbiAlPiUgZ2V0X2R1cGVzKHNlcmlhbCwgbW9tbG9jKSAjIG5vIGR1cGVzCm5yb3coY2hpbGRyZW4pCmBgYAoKYGBge3J9CnNhbXBsZTEgPC0KICBsZWZ0X2pvaW4obW90aGVycywgY2hpbGRyZW4sIGJ5ID0gYygic2VyaWFsIiwgInBlcm51bSIgPSAibW9tbG9jX2MiKSkgJT4lCiAgZmlsdGVyKAogICAgaXMubmEocWFnZV9jKSB8IHFhZ2VfYyA9PSAwLCAjIG5vdCBhbGxvY2F0ZWQ6IGNoaWxkJ3MgYWdlCiAgICAjIGlzLm5hKHFzZXhfYykgfCBxc2V4X2MgICVpbiUgYygwLCAzKSwgIyBub3QgYWxsb2NhdGVkOiBjaGlsZCdzIHNleAogICAgaXMubmEocXNleF9jKSB8IHFzZXhfYyA9PSAwLCAjIG5vdCBhbGxvY2F0ZWQ6IGNoaWxkJ3Mgc2V4CiAgICAjIGlzLm5hKHFyZWxhdGVfYykgfCBxcmVsYXRlX2MgICVpbiUgYygwLCAzKSwgIyBub3QgYWxsb2NhdGVkOiBjaGlsZCdzIHJlbGF0aW9uIHRvIGhlYWQgb2YgaG91c2Vob2xkCiAgICBpcy5uYShxcmVsYXRlX2MpIHwgcXJlbGF0ZV9jID09IDAsICMgbm90IGFsbG9jYXRlZDogY2hpbGQncyByZWxhdGlvbiB0byBoZWFkIG9mIGhvdXNlaG9sZAogICAgaXMubmEocWJpcnRobW9fYykgfCBxYmlydGhtb19jID09IDAgIyBub3QgYWxsb2NhdGVkOiBjaGlsZCdzIGJpcnRoIG1vbnRoCiAgKSAlPiUgCiAgZmlsdGVyKAogICAgIyBicGwgPD0gNTYsCiAgICAjIGJwbCAlaW4lIGMoMTo1NiwgMTEwKSwKICAgIHJhY2VkID09IDEwMCwKICAgIHFtYXJybm8gPT0gMCwKICAgIHFtYXJzdCA9PSAwLAogICAgcWFnZW1hcnIgPT0gMCwKICAgIHFyZWxhdGUgPT0gMCwKICAgIHFzZXggPT0gMAogICAgIyBpcy5uYShxc2V4X2MpIHwgcXNleF9jID09IDAsCiAgICAjIGlzLm5hKHFyZWxhdGVfYykgfCBxcmVsYXRlX2MgPT0gMAogICkKbnJvdyhzYW1wbGUxYSkKCiMgZ2V0X2R1cGVzKGZhbWlsaWVzLCBzZXJpYWwpICMgbm8gZHVwZXMKCiMgUGFwZXIgcmVzdWx0czogICA2NjIsMjA0ICAgNTM1LDg4NyAgIDQ2NSw1OTUKYGBgCgpgYGB7cn0Kc2FtcGxlMiA8LSAKICBzYW1wbGUxICU+JSAKICBtdXRhdGUoY2hpbGRyZW5fZXZlciA9IGNoYm9ybiAtIDEpICU+JSAKICBmaWx0ZXIoY2hpbGRyZW5fZXZlciA9PSBjaGlsZHJlbl9oaCwgYWdlX2MgPCAxOCwgaXMubmEodHdpbjEpIHwgdHdpbjIgPT0gMCkKCnNhbXBsZTEgJT4lIHNlbGVjdChzZXJpYWwsIHBlcm51bSwgY2hib3JuLCBjaGlsZHJlbl9oaCwgYWdlX2MpICU+JSBWaWV3KCkKbnJvdyhtb3RoZXJzMikKCm1vdGhlcnMzIDwtIAogIG1vdGhlcnMyICU+JSAKICBtdXRhdGUoCiAgICBtYXJyX2xlbiA9IGFnZSAtIGFnZW1hcnIsCiAgICBtYXJyX3lyX2Jvcm4gPSBtYXJyX2xlbiAtIGFnZV9jCiAgKSAlPiUgCiAgZmlsdGVyKGJldHdlZW4obWFycl95cl9ib3JuLCAwLCA1KSkgJT4lCiAgc2VsZWN0KC1tYXJyX2xlbiwgLSBtYXJyX3lyX2Jvcm4pCm5yb3cobW90aGVyczMpCmBgYAoKCmBgYHtyfQp3cml0ZV9mZWF0aGVyKGZhbWlsaWVzLCBzdHJfYyhkYXRhX2RpciwgImZhbWlsaWVzLmZlYXRoZXIiKSkKYGBgCgoKCg==</div>
 
 
 

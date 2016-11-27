@@ -19,7 +19,7 @@ library(janitor)
 library(feather)
 
 # Set directories
-data_dir <- "C:/Users/austensen/Downloads/"
+data_dir <- "/Users/Maxwell/Box Sync/aem/replication/data/raw/"
 ```
 
 ```{r}
@@ -27,87 +27,121 @@ raw <- read_stata(str_c(data_dir, "usa_00005.dta"))
 ```
 
 ```{r}
+names(raw) <- names(raw) %>% str_to_lower()
 raw %>% select(noquote(order(colnames(raw)))) %>% glimpse()
 ```
 
-```{r, women_exclusions}
-mothers <-
+```{r}
+mothers <- 
   raw %>%
-  mutate(
-    # keep all relates
-    us_born = if_else(bpl < 56, 1, 0),
-    white = if_else(race == 1, 1, 0),
-    women = if_else(sex ==2, 1, 0),
-    age_21_40 = if_else(between(age, 21, 40), 1, 0),
-    ever_married = if_else(between(marrno, 1, 6), 1, 0),
-    married_17_26 = if_else(between(agemarr, 17, 26), 1, 0),
-    ever_child = if_else(chborn > 1, 1, 0),
-    non_widow = if_else(marst != 5, 1, 0),
-    not_allocated = 0,
-      not_allocated = if_else(qage == 0, 1, not_allocated),
-      not_allocated = if_else(qmarrno %in% c(0, 3), 1, not_allocated),
-      not_allocated = if_else(qmarst %in% c(0, 3), 1, not_allocated),
-      not_allocated = if_else(qagemarr %in% c(0, 3), 1, not_allocated),
-      not_allocated = if_else(qchborn == 0, 1, not_allocated),
-      not_allocated = if_else(qrelate %in% c(0, 3), 1, not_allocated), # why not qrelate2 ?
-      not_allocated = if_else(qsex %in% c(0, 3), 1, not_allocated)
+  group_by(serial) %>% 
+  mutate( # Create standardized household income - needs info on all hh members
+    adults = sum(age >= 18, na.rm = TRUE),
+    children = sum(age < 18, na.rm = TRUE),
+    inc_adjuster = ((adults + (0.7 * children)) ^ 0.7),
+    hhincome_std = hhincome / inc_adjuster
   ) %>% 
+  ungroup() %>% 
   filter(
-    head_spouse,
-    us_born,
-    white,
-    women,
-    age_21_40,
-    ever_married,
-    married_17_26,
-    ever_child,
-    non_widow,
-    not_allocated
+    between(bpl, 1, 120), # US born (inc'l us territories etc.)
+    race == 1, # white
+    sex == 2, # female
+    between(age, 21, 40), # age 21-40
+    between(marrno, 1, 2), # ever married
+    between(agemarr, 17, 26), # married age 17-26
+    between(chborn, 2, 13), # ever child
+    between(marst, 1, 4), # ever married but not widow
+    qage == 0, # not allocated: age
+    qchborn == 0, # not allocated: chilren born
+    qmarrno  %in% c(0, 3), # not allocated: married
+    # qmarrno == 0, # not allocated: married
+    qmarst  %in% c(0, 3), # not allocated: marital status
+    # qmarst == 0, # not allocated: marital status
+    qagemarr %in% c(0, 3), # not allocated: married age
+    # qagemarr == 0, # not allocated: married age
+    qrelate  %in% c(0, 3), # not allocated: relation to household head
+    # qrelate == 0, # not allocated: relation to household head
+    qsex  %in% c(0, 3) # not allocated: sex
+    # qsex == 0 # not allocated: sex
   )
-# no dupes
+
+nrow(mothers)
 ```
 
 ```{r}
-fathers <-
-  raw %>% 
-  filter(sex == 1) %>% # keep all relates, use sloc to: keep only if wife in household and merege fathers with mothers
-  semi_join(mothers, by = "serial") %>% # in households /w sample mothers
-  anti_join(mothers, by = c("serial", "pernum")) # not sample mothers
-# no dupes
-
 children <-
   raw %>% 
-  # Keep all relates, use mloc to: keep kids with mothers, get sibling groups, and to merge with mothers
-  semi_join(mothers, by = "serial") %>% 
-  group_by(serial) %>% 
+  filter(momloc != 0) %>% 
+  group_by(serial, momloc) %>% 
+  mutate(children_hh  = n()) %>% # number of mother's children in household
+  filter(age == max(age)) %>% # Keep only the oldest (can be multiple oldest if same age in years)
   mutate(
-    oldest = if_else(age == max(age), 1, 0), # Should test with birth month also
-    not_twin = if_else(sum(oldest) == 1, 1, 0),
-    children_home = n()
+    max_age = max(age),
+    same_qtr = sum(birthqtr == lag(birthqtr), na.rm = TRUE),
+    twin1 = if_else(n() > 1, 1, 0), # twin based only on age in years
+    twin2 = if_else(same_qtr > 0, 1, 0) # twin based on age in years and quarter
+    # note: "twin" also includes other multiples (eg. triplets)
   ) %>% 
-  arrange(desc(age)) %>% 
-  distinct(.keep_all = TRUE) %>% 
+  arrange(serial, desc(age), birthqtr) %>% 
+  filter(row_number() == 1) %>% # keep only one child if twin
   ungroup() %>% 
-  mutate(
-    not_allocated = 0,
-      not_allocated = if_else(qage == 0, 1, not_allocated),
-      not_allocated = if_else(qsex %in% c(0, 3), 1, not_allocated),
-      not_allocated = if_else(qrelate %in% c(0, 3), 1, not_allocated), # why not qrelate2 ?
-      not_allocated = if_else(qbirthmo == 0, 1, not_allocated)
+  select(
+    serial, momloc_c = momloc, twin1, twin2, children_hh, age_c = age, 
+    qage_c = qage, qsex_c = qsex, qrelate_c = qrelate, qbirthmo_c = qbirthmo
   )
-# no dupes
+
+# children %>% get_dupes(serial, momloc) # no dupes
+nrow(children)
 ```
 
 ```{r}
-families <-
-  mothers %>% 
-  left_join(fathers, by = "serial") %>% 
-  left_join(children, by = "serial") %>% 
+sample1 <-
+  left_join(mothers, children, by = c("serial", "pernum" = "momloc_c")) %>%
   filter(
-    not_twin,
-    not_allocated.y
+    is.na(qage_c) | qage_c == 0, # not allocated: child's age
+    # is.na(qsex_c) | qsex_c  %in% c(0, 3), # not allocated: child's sex
+    is.na(qsex_c) | qsex_c == 0, # not allocated: child's sex
+    # is.na(qrelate_c) | qrelate_c  %in% c(0, 3), # not allocated: child's relation to head of household
+    is.na(qrelate_c) | qrelate_c == 0, # not allocated: child's relation to head of household
+    is.na(qbirthmo_c) | qbirthmo_c == 0 # not allocated: child's birth month
+  ) %>% 
+  filter(
+    # bpl <= 56,
+    # bpl %in% c(1:56, 110),
+    raced == 100,
+    qmarrno == 0,
+    qmarst == 0,
+    qagemarr == 0,
+    qrelate == 0,
+    qsex == 0
+    # is.na(qsex_c) | qsex_c == 0,
+    # is.na(qrelate_c) | qrelate_c == 0
   )
-# no dupes
+nrow(sample1a)
+
+# get_dupes(families, serial) # no dupes
+
+# Paper results:   662,204   535,887   465,595
+```
+
+```{r}
+sample2 <- 
+  sample1 %>% 
+  mutate(children_ever = chborn - 1) %>% 
+  filter(children_ever == children_hh, age_c < 18, is.na(twin1) | twin2 == 0)
+
+sample1 %>% select(serial, pernum, chborn, children_hh, age_c) %>% View()
+nrow(mothers2)
+
+mothers3 <- 
+  mothers2 %>% 
+  mutate(
+    marr_len = age - agemarr,
+    marr_yr_born = marr_len - age_c
+  ) %>% 
+  filter(between(marr_yr_born, 0, 5)) %>%
+  select(-marr_len, - marr_yr_born)
+nrow(mothers3)
 ```
 
 
