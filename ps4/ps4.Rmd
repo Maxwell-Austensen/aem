@@ -1,0 +1,29 @@
+---
+title: "AEM: PS4"
+author: "Maxwell Austensen"
+date: "November 16, 2016"
+output: html_notebook
+---
+
+```{r, message=FALSE, warning=FALSE}
+# Install packages if needed
+package_list <- c("tidyverse", "stargazer", "knitr", "haven", "stringr", "sandwich")
+new_packages <- package_list[! package_list %in% installed.packages()[,"Package"]]
+if(length(new_packages)) install.packages(new_packages)
+
+library(tidyverse)
+
+# Modification to stargazer() - escapes "*" to prevent html vs markdown confusion
+stargazer_html <- function(...) {
+  capture.output(stargazer::stargazer(..., type = "html", header = FALSE)) %>%
+  stringr::str_replace_all("\\*", "\\\\*") %>% 
+  paste(collapse = "\n") %>%
+  cat("\n")
+}
+```
+
+```{r}
+# Load Data
+dw <- haven::read_stata("http://users.nber.org/~rdehejia/!@$AEM/Problem%20Sets/ps4/nsw_dw.dta")
+glimpse(dw)
+```
