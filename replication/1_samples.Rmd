@@ -1,7 +1,7 @@
 ---
-title: "AEM Replication: 1"
+title: 'AEM Replication: 1'
 author: "Maxwell Austensen"
-date: "`r Sys.Date()`"
+date: '`r Sys.Date()`'
 output: html_notebook
 ---
 
@@ -28,6 +28,7 @@ raw <- read_stata(str_c(data_dir, "usa_00005.dta"))
 
 ```{r}
 names(raw) <- names(raw) %>% str_to_lower()
+raw <- raw %>% zap_labels()
 raw %>% select(noquote(order(colnames(raw)))) %>% glimpse()
 ```
 
@@ -84,11 +85,9 @@ children <-
   ) %>% 
   arrange(serial, desc(age), birthqtr) %>% 
   filter(row_number() == 1) %>% # keep only one child if twin
-  ungroup() %>% 
-  select(
-    serial, momloc_c = momloc, twin1, twin2, children_hh, age_c = age, 
-    qage_c = qage, qsex_c = qsex, qrelate_c = qrelate, qbirthmo_c = qbirthmo
-  )
+  ungroup()
+
+names(children) <- names(children) %>% map_chr(~ str_c(.x, "_c"))
 
 # children %>% get_dupes(serial, momloc) # no dupes
 nrow(children)
@@ -96,7 +95,7 @@ nrow(children)
 
 ```{r}
 sample1 <-
-  left_join(mothers, children, by = c("serial", "pernum" = "momloc_c")) %>%
+  left_join(mothers, children, by = c("serial" = "serial_c", "pernum" = "momloc_c")) %>%
   filter(
     is.na(qage_c) | qage_c == 0, # not allocated: child's age
     # is.na(qsex_c) | qsex_c  %in% c(0, 3), # not allocated: child's sex
@@ -117,36 +116,42 @@ sample1 <-
     # is.na(qsex_c) | qsex_c == 0,
     # is.na(qrelate_c) | qrelate_c == 0
   )
-nrow(sample1a)
 
 # get_dupes(families, serial) # no dupes
 
-# Paper results:   662,204   535,887   465,595
+# Paper results: 662,204
+nrow(sample1)
 ```
 
 ```{r}
 sample2 <- 
   sample1 %>% 
-  mutate(children_ever = chborn - 1) %>% 
-  filter(children_ever == children_hh, age_c < 18, is.na(twin1) | twin2 == 0)
+  mutate(children_ever = if_else(chborn == 13, NA_real_, chborn - 1)) %>% 
+  filter(children_ever == children_hh_c, age_c < 18, twin2_c != 1)
 
-sample1 %>% select(serial, pernum, chborn, children_hh, age_c) %>% View()
-nrow(mothers2)
+# Paper results: 535,887
+nrow(sample2)
+```
 
-mothers3 <- 
-  mothers2 %>% 
+```{r}
+sample3 <-
+  sample2 %>% 
   mutate(
     marr_len = age - agemarr,
     marr_yr_born = marr_len - age_c
   ) %>% 
   filter(between(marr_yr_born, 0, 5)) %>%
   select(-marr_len, - marr_yr_born)
-nrow(mothers3)
+
+# Paper results: 465,595
+nrow(sample3)
 ```
 
 
 ```{r}
-write_feather(families, str_c(data_dir, "families.feather"))
+write_feather(sample1, str_c(data_dir, "sample1.feather"))
+write_feather(sample2, str_c(data_dir, "sample2.feather"))
+write_feather(sample3, str_c(data_dir, "sample3.feather"))
 ```
 
 
