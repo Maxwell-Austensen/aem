@@ -2,7 +2,9 @@
 title: 'AEM Replication: 1'
 author: "Maxwell Austensen"
 date: '`r Sys.Date()`'
-output: html_notebook
+output:
+  github_document: default
+  html_notebook: default
 ---
 
 
@@ -19,11 +21,12 @@ library(janitor)
 library(feather)
 
 # Set directories
-data_dir <- "/Users/Maxwell/Box Sync/aem/replication/data/raw/"
+raw_ <- "/Users/Maxwell/Box Sync/aem/replication/data/raw/"
+clean_ <- "/Users/Maxwell/Box Sync/aem/replication/data/clean/"
 ```
 
 ```{r}
-raw <- read_stata(str_c(data_dir, "usa_00005.dta"))
+raw <- read_stata(str_c(raw_, "usa_00005.dta"))
 ```
 
 ```{r}
@@ -37,34 +40,27 @@ mothers <-
   raw %>%
   group_by(serial) %>% 
   mutate( # Create standardized household income - needs info on all hh members
-    adults = sum(age >= 18, na.rm = TRUE),
-    children = sum(age < 18, na.rm = TRUE),
-    inc_adjuster = ((adults + (0.7 * children)) ^ 0.7),
-    hhincome_std = hhincome / inc_adjuster
-  ) %>% 
+          adults = sum(age >= 18, na.rm = TRUE),
+          children = sum(age < 18, na.rm = TRUE),
+          inc_adjuster = ((adults + (0.7 * children)) ^ 0.7),
+          hhincome_std = hhincome / inc_adjuster) %>% 
   ungroup() %>% 
-  filter(
-    between(bpl, 1, 120), # US born (inc'l us territories etc.)
-    race == 1, # white
-    sex == 2, # female
-    between(age, 21, 40), # age 21-40
-    between(marrno, 1, 2), # ever married
-    between(agemarr, 17, 26), # married age 17-26
-    between(chborn, 2, 13), # ever child
-    between(marst, 1, 4), # ever married but not widow
-    qage == 0, # not allocated: age
-    qchborn == 0, # not allocated: chilren born
-    qmarrno  %in% c(0, 3), # not allocated: married
-    # qmarrno == 0, # not allocated: married
-    qmarst  %in% c(0, 3), # not allocated: marital status
-    # qmarst == 0, # not allocated: marital status
-    qagemarr %in% c(0, 3), # not allocated: married age
-    # qagemarr == 0, # not allocated: married age
-    qrelate  %in% c(0, 3), # not allocated: relation to household head
-    # qrelate == 0, # not allocated: relation to household head
-    qsex  %in% c(0, 3) # not allocated: sex
-    # qsex == 0 # not allocated: sex
-  )
+  filter( # restrict sample
+          between(bpl, 1, 120), # US born (inc'l us territories etc.)
+          race == 1, # white
+          sex == 2, # female
+          between(age, 21, 40), # age 21-40
+          between(marrno, 1, 2), # ever married
+          between(agemarr, 17, 26), # married age 17-26
+          between(chborn, 2, 13), # ever child
+          between(marst, 1, 4), # ever married but not widow
+          qage == 0, # not allocated: age
+          qchborn == 0, # not allocated: chilren born
+          qmarrno == 0, # not allocated: married
+          qmarst == 0, # not allocated: marital status
+          qagemarr== 0, # not allocated: married age
+          qrelate == 0, # not allocated: relation to household head
+          qsex == 0) # not allocated: sex
 
 nrow(mothers)
 ```
@@ -76,13 +72,11 @@ children <-
   group_by(serial, momloc) %>% 
   mutate(children_hh  = n()) %>% # number of mother's children in household
   filter(age == max(age)) %>% # Keep only the oldest (can be multiple oldest if same age in years)
-  mutate(
-    max_age = max(age),
-    same_qtr = sum(birthqtr == lag(birthqtr), na.rm = TRUE),
-    twin1 = if_else(n() > 1, 1, 0), # twin based only on age in years
-    twin2 = if_else(same_qtr > 0, 1, 0) # twin based on age in years and quarter
-    # note: "twin" also includes other multiples (eg. triplets)
-  ) %>% 
+  mutate(max_age = max(age),
+         same_qtr = sum(birthqtr == lag(birthqtr), na.rm = TRUE),
+         twin1 = if_else(n() > 1, 1, 0), # twin based only on age in years
+         twin2 = if_else(same_qtr > 0, 1, 0)) %>% # twin based on age in years and quarter
+         # note: "twin" also includes other multiples (eg. triplets) 
   arrange(serial, desc(age), birthqtr) %>% 
   filter(row_number() == 1) %>% # keep only one child if twin
   ungroup()
@@ -90,34 +84,22 @@ children <-
 names(children) <- names(children) %>% map_chr(~ str_c(.x, "_c"))
 
 # children %>% get_dupes(serial, momloc) # no dupes
+
 nrow(children)
 ```
 
 ```{r}
 sample1 <-
   left_join(mothers, children, by = c("serial" = "serial_c", "pernum" = "momloc_c")) %>%
-  filter(
-    is.na(qage_c) | qage_c == 0, # not allocated: child's age
-    # is.na(qsex_c) | qsex_c  %in% c(0, 3), # not allocated: child's sex
-    is.na(qsex_c) | qsex_c == 0, # not allocated: child's sex
-    # is.na(qrelate_c) | qrelate_c  %in% c(0, 3), # not allocated: child's relation to head of household
-    is.na(qrelate_c) | qrelate_c == 0, # not allocated: child's relation to head of household
-    is.na(qbirthmo_c) | qbirthmo_c == 0 # not allocated: child's birth month
-  ) %>% 
-  filter(
-    # bpl <= 56,
-    # bpl %in% c(1:56, 110),
-    raced == 100,
-    qmarrno == 0,
-    qmarst == 0,
-    qagemarr == 0,
-    qrelate == 0,
-    qsex == 0
-    # is.na(qsex_c) | qsex_c == 0,
-    # is.na(qrelate_c) | qrelate_c == 0
-  )
+  filter(is.na(qage_c) | qage_c == 0, # not allocated: child's age
+         is.na(qsex_c) | qsex_c == 0, # not allocated: child's sex
+         is.na(qrelate_c) | qrelate_c == 0, # not allocated: child's relation to head of household
+         is.na(qbirthmo_c) | qbirthmo_c == 0) %>% # not allocated: child's birth month
+  filter(# bpl <= 56,
+         # bpl %in% c(1:56, 110),
+         raced == 100)
 
-# get_dupes(families, serial) # no dupes
+# get_dupes(sample1, serial) # no dupes
 
 # Paper results: 662,204
 nrow(sample1)
@@ -136,10 +118,8 @@ nrow(sample2)
 ```{r}
 sample3 <-
   sample2 %>% 
-  mutate(
-    marr_len = age - agemarr,
-    marr_yr_born = marr_len - age_c
-  ) %>% 
+  mutate(marr_len = age - agemarr,
+         marr_yr_born = marr_len - age_c) %>% 
   filter(between(marr_yr_born, 0, 5)) %>%
   select(-marr_len, - marr_yr_born)
 
@@ -147,11 +127,10 @@ sample3 <-
 nrow(sample3)
 ```
 
-
 ```{r}
-write_feather(sample1, str_c(data_dir, "sample1.feather"))
-write_feather(sample2, str_c(data_dir, "sample2.feather"))
-write_feather(sample3, str_c(data_dir, "sample3.feather"))
+  write_feather(sample1, str_c(clean_, "sample1.feather"))
+  write_feather(sample2, str_c(clean_, "sample2.feather"))
+  write_feather(sample3, str_c(clean_, "sample3.feather"))
 ```
 
 
