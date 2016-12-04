@@ -1,0 +1,74 @@
+---
+title: 'AEM Replication: 3'
+author: "Maxwell Austensen"
+date: '`r Sys.Date()`'
+output:
+  html_notebook: default
+  github_document: default
+---
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+# Install packages if needed
+package_list <- c("haven", "stringr", "tidyverse", "janitor", "feather", "knitr", "rmarkdown")
+new_packages <- package_list[!package_list %in% installed.packages()[,"Package"]]
+if(length(new_packages)) install.packages(new_packages)
+
+library(haven)
+library(stringr)
+library(tidyverse)
+library(janitor)
+library(feather)
+library(broom)
+
+# Set directories
+clean_ <- "/Users/Maxwell/Box Sync/aem/replication/data/clean/"
+```
+
+```{r}
+sample3 <- read_feather(str_c(clean_, "sample3.feather")) %>% mutate(sample = "Sample 3")
+```
+
+```{r}
+first_stage_df <- 
+  sample3 %>% 
+  transmute(marr_ended = if_else(marst %in% c(3, 4) | marrno == 2, 1, 0),
+         child_girl = if_else(sex_c == 2, 1, 0),
+         `educ_<12 years` = if_else(higrade < 15, 1, 0),
+         `educ_12 years` = if_else(higrade == 15, 1, 0),
+         `educ_13-15 years` = if_else(between(higrade, 16, 18), 1, 0),
+         `educ_16+ years` = if_else(higrade >= 19, 1, 0),
+         `agemarr_<20 years old` = if_else(agemarr < 20, 1, 0),
+         `agemarr_20+ years old` = if_else(agemarr >= 20, 1, 0),
+         `agebirth_<22 years old` = if_else((age - age_c) < 22, 1, 0),
+         `agebirth_22+ years old` = if_else((age - age_c) >= 22, 1, 0))
+
+glimpse(first_stage_df)
+```
+
+```{r}
+make_table <- function(name, formula){
+  if(name == "child_girl"){
+    obs <- data_frame(Observations = nrow(first_stage_df))
+    mod <- first_stage_df %>% lm(formula, data = .)
+  } else {
+    filtered <- first_stage_df %>% filter_(str_interp("`${name}` == 1"))
+    obs <- data_frame(Observations = nrow(filtered))
+    mod <- filtered %>% lm(formula, data = .)
+  }
+  
+  label <- data_frame(label = str_replace(name, "educ_|agemarr_|agebirth_", ""))
+  est <- mod %>% tidy() %>% filter(term == "child_girl") %>% select(Coefficient = estimate)
+  f_stat <- mod %>% glance() %>% select(`F-Statistic` = statistic)
+  
+  df <- bind_cols(label, est, f_stat, obs)
+  return(df)
+}
+```
+
+```{r}
+cols <- first_stage_df %>% select(-marr_ended) %>% names()
+
+unadjusted <- map(cols, make_table, formula = "marr_ended ~ child_girl") %>% bind_rows()
+
+knitr::kable(unadjusted)
+```
