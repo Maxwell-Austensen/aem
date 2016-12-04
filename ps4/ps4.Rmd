@@ -17,6 +17,7 @@ library(MatchIt)
 library(haven)
 library(tidyverse)
 library(stringr)
+library(broom)
 
 # Modification to stargazer() - escapes "*" to prevent html vs markdown confusion
 stargazer_html <- function(...){
@@ -69,12 +70,10 @@ all %>%
   get_summary() %>%
   gather("name", "value", -grp) %>% 
   separate(name, c("var", "stat")) %>% 
-  mutate(
-    sample = recode(grp, "Dehejia-Wahba Sample_1" = "Treatment",
-                         "Dehejia-Wahba Sample_0" = "Control",
-                         "PSID_0" = "PSID - 1"),
-    sample = ordered(sample, levels = c("Treatment", "Control", "PSID - 1"))
-  ) %>% 
+  mutate(sample = recode(grp, "Dehejia-Wahba Sample_1" = "Treatment",
+                              "Dehejia-Wahba Sample_0" = "Control",
+                              "PSID_0" = "PSID - 1"),
+         sample = ordered(sample, levels = c("Treatment", "Control", "PSID - 1"))) %>% 
   spread(var, value) %>% 
   left_join(obs, by = "grp") %>% 
   mutate_at(vars(sample, observations), funs(if_else(stat == "se", "", as.character(.)))) %>% 
@@ -82,6 +81,39 @@ all %>%
 # %>%
   # knitr::kable()
 ```
+
+```{r}
+
+diff_means <- function(p, df){
+  lm(str_interp("${p} ~ group"), data = df) %>% 
+    tidy() %>% 
+    filter(term != "(Intercept)") %>% 
+    transmute(var = p,
+              est = round(estimate, 2),
+              se = round(std.error, 2))
+}
+
+cols <- all %>% select(-grp, -data_id, -treat) %>% names()
+```
+
+```{r}
+samples1 <- 
+  all %>% 
+  filter(grp %in% c("Dehejia-Wahba Sample_1", "PSID_0")) %>% 
+  mutate(group = treat)
+
+map(cols, diff_means, samples1) %>% bind_rows()
+```
+
+```{r}
+samples2 <- 
+  all %>% 
+  filter(grp %in% c("Dehejia-Wahba Sample_0", "PSID_0")) %>% 
+  mutate(group = if_else(grp == "Dehejia-Wahba Sample_0", 1, 0))
+
+map(cols, diff_means, samples2) %>% bind_rows()
+```
+
 
 ### 2.
 
