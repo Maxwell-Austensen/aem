@@ -90,26 +90,33 @@ nnmatch re78 treat `covariates', keep(match_info2) replace
 
 use "match_info2", clear
 
-local collapse_vars = "treat re78 age education black hispanic married re74 re75 re74_sq re75_sq km index dist re78_0 re78_1 age_0m education_0m black_0m hispanic_0m married_0m re74_0m re75_0m re74_sq_0m re75_sq_0m age_1m education_1m black_1m hispanic_1m married_1m re74_1m re75_1m re74_sq_1m re75_sq_1m"
+keep if treat == 1
+
+* merge back in other covariates dropped in matching process
+merge m:1 id using "treat", keepusing(nodegree_1m) keep(master match) nogen
+
+merge m:1 index using "comparison", keepusing(nodegree_0m) keep(master match) nogen
+
+local collapse_vars = "treat re78_* age_* education_* black_* hispanic_* nodegree_* married_* re74_1m re74_0m re75_1m re75_0m re74_sq_* re75_sq_* km index dist"
 
 collapse (mean) `collapse_vars', by(id) 
 
-local vars "age education black hispanic married re74 re75"
+local vars "age education black hispanic nodegree married re74 re75"
 
-matrix table1 = J(3, 7, .)
+matrix table1 = J(3, 8, .)
 matrix colnames table1 = `vars'
 matrix rownames table1 = trt_mean comp_mean diff_se
 
 matrix list table1 
 
 local i = 1
-foreach var in age education black hispanic married re74 re75 {
+foreach var in `vars' {
 
 	qui ttest `var'_0m == `var'_1m, unpaired
 	
-	matrix table1[1, `i'] = r(mu_2)
-	matrix table1[2, `i'] = r(mu_1)
-	matrix table1[3, `i'] = r(se)
+	matrix table1[1, `i'] = round(r(mu_2), 0.01)
+	matrix table1[2, `i'] = round(r(mu_1), 0.01)
+	matrix table1[3, `i'] = round(r(se), 0.01)
 	
 	local i = `i'+1
 }
@@ -117,6 +124,10 @@ foreach var in age education black hispanic married re74 re75 {
 * Assess the quality of the matches for each covariate
 matrix list table1
 
+*             age  education  black  hispanic  nodegree  married     re74     re75
+* trt_mean  25.82      10.35    .84       .06       .71      .19  2095.57  1532.06
+*comp_mean  26.24      10.46    .84       .06        .7      .19  3371.76  2135.67
+*  diff_se    .75         .2    .04       .02       .05      .04   509.04   348.16
 
 use "nsw_dw.dta", clear
 
@@ -124,13 +135,36 @@ drop if data_id == "Dehejia-Wahba Sample" & treat == 0
 
 ttest re78, by(treat)
 
-* Group |              Mean    Std. Err. 
-* diff  |            15204.78    1154.614
+* Group |     Mean   Std. Err. 
+* diff  | 15204.78    1154.614
  
 ********************************************************************************
+* Q 5
+******
+
+gen re74_sq = re74 ^ 2
+gen re75_sq = re75 ^ 2
+
+local covariates "age education black hispanic married re74 re75 re74_sq re75_sq"
+
+logit treat `covariates'
+
+predict p_score
+
+psgraph, t(treat) p(p_score)
 
 
+nnmatch re78 treat p_score, keep(match_info3) replace
 
+use "match_info3", clear
+
+preserve
+keep id p_score_1m re78_1
+
+
+local covariates "age education black hispanic married re74 re75 re74_sq re75_sq"
+
+pstest `covariates', raw t(treat)
 
 
 
