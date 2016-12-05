@@ -112,7 +112,7 @@ matrix list table1
 local i = 1
 foreach var in `vars' {
 
-	qui ttest `var'_0m == `var'_1m, unpaired
+	qui ttest `var'_0m == `var'_1m
 	
 	matrix table1[1, `i'] = round(r(mu_2), 0.01)
 	matrix table1[2, `i'] = round(r(mu_1), 0.01)
@@ -124,10 +124,10 @@ foreach var in `vars' {
 * Assess the quality of the matches for each covariate
 matrix list table1
 
-*             age  education  black  hispanic  nodegree  married     re74     re75
-* trt_mean  25.82      10.35    .84       .06       .71      .19  2095.57  1532.06
-*comp_mean  26.24      10.46    .84       .06        .7      .19  3371.76  2135.67
-*  diff_se    .75         .2    .04       .02       .05      .04   509.04   348.16
+*              age  education  black  hispanic  nodegree  married     re74     re75
+*  trt_mean  25.82      10.35    .84       .06       .71      .19  2095.57  1532.06
+* comp_mean  26.24      10.46    .84       .06        .7      .19  3371.76  2135.67
+*   diff_se    .17        .06      0         0       .02        0   171.78   153.15
 
 use "nsw_dw.dta", clear
 
