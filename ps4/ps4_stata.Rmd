@@ -435,7 +435,7 @@ This new specification achieves much better balance across all the covariates. N
 ------------------------------------------------------------------------------
 ```
 
-However
+Despite the apparently improved balance ofcovariates, the estimated treatment effect is now only 854.51, which is much lower than the experimental treatment effect of 1794.34, so it seems the matching has not acctually improved.
 
 ***
 
@@ -492,6 +492,6 @@ reg re78 treat `spec_7_vars'
 -------------+----------------------------------------------------------------
 ```
 
-The estimate the treatment effect via inverse propensity score weighting is 1657.51 using the first specification and 1440.64 using the second specification with additional covariates added to the estimation of the propensity score.
+The estimate the treatment effect via inverse propensity score weighting is 1657.51 using the first specification and 1440.64 using the second specification with additional covariates added to the estimation of the propensity score. The treatment effect estimate with inverse propensity score weighting with the first specification is almost the same as close to the experimental affect as was achieved with matching on that propensity score. The second specification, is much further off from the experimental effect estimate, as was the matching estimate for that specification. 
 
 ***

@@ -1,10 +1,10 @@
 capture log close
-log using "ps2", text replace
+log using "ps4", text replace
 /****************************************************************************
-Program Name:   ps2.do
+Program Name:   ps4.do
 Location:       GitHub\aem\ps2
 Author:         Maxwell Austensen
-Date Created:   31 Oct 2016
+Date Created:   06 Dec 2016
 Project:        Problem Set 2 - Instrumental Variables
 Class:        	Advanced Empirical Methods
 ****************************************************************************/
