@@ -3,8 +3,8 @@ title: 'AEM Replication: 3'
 author: "Maxwell Austensen"
 date: '`r Sys.Date()`'
 output:
-  html_notebook: default
   github_document: default
+  html_notebook: default
 ---
 
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
@@ -16,12 +16,12 @@ if(length(new_packages)) install.packages(new_packages)
 library(haven)
 library(stringr)
 library(tidyverse)
-library(janitor)
 library(feather)
 library(broom)
 
 # Set directories
-clean_ <- "/Users/Maxwell/Box Sync/aem/replication/data/clean/"
+clean_ <- "C:/Users/austensen/Box Sync/aem/replication/data/clean/"
+# clean_ <- "/Users/Maxwell/Box Sync/aem/replication/data/clean/"
 ```
 
 ```{r}
@@ -31,18 +31,18 @@ sample3 <- read_feather(str_c(clean_, "sample3.feather")) %>% mutate(sample = "S
 ```{r}
 first_stage_df <- 
   sample3 %>% 
-  transmute(marr_ended = if_else(marst %in% c(3, 4) | marrno == 2, 1, 0),
+  mutate(marr_ended = if_else(marst %in% c(3, 4) | marrno == 2, 1, 0),
          child_girl = if_else(sex_c == 2, 1, 0),
-         `educ_<12 years` = if_else(higrade < 15, 1, 0),
-         `educ_12 years` = if_else(higrade == 15, 1, 0),
-         `educ_13-15 years` = if_else(between(higrade, 16, 18), 1, 0),
-         `educ_16+ years` = if_else(higrade >= 19, 1, 0),
+         educ_yrs = if_else(higrade < 4, 0, higrade - 3),
+         `educ_<12 years` = if_else(educ_yrs < 12, 1, 0),
+         `educ_12 years` = if_else(educ_yrs == 12, 1, 0),
+         `educ_13-15 years` = if_else(between(educ_yrs, 13, 15), 1, 0),
+         `educ_16+ years` = if_else(educ_yrs >= 16, 1, 0),
          `agemarr_<20 years old` = if_else(agemarr < 20, 1, 0),
          `agemarr_20+ years old` = if_else(agemarr >= 20, 1, 0),
-         `agebirth_<22 years old` = if_else((age - age_c) < 22, 1, 0),
-         `agebirth_22+ years old` = if_else((age - age_c) >= 22, 1, 0))
-
-glimpse(first_stage_df)
+         age_birth = age - age_c,
+         `agebirth_<22 years old` = if_else(age_birth < 22, 1, 0),
+         `agebirth_22+ years old` = if_else(age_birth >= 22, 1, 0))
 ```
 
 ```{r}
@@ -66,9 +66,22 @@ make_table <- function(name, formula){
 ```
 
 ```{r}
-cols <- first_stage_df %>% select(-marr_ended) %>% names()
+cols <- c("child_girl", "educ_<12 years", "educ_12 years", "educ_13-15 years", 
+          "educ_16+ years", "agemarr_<20 years old", "agemarr_20+ years old", 
+          "agebirth_<22 years old", "agebirth_22+ years old")
 
-unadjusted <- map(cols, make_table, formula = "marr_ended ~ child_girl") %>% bind_rows()
+adj_formula <- "marr_ended ~ child_girl + age + age_birth + agemarr + educ_yrs + age^2 + agemarr^2 + age_birth^2 + educ_yrs^2 + age*educ_yrs + agemarr*educ_yrs + age_birth*educ_yrs + metarea + factor(bpl) + factor(statefip)"
 
-knitr::kable(unadjusted)
+unadjusted <- map_df(cols, make_table, formula = "marr_ended ~ child_girl")
+adjusted <- map_df(cols, make_table, formula = adj_formula)
+
+table2 <- 
+  unadjusted %>% 
+  inner_join(adjusted, by = c("label", "Observations"), suffix = c("_unadj", "_adj")) %>% 
+  select(label, contains("_unadj"), contains("_adj"), Observations)
+
+knitr::kable(table2, digits = c(NA, 3, 1, 3, 1, 0), format.args = list(big.mark = ','))
 ```
+
+
+
