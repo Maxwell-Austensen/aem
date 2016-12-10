@@ -4,6 +4,11 @@ Maxwell Austensen
 2016-12-10
 
 ``` r
+# load function to assign poverty threshold
+source("get_pov_threshold_99.R")
+```
+
+``` r
 raw <- read_stata(str_c(raw_, "usa_00005.dta"))
 ```
 
@@ -84,10 +89,11 @@ mothers <-
   raw %>%
   group_by(serial) %>% 
   mutate( # Create standardized household income - needs info on all hh members
-          adults = sum(age >= 18, na.rm = TRUE),
-          children = sum(age < 18, na.rm = TRUE),
-          inc_adjuster = ((adults + (0.7 * children)) ^ 0.7),
-          hhincome_std = hhincome / inc_adjuster) %>% 
+          hh_adults = sum(age >= 18, na.rm = TRUE),
+          hh_children = sum(age < 18, na.rm = TRUE),
+          hh_head_65p = if_else(pernum == 1, if_else(age >= 65, 1, 0), NA_real_) %>% sum(na.rm = TRUE),
+          inc_adjuster = (hh_adults + (0.7 * hh_children)) ^ 0.7,
+          hh_income_std = hhincome / inc_adjuster) %>% 
   ungroup() %>% 
   filter( # restrict sample
           between(bpl, 1, 120), # US born (inc'l us territories etc.)
@@ -154,7 +160,10 @@ sample1 <-
          urban = if_else(metarea == 0, 0, 1),
          n_children = if_else(chborn <= 1, 0, chborn - 1),
          children_hh = nchild,
-         poverty_status = if_else(is.na(poverty), NA_real_, if_else(poverty < 100, 1, 0)),
+         hh_income = hhincome,
+         hh_income_99 = hh_income * 2.314,
+         pov_threshold_99 = pmap_dbl(list(hh_adults, hh_children, hh_head_65p), get_pov_treshold_99),
+         poverty_status = if_else(hh_income_99 < pov_threshold_99, 1, 0),
          nonwoman_inc = hhincome - inctot,
          woman_inc = inctot,
          woman_earn = incwage,
@@ -166,6 +175,9 @@ sample1 <-
   select(serial,
          pernum,
          perwt,
+         hh_adults,
+         hh_children,
+         hh_head_65p,
          state_birth,
          state_current,
          marriage_ended,
@@ -176,7 +188,10 @@ sample1 <-
          urban,
          n_children,
          children_hh,
-         hhincome_std,
+         hh_income_std,
+         hh_income,
+         hh_income_99,
+         pov_threshold_99,
          poverty_status,
          nonwoman_inc,
          woman_inc,
