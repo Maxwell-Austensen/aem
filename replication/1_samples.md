@@ -1,7 +1,7 @@
-AEM Replication: 1
+1: Create Samples & Variables
 ================
 Maxwell Austensen
-2016-12-03
+2016-12-10
 
 ``` r
 raw <- read_stata(str_c(raw_, "usa_00005.dta"))
@@ -145,7 +145,50 @@ sample1 <-
          is.na(qbirthmo_c) | qbirthmo_c == 0) %>% # not allocated: child's birth month
   filter(# bpl <= 56,
          # bpl %in% c(1:56, 110),
-         raced == 100)
+         raced == 100) %>%
+  mutate(marriage_ended = if_else(marst %in% c(3, 4) | marrno == 2, 1, 0),
+         firstborn_girl = if_else(sex_c == 2, 1, 0),
+         educ_yrs = if_else(higrade < 4, 0, higrade - 3),
+         age_birth = age - age_c,
+         age_married = agemarr,
+         urban = if_else(metarea == 0, 0, 1),
+         n_children = if_else(chborn <= 1, 0, chborn - 1),
+         children_hh = nchild,
+         poverty_status = if_else(is.na(poverty), NA_real_, if_else(poverty < 100, 1, 0)),
+         nonwoman_inc = hhincome - inctot,
+         woman_inc = inctot,
+         woman_earn = incwage,
+         employed = if_else(empstat == 1, 1, 0),
+         weeks_worked = if_else(wkswork1 == 00, NA_real_, wkswork1),
+         hours_worked = if_else(uhrswork == 00, NA_real_, uhrswork),
+         state_birth = bpl,
+         state_current = statefip) %>%
+  select(serial,
+         pernum,
+         perwt,
+         state_birth,
+         state_current,
+         marriage_ended,
+         firstborn_girl,
+         educ_yrs,
+         age_birth,
+         age_married,
+         urban,
+         n_children,
+         children_hh,
+         hhincome_std,
+         poverty_status,
+         nonwoman_inc,
+         woman_inc,
+         woman_earn,
+         employed,
+         weeks_worked,
+         hours_worked,
+         chborn,
+         age,
+         age_c,
+         twin1_c,
+         twin2_c)
 
 # get_dupes(sample1, serial) # no dupes
 
@@ -158,19 +201,20 @@ nrow(sample1)
 ``` r
 sample2 <- 
   sample1 %>% 
-  mutate(children_ever = if_else(chborn == 13, NA_real_, chborn - 1)) %>% 
-  filter(children_ever == children_hh_c, age_c < 18, twin2_c != 1)
+  filter(n_children == children_hh, 
+         age_c < 18, 
+         twin2_c != 1)
 
 # Paper results: 535,887
 nrow(sample2)
 ```
 
-    ## [1] 533901
+    ## [1] 533881
 
 ``` r
 sample3 <-
   sample2 %>% 
-  mutate(marr_len = age - agemarr,
+  mutate(marr_len = age - age_married,
          marr_yr_born = marr_len - age_c) %>% 
   filter(between(marr_yr_born, 0, 5)) %>%
   select(-marr_len, - marr_yr_born)
@@ -179,10 +223,10 @@ sample3 <-
 nrow(sample3)
 ```
 
-    ## [1] 463819
+    ## [1] 463799
 
 ``` r
-  write_feather(sample1, str_c(clean_, "sample1.feather"))
-  write_feather(sample2, str_c(clean_, "sample2.feather"))
-  write_feather(sample3, str_c(clean_, "sample3.feather"))
+write_feather(sample1, str_c(clean_, "sample1.feather"))
+write_feather(sample2, str_c(clean_, "sample2.feather"))
+write_feather(sample3, str_c(clean_, "sample3.feather"))
 ```
