@@ -1,7 +1,7 @@
-AEM Replication: 2
+2: Table 1 - Descriptives
 ================
 Maxwell Austensen
-2016-12-03
+2016-12-10
 
 ``` r
 sample1 <- read_feather(str_c(clean_, "sample1.feather")) %>% mutate(sample = "Sample 1")
@@ -20,27 +20,18 @@ format_mean <- function(val, digits = 2) {
 ```
 
 ``` r
-order_vec <- c("marr_ended_mean", "marr_ended_sd", "agemarr_mean", "agemarr_sd", "child_girl_mean", 
-               "child_girl_sd", "chborn_mean", "chborn_sd", "age_birth_mean", "age_birth_sd", "age_mean", 
+order_vec <- c("marriage_ended_mean", "marriage_ended_sd", "age_married_mean", "age_married_sd", "firstborn_girl_mean", 
+               "firstborn_girl_sd", "n_children_mean", "n_children_sd", "age_birth_mean", "age_birth_sd", "age_mean", 
                "age_sd", "educ_yrs_mean", "educ_yrs_sd", "urban_mean", "urban_sd", "hhincome_std_mean", 
                "hhincome_std_sd", "poverty_status_mean", "poverty_status_sd", "nonwoman_inc_mean", 
                "nonwoman_inc_sd", "woman_inc_mean", "woman_inc_sd", "woman_earn_mean", "woman_earn_sd", 
-               "obs_mean", "obs_sd")
+               "observations_mean", "observations_sd")
 
 bind_rows(sample1, sample2, sample3) %>% 
   group_by(sample) %>% 
-  mutate(marr_ended = if_else(marst %in% c(3, 4) | marrno == 2, 1, 0),
-         age_birth = age - age_c,
-         child_girl = if_else(sex_c == 2, 1, 0),
-         educ_yrs = if_else(higrade <= 3, 0, higrade - 3),
-         urban = if_else(metarea == 0, 0, 1),
-         poverty_status = if_else(is.na(poverty), NA_real_, if_else(poverty < 100, 1, 0)),
-         nonwoman_inc = hhincome - inctot,
-         woman_inc = inctot,
-         woman_earn = incwage,
-         obs = n()) %>% 
-  select(marr_ended, agemarr, child_girl, chborn, age_birth, age, educ_yrs, urban, 
-         hhincome_std, poverty_status, nonwoman_inc, woman_inc, woman_earn, obs) %>% 
+  mutate(observations = n()) %>% 
+  select(marriage_ended, age_married, firstborn_girl, n_children, age_birth, age, educ_yrs, urban, 
+         hhincome_std, poverty_status, nonwoman_inc, woman_inc, woman_earn, observations) %>% 
   summarise_all(funs(mean, sd)) %>%
   mutate_at(vars(contains("_mean")), format_mean) %>%
   mutate_at(vars(contains("_sd")), format_sd) %>%
@@ -48,7 +39,7 @@ bind_rows(sample1, sample2, sample3) %>%
   spread(sample, value) %>% 
   mutate(variable = ordered(variable, levels = order_vec)) %>% 
   arrange(variable) %>% 
-  filter(variable != "obs_sd") %>% 
+  filter(variable != "observations_sd") %>% 
   mutate(variable = str_replace(variable, "_mean", ""),
          variable = if_else(str_detect(variable, "_sd"), "", variable)) %>% 
   knitr::kable()
@@ -56,13 +47,13 @@ bind_rows(sample1, sample2, sample3) %>%
 
 | variable        | Sample 1    | Sample 2   | Sample 3   |
 |:----------------|:------------|:-----------|:-----------|
-| marr\_ended     | 0.25        | 0.21       | 0.2        |
+| marriage\_ended | 0.25        | 0.21       | 0.2        |
 |                 | (0.43)      | (0.4)      | (0.4)      |
-| agemarr         | 19.94       | 20.11      | 20.03      |
+| age\_married    | 19.94       | 20.11      | 20.03      |
 |                 | (2.15)      | (2.14)     | (2.13)     |
-| child\_girl     | NA          | 0.49       | 0.49       |
+| firstborn\_girl | NA          | 0.49       | 0.49       |
 |                 | NA          | (0.5)      | (0.5)      |
-| chborn          | 3.18        | 3.03       | 3.08       |
+| n\_children     | 2.18        | 2.03       | 2.08       |
 |                 | (1.08)      | (0.93)     | (0.94)     |
 | age\_birth      | NA          | 22.63      | 22.18      |
 |                 | NA          | (3.22)     | (2.68)     |
@@ -72,14 +63,14 @@ bind_rows(sample1, sample2, sample3) %>%
 |                 | (2.1)       | (2.09)     | (2.01)     |
 | urban           | 0.64        | 0.64       | 0.64       |
 |                 | (0.48)      | (0.48)     | (0.48)     |
-| hhincome\_std   | 18841.86    | 9743.95    | 9578.49    |
-|                 | (300218.78) | (5531.71)  | (5394.4)   |
+| hhincome\_std   | 18841.86    | 9744.13    | 9578.69    |
+|                 | (300218.78) | (5531.69)  | (5394.37)  |
 | poverty\_status | 0.08        | 0.08       | 0.08       |
 |                 | (0.28)      | (0.27)     | (0.27)     |
-| nonwoman\_inc   | 27441.2     | 18401.27   | 18327.18   |
-|                 | (300075.22) | (12783.26) | (12745.22) |
-| woman\_inc      | 4610.71     | 4388.72    | 4293.39    |
-|                 | (5949.73)   | (5847.96)  | (5744.21)  |
-| woman\_earn     | 4018.72     | 3838.23    | 3751.35    |
-|                 | (5428.95)   | (5326.69)  | (5221.68)  |
-| obs             | 660705      | 533901     | 463819     |
+| nonwoman\_inc   | 27441.2     | 18401.09   | 18326.97   |
+|                 | (300075.22) | (12782.94) | (12744.85) |
+| woman\_inc      | 4610.71     | 4388.88    | 4293.56    |
+|                 | (5949.73)   | (5848.02)  | (5744.27)  |
+| woman\_earn     | 4018.72     | 3838.37    | 3751.51    |
+|                 | (5428.95)   | (5326.74)  | (5221.74)  |
+| observations    | 660705      | 533881     | 463799     |
