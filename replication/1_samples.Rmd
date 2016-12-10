@@ -97,7 +97,44 @@ sample1 <-
          is.na(qbirthmo_c) | qbirthmo_c == 0) %>% # not allocated: child's birth month
   filter(# bpl <= 56,
          # bpl %in% c(1:56, 110),
-         raced == 100)
+         raced == 100) %>%
+  mutate(marr_ended = if_else(marst %in% c(3, 4) | marrno == 2, 1, 0),
+         firstborn_girl = if_else(sex_c == 2, 1, 0),
+         educ_yrs = if_else(higrade < 4, 0, higrade - 3),
+         age_birth = age - age_c,
+         age_married = agemarr,
+         urban = if_else(metarea == 0, 0, 1),
+         n_children = if_else(chborn < 2, 0, chborn - 1),
+         poverty_status = if_else(is.na(poverty), NA_real_, if_else(poverty < 100, 1, 0)),
+         nonwoman_inc = hhincome - inctot,
+         woman_inc = inctot,
+         woman_earn = incwage,
+         employed = if_else(empstat == 1, 1, 0),
+         worked_wks = if_else(wkswork1 == 00, NA_real_, wkswork1),
+         worked_hrs = if_else(uhrswork == 00, NA_real_, uhrswork)) %>%
+  select(serial,
+         pernum,
+         perwt,
+         marr_ended,
+         firstborn_girl,
+         educ_yrs,
+         age_birth,
+         urban,
+         n_children,
+         hhincome_std,
+         poverty_status,
+         nonwoman_inc,
+         woman_inc,
+         woman_earn,
+         employed,
+         worked_wks,
+         worked_hrs,
+         chborn,
+         age,
+         children_hh_c,
+         age_c,
+         twin1_c,
+         twin2_c)
 
 # get_dupes(sample1, serial) # no dupes
 
