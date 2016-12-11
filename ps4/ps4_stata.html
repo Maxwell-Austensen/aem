@@ -352,11 +352,13 @@ matrix list table1
 <pre><code>ttest re78_1 == re78_0
 
 *        |      Mean  Std. Err. 
-* re78_1 |      185    6349.144    
-* re78_0 |      185    4951.368     
+* re78_1 |  6349.144   578.4229   
+* re78_0 |  4951.368    557.107   
 *--------+----------------------
 *  diff  | 1397.775     777.192
 
+* Ha: mean(diff) != 0  
+* Pr(|T| &gt; |t|) = 0.0737 
 
 use &quot;nsw_dw.dta&quot;, clear
 keep if data_id == &quot;Dehejia-Wahba Sample&quot;
@@ -371,7 +373,11 @@ ttest re78, by(treat)
  Treated |     185    6349.144    578.4229    7867.402    5207.949    7490.338
 ---------+--------------------------------------------------------------------
     diff |           -1794.342    632.8534                -3038.11   -550.5745
-------------------------------------------------------------------------------</code></pre>
+------------------------------------------------------------------------------
+
+ Ha: diff != 0 
+ Pr(|T| &gt; |t|) = 0.0048 
+ </code></pre>
 <p>The estimated treatment effect using the matching method is 1397.78 while experimental treatment effect estimate is 1794.34.</p>
 <hr />
 </div>
@@ -529,7 +535,7 @@ re75                    | 1532.1     2046     -5.2 |  -1.63  0.105 |  1.28
 ---------+--------------------------------------------------------------------
     diff |           -1794.342    632.8534                -3038.11   -550.5745
 ------------------------------------------------------------------------------</code></pre>
-<p>Despite the apparently improved balance ofcovariates, the estimated treatment effect is now only 854.51, which is much lower than the experimental treatment effect of 1794.34, so it seems the matching has not acctually improved.</p>
+<p>Despite the apparently improved balance ofcovariates, the estimated treatment effect is now only 854.51, which is much lower than the experimental treatment effect of 1794.34, so it seems the matching has not acctually improved the estimate realative to the experiment.</p>
 <hr />
 </div>
 </div>
@@ -552,18 +558,26 @@ qui logit treat `spec_5_vars'
 
 predict p_score
 
-gen ipw = 1 / p_score if treat == 1
-replace ipw = 1 / (1 - p_score) if treat == 0
 
-reg re78 treat `spec_5_vars'
+gen ipw_ate = re78 * ((treat - p_score) / (p_score * (1 - p_score)))
+qui sum ipw_ate
+di r(mean)
+* -8780.056
 
-drop p_score ipw
+gen ipw_att = re78 * ((treat - p_score) / ((1 - p_score)))
+qui sum ipw_att 
+di (1 / (185 / 2675)) * r(mean)
+* 2167.4583
+
+reg re78 treat `spec_5_vars' [pweight = p_score]
+
+drop p_score ipw_ate ipw_att
 
 ------------------------------------------------------------------------------
+             |               Robust
         re78 |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-       treat |    1657.51   927.1529     1.79   0.074     -160.502    3475.522
--------------+----------------------------------------------------------------
+       treat |   431.7796   817.8577     0.53   0.598    -1171.918    2035.477
 
 
 local spec_7_vars &quot;age age_sq education black hispanic nodegree educ_nodegree married re74 re75 re74_sq re75_sq&quot;
@@ -572,17 +586,24 @@ qui logit treat `spec_7_vars'
 
 predict p_score
 
-gen ipw = 1 / p_score if treat == 1
-replace ipw = 1 / (1 - p_score) if treat == 0
+gen ipw_ate = re78 * ((treat - p_score) / (p_score * (1 - p_score)))
+qui sum ipw_ate
+di r(mean)
+* -5543.2366
 
-reg re78 treat `spec_7_vars'
+gen ipw_att = re78 * ((treat - p_score) / ((1 - p_score)))
+qui sum ipw_att 
+di (1 / (185 / 2675)) * r(mean)
+* 1120.4267
+
+reg re78 treat `spec_7_vars' [pweight = p_score]
 
 -------------------------------------------------------------------------------
+              |               Robust
          re78 |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
 --------------+----------------------------------------------------------------
-        treat |    1440.64   937.1482     1.54   0.124    -396.9721    3278.253
--------------+----------------------------------------------------------------</code></pre>
-<p>The estimate the treatment effect via inverse propensity score weighting is 1657.51 using the first specification and 1440.64 using the second specification with additional covariates added to the estimation of the propensity score. The treatment effect estimate with inverse propensity score weighting with the first specification is almost the same as close to the experimental affect as was achieved with matching on that propensity score. The second specification, is much further off from the experimental effect estimate, as was the matching estimate for that specification.</p>
+        treat |   1450.125   930.4046     1.56   0.119    -374.2643    3274.514</code></pre>
+<p>The average treatment effect on treated estimated via inverse propensity score weighting is 2167.46 using the first specification and 1120.43 using the second specification with additional covariates added to the estimation of the propensity score.</p>
 <hr />
 </div>
 </div>

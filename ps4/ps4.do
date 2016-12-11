@@ -121,9 +121,6 @@ nnmatch re78 treat re74 re75, keep(match_info) replace
 */
 
 
-********************************************************************************
-* Q 3
-******
 
 use "match_info", clear
 
@@ -156,7 +153,12 @@ graph export "plot2.png", replace
 
 reg re75_0m re75_1m
 	* R-squared     =  0.9929
+
 	
+********************************************************************************
+* Q 3
+******
+
 * check balance of education treatment and matched comparison
 twoway (scatter education_0m education_1m) (lfit education_0m education_1m) || ///
 	function y = x, ra(education_0m) clpat(dash)
@@ -231,10 +233,13 @@ matrix list table1
 ttest re78_1 == re78_0
 
 *        |      Mean  Std. Err. 
-* re78_1 |      185    6349.144    
-* re78_0 |      185    4951.368     
+* re78_1 |  6349.144   578.4229   
+* re78_0 |  4951.368    557.107   
 *--------+----------------------
 *  diff  | 1397.775     777.192
+
+* Ha: mean(diff) != 0  
+* Pr(|T| > |t|) = 0.0737 
 
 
 
@@ -243,9 +248,7 @@ keep if data_id == "Dehejia-Wahba Sample"
 ttest re78, by(treat) 
 
 * Experimental treatment effect estimate
-* --------------------------------------
-/*
-
+/* --------------------------------------
 ------------------------------------------------------------------------------
    Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
 ---------+--------------------------------------------------------------------
@@ -254,6 +257,10 @@ ttest re78, by(treat)
 ---------+--------------------------------------------------------------------
     diff |           -1794.342    632.8534                -3038.11   -550.5745
 ------------------------------------------------------------------------------
+
+ Ha: diff != 0 
+ Pr(|T| > |t|) = 0.0048 
+ 
 */
  
 ********************************************************************************
@@ -437,18 +444,28 @@ qui logit treat `spec_5_vars'
 
 predict p_score
 
-gen ipw = 1 / p_score if treat == 1
-replace ipw = 1 / (1 - p_score) if treat == 0
 
-reg re78 treat `spec_5_vars'
+gen ipw_ate = re78 * ((treat - p_score) / (p_score * (1 - p_score)))
+qui sum ipw_ate
+di r(mean)
+* -8780.056
 
-drop p_score ipw
+gen ipw_att = re78 * ((treat - p_score) / ((1 - p_score)))
+qui sum ipw_att 
+di (1 / (185 / 2675)) * r(mean)
+* 2167.4583
+
+reg re78 treat `spec_5_vars' [pweight = p_score]
+
+drop p_score ipw_ate ipw_att
 
 /*
 ------------------------------------------------------------------------------
+             |               Robust
         re78 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-       treat |    1657.51   927.1529     1.79   0.074     -160.502    3475.522
+       treat |   431.7796   817.8577     0.53   0.598    -1171.918    2035.477
+
 */
 
 
@@ -458,16 +475,25 @@ qui logit treat `spec_7_vars'
 
 predict p_score
 
-gen ipw = 1 / p_score if treat == 1
-replace ipw = 1 / (1 - p_score) if treat == 0
+gen ipw_ate = re78 * ((treat - p_score) / (p_score * (1 - p_score)))
+qui sum ipw_ate
+di r(mean)
+* -5543.2366
 
-reg re78 treat `spec_7_vars'
+gen ipw_att = re78 * ((treat - p_score) / ((1 - p_score)))
+qui sum ipw_att 
+di (1 / (185 / 2675)) * r(mean)
+* 1120.4267
+
+reg re78 treat `spec_7_vars' [pweight = p_score]
 
 /*
 -------------------------------------------------------------------------------
+              |               Robust
          re78 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 --------------+----------------------------------------------------------------
-        treat |    1440.64   937.1482     1.54   0.124    -396.9721    3278.253
+        treat |   1450.125   930.4046     1.56   0.119    -374.2643    3274.514
+
 */
 
 ************************************************************
