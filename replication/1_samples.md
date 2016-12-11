@@ -111,18 +111,14 @@ mothers <-
           qagemarr== 0, # not allocated: married age
           qrelate == 0, # not allocated: relation to household head
           qsex == 0) # not allocated: sex
-
-nrow(mothers)
 ```
-
-    ## [1] 703564
 
 ``` r
 children <-
   raw %>% 
   filter(momloc != 0) %>% 
   group_by(serial, momloc) %>% 
-  mutate(children_hh  = n()) %>% # number of mother's children in household
+  mutate(children_mom  = n()) %>% # number of mother's children in household
   filter(age == max(age)) %>% # Keep only the oldest (can be multiple oldest if same age in years)
   mutate(max_age = max(age),
          same_qtr = sum(birthqtr == lag(birthqtr), na.rm = TRUE),
@@ -133,14 +129,10 @@ children <-
   filter(row_number() == 1) %>% # keep only one child if twin
   ungroup()
 
-names(children) <- names(children) %>% map_chr(~ str_c(.x, "_c"))
+names(children) <- names(children) %>% str_c("_c")
 
 # children %>% get_dupes(serial, momloc) # no dupes
-
-nrow(children)
 ```
-
-    ## [1] 1984169
 
 ``` r
 sample1 <-
@@ -157,9 +149,10 @@ sample1 <-
          educ_yrs = if_else(higrade < 4, 0, higrade - 3),
          age_birth = age - age_c,
          age_married = agemarr,
+         marital_status = if_else(marst %in% c(1, 2) & marrno == 2, 1, 0),
          urban = if_else(metarea == 0, 0, 1),
          n_children = if_else(chborn <= 1, 0, chborn - 1),
-         children_hh = nchild,
+         children_mom = children_mom_c,
          hh_income = hhincome,
          hh_income_99 = hh_income * 2.314,
          pov_threshold_99 = pmap_dbl(list(hh_adults, hh_children, hh_head_65p), get_pov_treshold_99),
@@ -168,8 +161,8 @@ sample1 <-
          woman_inc = inctot,
          woman_earn = incwage,
          employed = if_else(empstat == 1, 1, 0),
-         weeks_worked = if_else(wkswork1 == 00, NA_real_, wkswork1),
-         hours_worked = if_else(uhrswork == 00, NA_real_, uhrswork),
+         weeks_worked = wkswork1,
+         hours_worked = uhrswork,
          state_birth = bpl,
          state_current = statefip) %>%
   select(serial,
@@ -185,9 +178,11 @@ sample1 <-
          educ_yrs,
          age_birth,
          age_married,
+         marital_status,
          urban,
          n_children,
-         children_hh,
+         nchild,
+         children_mom,
          hh_income_std,
          hh_income,
          hh_income_99,
@@ -216,7 +211,7 @@ nrow(sample1)
 ``` r
 sample2 <- 
   sample1 %>% 
-  filter(n_children == children_hh, 
+  filter(n_children == children_mom, 
          age_c < 18, 
          twin2_c != 1)
 
@@ -224,7 +219,7 @@ sample2 <-
 nrow(sample2)
 ```
 
-    ## [1] 533881
+    ## [1] 533903
 
 ``` r
 sample3 <-
@@ -238,7 +233,7 @@ sample3 <-
 nrow(sample3)
 ```
 
-    ## [1] 463799
+    ## [1] 463821
 
 ``` r
 write_feather(sample1, str_c(clean_, "sample1.feather"))
