@@ -11,7 +11,7 @@
 
 <meta name="author" content="Maxwell Austensen" />
 
-<meta name="date" content="2016-12-10" />
+<meta name="date" content="2016-12-11" />
 
 <title>2: Table 1 - Descriptives</title>
 
@@ -171,7 +171,7 @@ $(document).ready(function () {
 <h1 class="title toc-ignore">2: Table 1 - Descriptives</h1>
 <h3 class="subtitle"><em>AEM Replication</em></h3>
 <h4 class="author"><em>Maxwell Austensen</em></h4>
-<h4 class="date"><em>2016-12-10</em></h4>
+<h4 class="date"><em>2016-12-11</em></h4>
 
 </div>
 
@@ -181,225 +181,240 @@ $(document).ready(function () {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2FtcGxlMSA8LSByZWFkX2ZlYXRoZXIoc3RyX2MoY2xlYW5fLCBcInNhbXBsZTEuZmVhdGhlclwiKSkgJT4lIG11dGF0ZShzYW1wbGUgPSBcIlNhbXBsZSAxXCIpXG5zYW1wbGUyIDwtIHJlYWRfZmVhdGhlcihzdHJfYyhjbGVhbl8sIFwic2FtcGxlMi5mZWF0aGVyXCIpKSAlPiUgbXV0YXRlKHNhbXBsZSA9IFwiU2FtcGxlIDJcIilcbnNhbXBsZTMgPC0gcmVhZF9mZWF0aGVyKHN0cl9jKGNsZWFuXywgXCJzYW1wbGUzLmZlYXRoZXJcIikpICU+JSBtdXRhdGUoc2FtcGxlID0gXCJTYW1wbGUgM1wiKVxuYGBgIn0= -->
-<pre class="r"><code>sample1 &lt;- read_feather(str_c(clean_, &quot;sample1.feather&quot;)) %&gt;% mutate(sample = &quot;Sample 1&quot;)
-sample2 &lt;- read_feather(str_c(clean_, &quot;sample2.feather&quot;)) %&gt;% mutate(sample = &quot;Sample 2&quot;)
-sample3 &lt;- read_feather(str_c(clean_, &quot;sample3.feather&quot;)) %&gt;% mutate(sample = &quot;Sample 3&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm9ybWF0X3NkIDwtIGZ1bmN0aW9uKHgsIGRpZ2l0cyA9IDIpIHtcbiAgeCAlPiUgcm91bmQoZGlnaXRzID0gZGlnaXRzKSAlPiUgc3RyX2MoXCIoXCIsIC4sIFwiKVwiKVxufVxuZm9ybWF0X21lYW4gPC0gZnVuY3Rpb24odmFsLCBkaWdpdHMgPSAyKSB7XG4gIHZhbCAlPiUgcm91bmQoZGlnaXRzID0gZGlnaXRzKSAlPiUgYXMuY2hhcmFjdGVyKClcbn1cbmBgYCJ9 -->
-<pre class="r"><code>format_sd &lt;- function(x, digits = 2) {
-  x %&gt;% round(digits = digits) %&gt;% str_c(&quot;(&quot;, ., &quot;)&quot;)
-}
-format_mean &lt;- function(val, digits = 2) {
-  val %&gt;% round(digits = digits) %&gt;% as.character()
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9hZF9zYW1wbGUgPC0gZnVuY3Rpb24obil7XG4gIHJlYWRfZmVhdGhlcihzdHJfaW50ZXJwKFwiJHtjbGVhbl99c2FtcGxlJHtufS5mZWF0aGVyXCIpKSAlPiUgbXV0YXRlKHNhbXBsZSA9IHN0cl9jKFwic2FtcGxlXCIsIG4pKVxufVxuYGBgIn0= -->
+<pre class="r"><code>load_sample &lt;- function(n){
+  read_feather(str_interp(&quot;${clean_}sample${n}.feather&quot;)) %&gt;% mutate(sample = str_c(&quot;sample&quot;, n))
 }</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxub3JkZXJfdmVjIDwtIGMoXCJtYXJyaWFnZV9lbmRlZF9tZWFuXCIsIFwibWFycmlhZ2VfZW5kZWRfc2RcIiwgXCJhZ2VfbWFycmllZF9tZWFuXCIsIFwiYWdlX21hcnJpZWRfc2RcIiwgXCJmaXJzdGJvcm5fZ2lybF9tZWFuXCIsIFxuICAgICAgICAgICAgICAgXCJmaXJzdGJvcm5fZ2lybF9zZFwiLCBcIm5fY2hpbGRyZW5fbWVhblwiLCBcIm5fY2hpbGRyZW5fc2RcIiwgXCJhZ2VfYmlydGhfbWVhblwiLCBcImFnZV9iaXJ0aF9zZFwiLCBcImFnZV9tZWFuXCIsIFxuICAgICAgICAgICAgICAgXCJhZ2Vfc2RcIiwgXCJlZHVjX3lyc19tZWFuXCIsIFwiZWR1Y195cnNfc2RcIiwgXCJ1cmJhbl9tZWFuXCIsIFwidXJiYW5fc2RcIiwgXCJoaF9pbmNvbWVfc3RkX21lYW5cIiwgXG4gICAgICAgICAgICAgICBcImhoX2luY29tZV9zdGRfc2RcIiwgXCJwb3ZlcnR5X3N0YXR1c19tZWFuXCIsIFwicG92ZXJ0eV9zdGF0dXNfc2RcIiwgXCJub253b21hbl9pbmNfbWVhblwiLCBcbiAgICAgICAgICAgICAgIFwibm9ud29tYW5faW5jX3NkXCIsIFwid29tYW5faW5jX21lYW5cIiwgXCJ3b21hbl9pbmNfc2RcIiwgXCJ3b21hbl9lYXJuX21lYW5cIiwgXCJ3b21hbl9lYXJuX3NkXCIsIFxuICAgICAgICAgICAgICAgXCJvYnNlcnZhdGlvbnNfbWVhblwiLCBcIm9ic2VydmF0aW9uc19zZFwiKVxuYmluZF9yb3dzKHNhbXBsZTEsIHNhbXBsZTIsIHNhbXBsZTMpICU+JSBcbiAgZ3JvdXBfYnkoc2FtcGxlKSAlPiUgXG4gIG11dGF0ZShvYnNlcnZhdGlvbnMgPSBuKCkpICU+JSBcbiAgc2VsZWN0KG1hcnJpYWdlX2VuZGVkLCBhZ2VfbWFycmllZCwgZmlyc3Rib3JuX2dpcmwsIG5fY2hpbGRyZW4sIGFnZV9iaXJ0aCwgYWdlLCBlZHVjX3lycywgdXJiYW4sIFxuICAgICAgICAgaGhfaW5jb21lX3N0ZCwgcG92ZXJ0eV9zdGF0dXMsIG5vbndvbWFuX2luYywgd29tYW5faW5jLCB3b21hbl9lYXJuLCBvYnNlcnZhdGlvbnMpICU+JSBcbiAgc3VtbWFyaXNlX2FsbChmdW5zKG1lYW4sIHNkKSkgJT4lXG4gIG11dGF0ZV9hdCh2YXJzKGNvbnRhaW5zKFwiX21lYW5cIikpLCBmb3JtYXRfbWVhbikgJT4lXG4gIG11dGF0ZV9hdCh2YXJzKGNvbnRhaW5zKFwiX3NkXCIpKSwgZm9ybWF0X3NkKSAlPiVcbiAgZ2F0aGVyKFwidmFyaWFibGVcIiwgXCJ2YWx1ZVwiLCAtc2FtcGxlKSAlPiUgXG4gIHNwcmVhZChzYW1wbGUsIHZhbHVlKSAlPiUgXG4gIG11dGF0ZSh2YXJpYWJsZSA9IG9yZGVyZWQodmFyaWFibGUsIGxldmVscyA9IG9yZGVyX3ZlYykpICU+JSBcbiAgYXJyYW5nZSh2YXJpYWJsZSkgJT4lIFxuICBmaWx0ZXIodmFyaWFibGUgIT0gXCJvYnNlcnZhdGlvbnNfc2RcIikgJT4lIFxuICBtdXRhdGUodmFyaWFibGUgPSBzdHJfcmVwbGFjZSh2YXJpYWJsZSwgXCJfbWVhblwiLCBcIlwiKSxcbiAgICAgICAgIHZhcmlhYmxlID0gaWZfZWxzZShzdHJfZGV0ZWN0KHZhcmlhYmxlLCBcIl9zZFwiKSwgXCJcIiwgdmFyaWFibGUpKSAlPiUgXG4gIGtuaXRyOjprYWJsZSgpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYWxsX3NhbXBsZXMgPC0gYygxLCAyLCAzKSAlPiUgbWFwKGxvYWRfc2FtcGxlKVxuYGBgIn0= -->
+<pre class="r"><code>all_samples &lt;- c(1, 2, 3) %&gt;% map(load_sample)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxub3JkZXJfdmVjIDwtIGMoXCJtYXJyaWFnZV9lbmRlZF9tZWFuXCIsIFwibWFycmlhZ2VfZW5kZWRfc2RcIiwgXCJhZ2VfbWFycmllZF9tZWFuXCIsIFwiYWdlX21hcnJpZWRfc2RcIiwgXCJmaXJzdGJvcm5fZ2lybF9tZWFuXCIsIFxuICAgICAgICAgICAgICAgXCJmaXJzdGJvcm5fZ2lybF9zZFwiLCBcIm5fY2hpbGRyZW5fbWVhblwiLCBcIm5fY2hpbGRyZW5fc2RcIiwgXCJhZ2VfYmlydGhfbWVhblwiLCBcImFnZV9iaXJ0aF9zZFwiLCBcImFnZV9tZWFuXCIsIFxuICAgICAgICAgICAgICAgXCJhZ2Vfc2RcIiwgXCJlZHVjX3lyc19tZWFuXCIsIFwiZWR1Y195cnNfc2RcIiwgXCJ1cmJhbl9tZWFuXCIsIFwidXJiYW5fc2RcIiwgXCJoaF9pbmNvbWVfc3RkX21lYW5cIiwgXG4gICAgICAgICAgICAgICBcImhoX2luY29tZV9zdGRfc2RcIiwgXCJwb3ZlcnR5X3N0YXR1c19tZWFuXCIsIFwicG92ZXJ0eV9zdGF0dXNfc2RcIiwgXCJub253b21hbl9pbmNfbWVhblwiLCBcbiAgICAgICAgICAgICAgIFwibm9ud29tYW5faW5jX3NkXCIsIFwid29tYW5faW5jX21lYW5cIiwgXCJ3b21hbl9pbmNfc2RcIiwgXCJ3b21hbl9lYXJuX21lYW5cIiwgXCJ3b21hbl9lYXJuX3NkXCIpXG50YWJsZV90b3AgPC1cbiAgYWxsX3NhbXBsZXMgJT4lIFxuICBiaW5kX3Jvd3MoKSAlPiUgXG4gIGdyb3VwX2J5KHNhbXBsZSkgJT4lIFxuICBzZWxlY3QobWFycmlhZ2VfZW5kZWQsIGFnZV9tYXJyaWVkLCBmaXJzdGJvcm5fZ2lybCwgbl9jaGlsZHJlbiwgYWdlX2JpcnRoLCBhZ2UsIGVkdWNfeXJzLCB1cmJhbiwgXG4gICAgICAgICBoaF9pbmNvbWVfc3RkLCBwb3ZlcnR5X3N0YXR1cywgbm9ud29tYW5faW5jLCB3b21hbl9pbmMsIHdvbWFuX2Vhcm4pICU+JSBcbiAgc3VtbWFyaXNlX2FsbChmdW5zKG1lYW4sIHNkKSkgJT4lXG4gIGdhdGhlcihcInZhcmlhYmxlXCIsIFwidmFsdWVcIiwgLXNhbXBsZSkgJT4lIFxuICBzcHJlYWQoc2FtcGxlLCB2YWx1ZSkgJT4lIFxuICBtdXRhdGUodmFyaWFibGUgPSBvcmRlcmVkKHZhcmlhYmxlLCBsZXZlbHMgPSBvcmRlcl92ZWMpKSAlPiUgXG4gIGFycmFuZ2UodmFyaWFibGUpXG5gYGAifQ== -->
 <pre class="r"><code>order_vec &lt;- c(&quot;marriage_ended_mean&quot;, &quot;marriage_ended_sd&quot;, &quot;age_married_mean&quot;, &quot;age_married_sd&quot;, &quot;firstborn_girl_mean&quot;, 
                &quot;firstborn_girl_sd&quot;, &quot;n_children_mean&quot;, &quot;n_children_sd&quot;, &quot;age_birth_mean&quot;, &quot;age_birth_sd&quot;, &quot;age_mean&quot;, 
                &quot;age_sd&quot;, &quot;educ_yrs_mean&quot;, &quot;educ_yrs_sd&quot;, &quot;urban_mean&quot;, &quot;urban_sd&quot;, &quot;hh_income_std_mean&quot;, 
                &quot;hh_income_std_sd&quot;, &quot;poverty_status_mean&quot;, &quot;poverty_status_sd&quot;, &quot;nonwoman_inc_mean&quot;, 
-               &quot;nonwoman_inc_sd&quot;, &quot;woman_inc_mean&quot;, &quot;woman_inc_sd&quot;, &quot;woman_earn_mean&quot;, &quot;woman_earn_sd&quot;, 
-               &quot;observations_mean&quot;, &quot;observations_sd&quot;)
-bind_rows(sample1, sample2, sample3) %&gt;% 
+               &quot;nonwoman_inc_sd&quot;, &quot;woman_inc_mean&quot;, &quot;woman_inc_sd&quot;, &quot;woman_earn_mean&quot;, &quot;woman_earn_sd&quot;)
+table_top &lt;-
+  all_samples %&gt;% 
+  bind_rows() %&gt;% 
   group_by(sample) %&gt;% 
-  mutate(observations = n()) %&gt;% 
   select(marriage_ended, age_married, firstborn_girl, n_children, age_birth, age, educ_yrs, urban, 
-         hh_income_std, poverty_status, nonwoman_inc, woman_inc, woman_earn, observations) %&gt;% 
+         hh_income_std, poverty_status, nonwoman_inc, woman_inc, woman_earn) %&gt;% 
   summarise_all(funs(mean, sd)) %&gt;%
-  mutate_at(vars(contains(&quot;_mean&quot;)), format_mean) %&gt;%
-  mutate_at(vars(contains(&quot;_sd&quot;)), format_sd) %&gt;%
   gather(&quot;variable&quot;, &quot;value&quot;, -sample) %&gt;% 
   spread(sample, value) %&gt;% 
   mutate(variable = ordered(variable, levels = order_vec)) %&gt;% 
-  arrange(variable) %&gt;% 
-  filter(variable != &quot;observations_sd&quot;) %&gt;% 
-  mutate(variable = str_replace(variable, &quot;_mean&quot;, &quot;&quot;),
-         variable = if_else(str_detect(variable, &quot;_sd&quot;), &quot;&quot;, variable)) %&gt;% 
-  knitr::kable()</code></pre>
+  arrange(variable)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxub2JzX3JvdyA8LSBkYXRhX2ZyYW1lKHZhcmlhYmxlID0gXCJTYW1wbGUgU2l6ZVwiLFxuICAgICAgICAgICAgICAgICAgICAgIHNhbXBsZTEgPSBucm93KGFsbF9zYW1wbGVzW1sxXV0pLFxuICAgICAgICAgICAgICAgICAgICAgIHNhbXBsZTIgPSBucm93KGFsbF9zYW1wbGVzW1syXV0pLFxuICAgICAgICAgICAgICAgICAgICAgIHNhbXBsZTMgPSBucm93KGFsbF9zYW1wbGVzW1szXV0pKVxuYGBgIn0= -->
+<pre class="r"><code>obs_row &lt;- data_frame(variable = &quot;Sample Size&quot;,
+                      sample1 = nrow(all_samples[[1]]),
+                      sample2 = nrow(all_samples[[2]]),
+                      sample3 = nrow(all_samples[[3]]))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUxIDwtICBcbiAgdGFibGVfdG9wICU+JSBcbiAgYmluZF9yb3dzKG9ic19yb3cpICU+JSBcbiAgcmVuYW1lKGBFdmVyLU1hcnJpZWQgd2l0aCBDaGlsZHJlbmAgPSBzYW1wbGUxLFxuICAgICAgICAgYEFsbCBDaGlsZHJlbiBMaXZlIGluIEhvdXNlaG9sZGAgPSBzYW1wbGUyLFxuICAgICAgICAgYDFzdCBDaGlsZCBCb3JuIFdpdGhpbiA1IFllYXJzIG9mIDFzdCBNYXJyaWFnZWAgPSBzYW1wbGUzKVxud3JpdGVfZmVhdGhlcih0YWJsZTEsIHN0cl9jKGNsZWFuXywgXCIvdGFibGVzL3RhYmxlMS5mZWF0aGVyXCIpKVxudGl0bGUgPC0gXCJUYWJsZSAxOiBEZXNjcmlwdGl2ZSBTdGF0aXN0aWNzXCJcbmtuaXRyOjprYWJsZSh0YWJsZTEsIGRpZ2l0cyA9IDIsIGZvcm1hdC5hcmdzID0gbGlzdChiaWcubWFyayA9ICcsJyksIGZvcm1hdCA9IFwicGFuZG9jXCIsIGNhcHRpb24gPSB0aXRsZSlcbmBgYCJ9 -->
+<pre class="r"><code>table1 &lt;-  
+  table_top %&gt;% 
+  bind_rows(obs_row) %&gt;% 
+  rename(`Ever-Married with Children` = sample1,
+         `All Children Live in Household` = sample2,
+         `1st Child Born Within 5 Years of 1st Marriage` = sample3)
+write_feather(table1, str_c(clean_, &quot;/tables/table1.feather&quot;))
+title &lt;- &quot;Table 1: Descriptive Statistics&quot;
+knitr::kable(table1, digits = 2, format.args = list(big.mark = ','), format = &quot;pandoc&quot;, caption = title)</code></pre>
 <!-- rnb-source-end -->
 
 <!-- rnb-html-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImtuaXRfYXNpcyJdfX0= -->
 
 <table>
+<caption>Table 1: Descriptive Statistics</caption>
 <thead>
 <tr class="header">
 <th align="left">variable</th>
-<th align="left">Sample 1</th>
-<th align="left">Sample 2</th>
-<th align="left">Sample 3</th>
+<th align="right">Ever-Married with Children</th>
+<th align="right">All Children Live in Household</th>
+<th align="right">1st Child Born Within 5 Years of 1st Marriage</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">marriage_ended</td>
-<td align="left">0.25</td>
-<td align="left">0.21</td>
-<td align="left">0.2</td>
+<td align="left">marriage_ended_mean</td>
+<td align="right">0.25</td>
+<td align="right">0.21</td>
+<td align="right">0.20</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(0.43)</td>
-<td align="left">(0.4)</td>
-<td align="left">(0.4)</td>
+<td align="left">marriage_ended_sd</td>
+<td align="right">0.43</td>
+<td align="right">0.40</td>
+<td align="right">0.40</td>
 </tr>
 <tr class="odd">
-<td align="left">age_married</td>
-<td align="left">19.94</td>
-<td align="left">20.11</td>
-<td align="left">20.03</td>
+<td align="left">age_married_mean</td>
+<td align="right">19.94</td>
+<td align="right">20.11</td>
+<td align="right">20.03</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(2.15)</td>
-<td align="left">(2.14)</td>
-<td align="left">(2.13)</td>
+<td align="left">age_married_sd</td>
+<td align="right">2.15</td>
+<td align="right">2.14</td>
+<td align="right">2.13</td>
 </tr>
 <tr class="odd">
-<td align="left">firstborn_girl</td>
-<td align="left">NA</td>
-<td align="left">0.49</td>
-<td align="left">0.49</td>
+<td align="left">firstborn_girl_mean</td>
+<td align="right">NA</td>
+<td align="right">0.49</td>
+<td align="right">0.49</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">NA</td>
-<td align="left">(0.5)</td>
-<td align="left">(0.5)</td>
+<td align="left">firstborn_girl_sd</td>
+<td align="right">NA</td>
+<td align="right">0.50</td>
+<td align="right">0.50</td>
 </tr>
 <tr class="odd">
-<td align="left">n_children</td>
-<td align="left">2.18</td>
-<td align="left">2.03</td>
-<td align="left">2.08</td>
+<td align="left">n_children_mean</td>
+<td align="right">2.18</td>
+<td align="right">2.03</td>
+<td align="right">2.08</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(1.08)</td>
-<td align="left">(0.93)</td>
-<td align="left">(0.94)</td>
+<td align="left">n_children_sd</td>
+<td align="right">1.08</td>
+<td align="right">0.93</td>
+<td align="right">0.94</td>
 </tr>
 <tr class="odd">
-<td align="left">age_birth</td>
-<td align="left">NA</td>
-<td align="left">22.63</td>
-<td align="left">22.18</td>
+<td align="left">age_birth_mean</td>
+<td align="right">NA</td>
+<td align="right">22.63</td>
+<td align="right">22.18</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">NA</td>
-<td align="left">(3.22)</td>
-<td align="left">(2.68)</td>
+<td align="left">age_birth_sd</td>
+<td align="right">NA</td>
+<td align="right">3.22</td>
+<td align="right">2.68</td>
 </tr>
 <tr class="odd">
-<td align="left">age</td>
-<td align="left">31.41</td>
-<td align="left">30.64</td>
-<td align="left">30.55</td>
+<td align="left">age_mean</td>
+<td align="right">31.41</td>
+<td align="right">30.64</td>
+<td align="right">30.55</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(5.14)</td>
-<td align="left">(4.84)</td>
-<td align="left">(4.89)</td>
+<td align="left">age_sd</td>
+<td align="right">5.14</td>
+<td align="right">4.84</td>
+<td align="right">4.89</td>
 </tr>
 <tr class="odd">
-<td align="left">educ_yrs</td>
-<td align="left">12.67</td>
-<td align="left">12.81</td>
-<td align="left">12.75</td>
+<td align="left">educ_yrs_mean</td>
+<td align="right">12.67</td>
+<td align="right">12.81</td>
+<td align="right">12.75</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(2.1)</td>
-<td align="left">(2.09)</td>
-<td align="left">(2.01)</td>
+<td align="left">educ_yrs_sd</td>
+<td align="right">2.10</td>
+<td align="right">2.09</td>
+<td align="right">2.01</td>
 </tr>
 <tr class="odd">
-<td align="left">urban</td>
-<td align="left">0.64</td>
-<td align="left">0.64</td>
-<td align="left">0.64</td>
+<td align="left">urban_mean</td>
+<td align="right">0.64</td>
+<td align="right">0.64</td>
+<td align="right">0.64</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(0.48)</td>
-<td align="left">(0.48)</td>
-<td align="left">(0.48)</td>
+<td align="left">urban_sd</td>
+<td align="right">0.48</td>
+<td align="right">0.48</td>
+<td align="right">0.48</td>
 </tr>
 <tr class="odd">
-<td align="left">hh_income_std</td>
-<td align="left">18841.86</td>
-<td align="left">9744.13</td>
-<td align="left">9578.69</td>
+<td align="left">hh_income_std_mean</td>
+<td align="right">18,841.86</td>
+<td align="right">9,743.93</td>
+<td align="right">9,578.46</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(300218.78)</td>
-<td align="left">(5531.69)</td>
-<td align="left">(5394.37)</td>
+<td align="left">hh_income_std_sd</td>
+<td align="right">300,218.78</td>
+<td align="right">5,531.72</td>
+<td align="right">5,394.40</td>
 </tr>
 <tr class="odd">
-<td align="left">poverty_status</td>
-<td align="left">0.08</td>
-<td align="left">0.07</td>
-<td align="left">0.07</td>
+<td align="left">poverty_status_mean</td>
+<td align="right">0.08</td>
+<td align="right">0.07</td>
+<td align="right">0.07</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(0.27)</td>
-<td align="left">(0.26)</td>
-<td align="left">(0.26)</td>
+<td align="left">poverty_status_sd</td>
+<td align="right">0.27</td>
+<td align="right">0.26</td>
+<td align="right">0.26</td>
 </tr>
 <tr class="odd">
-<td align="left">nonwoman_inc</td>
-<td align="left">27441.2</td>
-<td align="left">18401.09</td>
-<td align="left">18326.97</td>
+<td align="left">nonwoman_inc_mean</td>
+<td align="right">27,441.20</td>
+<td align="right">18,401.25</td>
+<td align="right">18,327.16</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(300075.22)</td>
-<td align="left">(12782.94)</td>
-<td align="left">(12744.85)</td>
+<td align="left">nonwoman_inc_sd</td>
+<td align="right">300,075.22</td>
+<td align="right">12,783.25</td>
+<td align="right">12,745.20</td>
 </tr>
 <tr class="odd">
-<td align="left">woman_inc</td>
-<td align="left">4610.71</td>
-<td align="left">4388.88</td>
-<td align="left">4293.56</td>
+<td align="left">woman_inc_mean</td>
+<td align="right">4,610.71</td>
+<td align="right">4,388.71</td>
+<td align="right">4,293.37</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(5949.73)</td>
-<td align="left">(5848.02)</td>
-<td align="left">(5744.27)</td>
+<td align="left">woman_inc_sd</td>
+<td align="right">5,949.73</td>
+<td align="right">5,847.96</td>
+<td align="right">5,744.21</td>
 </tr>
 <tr class="odd">
-<td align="left">woman_earn</td>
-<td align="left">4018.72</td>
-<td align="left">3838.37</td>
-<td align="left">3751.51</td>
+<td align="left">woman_earn_mean</td>
+<td align="right">4,018.72</td>
+<td align="right">3,838.21</td>
+<td align="right">3,751.33</td>
 </tr>
 <tr class="even">
-<td align="left"></td>
-<td align="left">(5428.95)</td>
-<td align="left">(5326.74)</td>
-<td align="left">(5221.74)</td>
+<td align="left">woman_earn_sd</td>
+<td align="right">5,428.95</td>
+<td align="right">5,326.69</td>
+<td align="right">5,221.68</td>
 </tr>
 <tr class="odd">
-<td align="left">observations</td>
-<td align="left">660705</td>
-<td align="left">533881</td>
-<td align="left">463799</td>
+<td align="left">Sample Size</td>
+<td align="right">660,705.00</td>
+<td align="right">533,903.00</td>
+<td align="right">463,821.00</td>
 </tr>
 </tbody>
 </table>
@@ -411,7 +426,7 @@ bind_rows(sample1, sample2, sample3) %&gt;%
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAnMjogVGFibGUgMSAtIERlc2NyaXB0aXZlcycKYXV0aG9yOiAiTWF4d2VsbCBBdXN0ZW5zZW4iCmRhdGU6ICdgciBTeXMuRGF0ZSgpYCcKb3V0cHV0OgogIGdpdGh1Yl9kb2N1bWVudDogZGVmYXVsdAogIGh0bWxfbm90ZWJvb2s6IGRlZmF1bHQKc3VidGl0bGU6IEFFTSBSZXBsaWNhdGlvbgotLS0KCmBgYHtyLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCBpbmNsdWRlPUZBTFNFfQojIEluc3RhbGwgcGFja2FnZXMgaWYgbmVlZGVkCnBhY2thZ2VfbGlzdCA8LSBjKCJoYXZlbiIsICJzdHJpbmdyIiwgInRpZHl2ZXJzZSIsICJqYW5pdG9yIiwgImZlYXRoZXIiLCAia25pdHIiLCAicm1hcmtkb3duIikKbmV3X3BhY2thZ2VzIDwtIHBhY2thZ2VfbGlzdFshcGFja2FnZV9saXN0ICVpbiUgaW5zdGFsbGVkLnBhY2thZ2VzKClbLCJQYWNrYWdlIl1dCmlmKGxlbmd0aChuZXdfcGFja2FnZXMpKSBpbnN0YWxsLnBhY2thZ2VzKG5ld19wYWNrYWdlcykKCmxpYnJhcnkoaGF2ZW4pCmxpYnJhcnkoc3RyaW5ncikKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoamFuaXRvcikKbGlicmFyeShmZWF0aGVyKQoKIyBTZXQgZGlyZWN0b3JpZXMKY2xlYW5fIDwtICIvVXNlcnMvTWF4d2VsbC9Cb3ggU3luYy9hZW0vcmVwbGljYXRpb24vZGF0YS9jbGVhbi8iCmBgYAoKYGBge3J9CnNhbXBsZTEgPC0gcmVhZF9mZWF0aGVyKHN0cl9jKGNsZWFuXywgInNhbXBsZTEuZmVhdGhlciIpKSAlPiUgbXV0YXRlKHNhbXBsZSA9ICJTYW1wbGUgMSIpCnNhbXBsZTIgPC0gcmVhZF9mZWF0aGVyKHN0cl9jKGNsZWFuXywgInNhbXBsZTIuZmVhdGhlciIpKSAlPiUgbXV0YXRlKHNhbXBsZSA9ICJTYW1wbGUgMiIpCnNhbXBsZTMgPC0gcmVhZF9mZWF0aGVyKHN0cl9jKGNsZWFuXywgInNhbXBsZTMuZmVhdGhlciIpKSAlPiUgbXV0YXRlKHNhbXBsZSA9ICJTYW1wbGUgMyIpCmBgYAoKYGBge3J9CmZvcm1hdF9zZCA8LSBmdW5jdGlvbih4LCBkaWdpdHMgPSAyKSB7CiAgeCAlPiUgcm91bmQoZGlnaXRzID0gZGlnaXRzKSAlPiUgc3RyX2MoIigiLCAuLCAiKSIpCn0KCmZvcm1hdF9tZWFuIDwtIGZ1bmN0aW9uKHZhbCwgZGlnaXRzID0gMikgewogIHZhbCAlPiUgcm91bmQoZGlnaXRzID0gZGlnaXRzKSAlPiUgYXMuY2hhcmFjdGVyKCkKfQpgYGAKCmBgYHtyLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQoKb3JkZXJfdmVjIDwtIGMoIm1hcnJpYWdlX2VuZGVkX21lYW4iLCAibWFycmlhZ2VfZW5kZWRfc2QiLCAiYWdlX21hcnJpZWRfbWVhbiIsICJhZ2VfbWFycmllZF9zZCIsICJmaXJzdGJvcm5fZ2lybF9tZWFuIiwgCiAgICAgICAgICAgICAgICJmaXJzdGJvcm5fZ2lybF9zZCIsICJuX2NoaWxkcmVuX21lYW4iLCAibl9jaGlsZHJlbl9zZCIsICJhZ2VfYmlydGhfbWVhbiIsICJhZ2VfYmlydGhfc2QiLCAiYWdlX21lYW4iLCAKICAgICAgICAgICAgICAgImFnZV9zZCIsICJlZHVjX3lyc19tZWFuIiwgImVkdWNfeXJzX3NkIiwgInVyYmFuX21lYW4iLCAidXJiYW5fc2QiLCAiaGhfaW5jb21lX3N0ZF9tZWFuIiwgCiAgICAgICAgICAgICAgICJoaF9pbmNvbWVfc3RkX3NkIiwgInBvdmVydHlfc3RhdHVzX21lYW4iLCAicG92ZXJ0eV9zdGF0dXNfc2QiLCAibm9ud29tYW5faW5jX21lYW4iLCAKICAgICAgICAgICAgICAgIm5vbndvbWFuX2luY19zZCIsICJ3b21hbl9pbmNfbWVhbiIsICJ3b21hbl9pbmNfc2QiLCAid29tYW5fZWFybl9tZWFuIiwgIndvbWFuX2Vhcm5fc2QiLCAKICAgICAgICAgICAgICAgIm9ic2VydmF0aW9uc19tZWFuIiwgIm9ic2VydmF0aW9uc19zZCIpCgpiaW5kX3Jvd3Moc2FtcGxlMSwgc2FtcGxlMiwgc2FtcGxlMykgJT4lIAogIGdyb3VwX2J5KHNhbXBsZSkgJT4lIAogIG11dGF0ZShvYnNlcnZhdGlvbnMgPSBuKCkpICU+JSAKICBzZWxlY3QobWFycmlhZ2VfZW5kZWQsIGFnZV9tYXJyaWVkLCBmaXJzdGJvcm5fZ2lybCwgbl9jaGlsZHJlbiwgYWdlX2JpcnRoLCBhZ2UsIGVkdWNfeXJzLCB1cmJhbiwgCiAgICAgICAgIGhoX2luY29tZV9zdGQsIHBvdmVydHlfc3RhdHVzLCBub253b21hbl9pbmMsIHdvbWFuX2luYywgd29tYW5fZWFybiwgb2JzZXJ2YXRpb25zKSAlPiUgCiAgc3VtbWFyaXNlX2FsbChmdW5zKG1lYW4sIHNkKSkgJT4lCiAgbXV0YXRlX2F0KHZhcnMoY29udGFpbnMoIl9tZWFuIikpLCBmb3JtYXRfbWVhbikgJT4lCiAgbXV0YXRlX2F0KHZhcnMoY29udGFpbnMoIl9zZCIpKSwgZm9ybWF0X3NkKSAlPiUKICBnYXRoZXIoInZhcmlhYmxlIiwgInZhbHVlIiwgLXNhbXBsZSkgJT4lIAogIHNwcmVhZChzYW1wbGUsIHZhbHVlKSAlPiUgCiAgbXV0YXRlKHZhcmlhYmxlID0gb3JkZXJlZCh2YXJpYWJsZSwgbGV2ZWxzID0gb3JkZXJfdmVjKSkgJT4lIAogIGFycmFuZ2UodmFyaWFibGUpICU+JSAKICBmaWx0ZXIodmFyaWFibGUgIT0gIm9ic2VydmF0aW9uc19zZCIpICU+JSAKICBtdXRhdGUodmFyaWFibGUgPSBzdHJfcmVwbGFjZSh2YXJpYWJsZSwgIl9tZWFuIiwgIiIpLAogICAgICAgICB2YXJpYWJsZSA9IGlmX2Vsc2Uoc3RyX2RldGVjdCh2YXJpYWJsZSwgIl9zZCIpLCAiIiwgdmFyaWFibGUpKSAlPiUgCiAga25pdHI6OmthYmxlKCkKYGBgCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAnMjogVGFibGUgMSAtIERlc2NyaXB0aXZlcycKYXV0aG9yOiAiTWF4d2VsbCBBdXN0ZW5zZW4iCmRhdGU6ICdgciBTeXMuRGF0ZSgpYCcKb3V0cHV0OgogIGdpdGh1Yl9kb2N1bWVudDogZGVmYXVsdAogIGh0bWxfbm90ZWJvb2s6IGRlZmF1bHQKc3VidGl0bGU6IEFFTSBSZXBsaWNhdGlvbgotLS0KCmBgYHtyLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCBpbmNsdWRlPUZBTFNFfQojIEluc3RhbGwgcGFja2FnZXMgaWYgbmVlZGVkCnBhY2thZ2VfbGlzdCA8LSBjKCJoYXZlbiIsICJzdHJpbmdyIiwgInRpZHl2ZXJzZSIsICJqYW5pdG9yIiwgImZlYXRoZXIiLCAia25pdHIiLCAicm1hcmtkb3duIikKbmV3X3BhY2thZ2VzIDwtIHBhY2thZ2VfbGlzdFshcGFja2FnZV9saXN0ICVpbiUgaW5zdGFsbGVkLnBhY2thZ2VzKClbLCJQYWNrYWdlIl1dCmlmKGxlbmd0aChuZXdfcGFja2FnZXMpKSBpbnN0YWxsLnBhY2thZ2VzKG5ld19wYWNrYWdlcykKCmxpYnJhcnkoaGF2ZW4pCmxpYnJhcnkoc3RyaW5ncikKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoamFuaXRvcikKbGlicmFyeShmZWF0aGVyKQoKIyBTZXQgZGlyZWN0b3JpZXMKY2xlYW5fIDwtICIvVXNlcnMvTWF4d2VsbC9Cb3ggU3luYy9hZW0vcmVwbGljYXRpb24vZGF0YS9jbGVhbi8iCmBgYAoKYGBge3J9CmxvYWRfc2FtcGxlIDwtIGZ1bmN0aW9uKG4pewogIHJlYWRfZmVhdGhlcihzdHJfaW50ZXJwKCIke2NsZWFuX31zYW1wbGUke259LmZlYXRoZXIiKSkgJT4lIG11dGF0ZShzYW1wbGUgPSBzdHJfYygic2FtcGxlIiwgbikpCn0KYGBgCgpgYGB7cn0KYWxsX3NhbXBsZXMgPC0gYygxLCAyLCAzKSAlPiUgbWFwKGxvYWRfc2FtcGxlKQpgYGAKCmBgYHtyLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQpvcmRlcl92ZWMgPC0gYygibWFycmlhZ2VfZW5kZWRfbWVhbiIsICJtYXJyaWFnZV9lbmRlZF9zZCIsICJhZ2VfbWFycmllZF9tZWFuIiwgImFnZV9tYXJyaWVkX3NkIiwgImZpcnN0Ym9ybl9naXJsX21lYW4iLCAKICAgICAgICAgICAgICAgImZpcnN0Ym9ybl9naXJsX3NkIiwgIm5fY2hpbGRyZW5fbWVhbiIsICJuX2NoaWxkcmVuX3NkIiwgImFnZV9iaXJ0aF9tZWFuIiwgImFnZV9iaXJ0aF9zZCIsICJhZ2VfbWVhbiIsIAogICAgICAgICAgICAgICAiYWdlX3NkIiwgImVkdWNfeXJzX21lYW4iLCAiZWR1Y195cnNfc2QiLCAidXJiYW5fbWVhbiIsICJ1cmJhbl9zZCIsICJoaF9pbmNvbWVfc3RkX21lYW4iLCAKICAgICAgICAgICAgICAgImhoX2luY29tZV9zdGRfc2QiLCAicG92ZXJ0eV9zdGF0dXNfbWVhbiIsICJwb3ZlcnR5X3N0YXR1c19zZCIsICJub253b21hbl9pbmNfbWVhbiIsIAogICAgICAgICAgICAgICAibm9ud29tYW5faW5jX3NkIiwgIndvbWFuX2luY19tZWFuIiwgIndvbWFuX2luY19zZCIsICJ3b21hbl9lYXJuX21lYW4iLCAid29tYW5fZWFybl9zZCIpCgp0YWJsZV90b3AgPC0KICBhbGxfc2FtcGxlcyAlPiUgCiAgYmluZF9yb3dzKCkgJT4lIAogIGdyb3VwX2J5KHNhbXBsZSkgJT4lIAogIHNlbGVjdChtYXJyaWFnZV9lbmRlZCwgYWdlX21hcnJpZWQsIGZpcnN0Ym9ybl9naXJsLCBuX2NoaWxkcmVuLCBhZ2VfYmlydGgsIGFnZSwgZWR1Y195cnMsIHVyYmFuLCAKICAgICAgICAgaGhfaW5jb21lX3N0ZCwgcG92ZXJ0eV9zdGF0dXMsIG5vbndvbWFuX2luYywgd29tYW5faW5jLCB3b21hbl9lYXJuKSAlPiUgCiAgc3VtbWFyaXNlX2FsbChmdW5zKG1lYW4sIHNkKSkgJT4lCiAgZ2F0aGVyKCJ2YXJpYWJsZSIsICJ2YWx1ZSIsIC1zYW1wbGUpICU+JSAKICBzcHJlYWQoc2FtcGxlLCB2YWx1ZSkgJT4lIAogIG11dGF0ZSh2YXJpYWJsZSA9IG9yZGVyZWQodmFyaWFibGUsIGxldmVscyA9IG9yZGVyX3ZlYykpICU+JSAKICBhcnJhbmdlKHZhcmlhYmxlKQpgYGAKCmBgYHtyfQpvYnNfcm93IDwtIGRhdGFfZnJhbWUodmFyaWFibGUgPSAiU2FtcGxlIFNpemUiLAogICAgICAgICAgICAgICAgICAgICAgc2FtcGxlMSA9IG5yb3coYWxsX3NhbXBsZXNbWzFdXSksCiAgICAgICAgICAgICAgICAgICAgICBzYW1wbGUyID0gbnJvdyhhbGxfc2FtcGxlc1tbMl1dKSwKICAgICAgICAgICAgICAgICAgICAgIHNhbXBsZTMgPSBucm93KGFsbF9zYW1wbGVzW1szXV0pKQpgYGAKCmBgYHtyLCBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdhc2lzJ30KdGFibGUxIDwtICAKICB0YWJsZV90b3AgJT4lIAogIGJpbmRfcm93cyhvYnNfcm93KSAlPiUgCiAgcmVuYW1lKGBFdmVyLU1hcnJpZWQgd2l0aCBDaGlsZHJlbmAgPSBzYW1wbGUxLAogICAgICAgICBgQWxsIENoaWxkcmVuIExpdmUgaW4gSG91c2Vob2xkYCA9IHNhbXBsZTIsCiAgICAgICAgIGAxc3QgQ2hpbGQgQm9ybiBXaXRoaW4gNSBZZWFycyBvZiAxc3QgTWFycmlhZ2VgID0gc2FtcGxlMykKCndyaXRlX2ZlYXRoZXIodGFibGUxLCBzdHJfYyhjbGVhbl8sICIvdGFibGVzL3RhYmxlMS5mZWF0aGVyIikpCgp0aXRsZSA8LSAiVGFibGUgMTogRGVzY3JpcHRpdmUgU3RhdGlzdGljcyIKa25pdHI6OmthYmxlKHRhYmxlMSwgZGlnaXRzID0gMiwgZm9ybWF0LmFyZ3MgPSBsaXN0KGJpZy5tYXJrID0gJywnKSwgZm9ybWF0ID0gInBhbmRvYyIsIGNhcHRpb24gPSB0aXRsZSkKYGBgCgo=</div>
 
 
 
