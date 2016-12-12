@@ -1,7 +1,7 @@
 4: Table 3 - Differences in Means
 ================
 Maxwell Austensen
-2016-12-10
+2016-12-11
 
 ``` r
 sample3 <- read_feather(str_c(clean_, "sample3.feather"))
@@ -94,23 +94,25 @@ table3 <-
   mutate(variable = ordered(variable, levels = order_vec)) %>% 
   arrange(variable)
   
+write_feather(table3, str_c(clean_, "/tables/table3.feather"))
 
-knitr::kable(table3, digits = 3)
+title <- "Table 3: Differences in Means, by Divorce Status and Firstborn Sex (Ever-Married Mothers)"
+knitr::kable(table3, digits = 3, format = "pandoc", caption = title)
 ```
 
 | variable             |  Never-divorced|  Ever-divorced|  Difference\_divorce|  Firstborn Boy|  Firstborn Girl|  Difference\_firstborn|
 |:---------------------|---------------:|--------------:|--------------------:|--------------:|---------------:|----------------------:|
-| marriage\_ended\_one |              NA|             NA|                   NA|          0.193|           0.201|                  0.008|
+| marriage\_ended\_one |              NA|             NA|                   NA|          0.192|           0.201|                  0.008|
 | marriage\_ended\_two |              NA|             NA|                   NA|          0.394|           0.401|                  0.001|
 | age\_married\_one    |          20.212|         19.302|               -0.910|         20.037|          20.030|                 -0.007|
 | age\_married\_two    |           2.144|          1.905|                0.007|          2.133|           2.127|                  0.006|
 | firstborn\_girl\_one |           0.485|          0.498|                0.013|             NA|              NA|                     NA|
 | firstborn\_girl\_two |           0.500|          0.500|                0.002|             NA|              NA|                     NA|
-| n\_children\_one     |           2.113|          1.966|               -0.147|          2.082|           2.086|                  0.004|
-| n\_children\_two     |           0.933|          0.941|                0.003|          0.933|           0.941|                  0.003|
+| n\_children\_one     |           2.114|          1.966|               -0.148|          2.083|           2.087|                  0.004|
+| n\_children\_two     |           0.936|          0.941|                0.003|          0.934|           0.943|                  0.003|
 | age\_birth\_one      |          22.416|         21.204|               -1.212|         22.182|          22.173|                 -0.009|
 | age\_birth\_two      |           2.681|          2.428|                0.009|          2.677|           2.677|                  0.008|
-| age\_one             |          30.498|         30.774|                0.275|         30.549|          30.555|                  0.006|
+| age\_one             |          30.499|         30.774|                0.275|         30.550|          30.556|                  0.006|
 | age\_two             |           4.960|          4.589|                0.017|          4.894|           4.887|                  0.014|
 | educ\_yrs\_one       |          12.835|         12.394|               -0.441|         12.746|          12.751|                  0.005|
 | educ\_yrs\_two       |           2.028|          1.914|                0.007|          2.015|           2.012|                  0.006|

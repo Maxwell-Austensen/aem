@@ -3,8 +3,8 @@ title: '4: Table 3 - Differences in Means'
 author: "Maxwell Austensen"
 date: '`r Sys.Date()`'
 output:
-  html_notebook: default
   github_document: default
+  html_notebook: default
 subtitle: AEM Replication
 ---
 
@@ -102,8 +102,7 @@ diffs_right <-
   fix_labels(c("_est", "_se"))
 ```
 
-
-```{r}
+```{r, results = 'asis'}
 order_vec <- c("marriage_ended_one", "marriage_ended_two", "age_married_one", "age_married_two", 
                "firstborn_girl_one", "firstborn_girl_two", "n_children_one", "n_children_two", 
                "age_birth_one", "age_birth_two", "age_one", "age_two", "educ_yrs_one", 
@@ -118,7 +117,9 @@ table3 <-
   mutate(variable = ordered(variable, levels = order_vec)) %>% 
   arrange(variable)
   
+write_feather(table3, str_c(clean_, "/tables/table3.feather"))
 
-knitr::kable(table3, digits = 3)
+title <- "Table 3: Differences in Means, by Divorce Status and Firstborn Sex (Ever-Married Mothers)"
+knitr::kable(table3, digits = 3, format = "pandoc", caption = title)
 ```
 

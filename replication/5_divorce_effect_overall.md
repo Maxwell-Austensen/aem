@@ -88,13 +88,16 @@ tsls2_table <-
 ```
 
 ``` r
-full_table <- 
+table4 <- 
   ols_table %>% 
   left_join(wald_table, by = "variable") %>% 
   left_join(tsls1_table, by = "variable") %>% 
   left_join(tsls2_table, by = "variable")
 
-knitr::kable(full_table, digits = 3)
+write_feather(table4, str_c(clean_, "/tables/table4.feather"))
+
+title <- "Table 4: The Effect of Divorce on Female Economic Status and Labor Supply"
+knitr::kable(table4, digits = 3, format = "pandoc", caption = title)
 ```
 
 | variable             |        OLS|      WALD|   TSLS\_1|   TSLS\_2|

@@ -1,7 +1,7 @@
 3: Table 2 - First Stage
 ================
 Maxwell Austensen
-2016-12-10
+2016-12-11
 
 ``` r
 sample3 <- read_feather(str_c(clean_, "sample3.feather"))
@@ -67,17 +67,20 @@ table2 <-
   mutate(label = if_else(label == "firstborn_girl", "Overall Effect: Firstborn Girl", label)) %>% 
   select(label, contains("_unadj"), contains("_adj"), Observations)
 
-knitr::kable(table2, digits = c(NA, 3, 1, 3, 1, 0), format.args = list(big.mark = ','))
+write_feather(table2, str_c(clean_, "/tables/table2.feather"))
+
+title <- "Table 2: Effect of Firstborn Sex on the Probability of Marital Instability"
+knitr::kable(table2, digits = c(NA, 3, 1, 3, 1, 0), format.args = list(big.mark = ','), format = "pandoc", caption = title)
 ```
 
 | label                                   |  Coefficient\_unadj|  F-Statistic\_unadj|  Coefficient\_adj|  F-Statistic\_adj|  Observations|
 |:----------------------------------------|-------------------:|-------------------:|-----------------:|-----------------:|-------------:|
-| Overall Effect: Firstborn Girl          |               0.008|                49.6|             0.008|              52.8|       463,799|
-| Education Level: &lt;12 years           |               0.020|                24.5|             0.018|              25.3|        51,046|
-| Education Level: 12 years               |               0.006|                13.4|             0.005|              14.0|       246,180|
-| Education Level: 13-15 years            |               0.010|                16.8|             0.009|              18.2|       102,005|
-| Education Level: 16+ years              |               0.005|                 4.0|             0.005|               4.4|        64,568|
-| Age at First Marriage: &lt;20 years old |               0.011|                34.2|             0.010|              35.6|       215,525|
-| Age at First Marriage: 20+ years old    |               0.006|                16.7|             0.005|              17.3|       248,274|
-| Age at First Birth: &lt;22 years old    |               0.012|                38.3|             0.011|              39.9|       206,042|
-| Age at First Birth: 22+ years old       |               0.005|                11.9|             0.005|              12.4|       257,757|
+| Overall Effect: Firstborn Girl          |               0.008|                49.6|             0.008|              52.8|       463,821|
+| Education Level: &lt;12 years           |               0.020|                24.4|             0.018|              25.1|        51,054|
+| Education Level: 12 years               |               0.006|                13.4|             0.005|              14.0|       246,187|
+| Education Level: 13-15 years            |               0.010|                16.8|             0.009|              18.3|       102,010|
+| Education Level: 16+ years              |               0.005|                 4.0|             0.005|               4.4|        64,570|
+| Age at First Marriage: &lt;20 years old |               0.011|                34.2|             0.010|              35.6|       215,531|
+| Age at First Marriage: 20+ years old    |               0.006|                16.7|             0.005|              17.3|       248,290|
+| Age at First Birth: &lt;22 years old    |               0.012|                38.3|             0.011|              40.0|       206,050|
+| Age at First Birth: 22+ years old       |               0.005|                11.9|             0.005|              12.4|       257,771|
