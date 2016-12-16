@@ -144,7 +144,9 @@ table5 <- list(ols_row, ols_table, tsls_row, tsls_table, f_stat_row, obs_row) %>
 
 write_feather(table5, str_c(clean_, "/tables/table5.feather"))
 
-knitr::kable(table5, digits = 3)
+title <- "The Effect of Divorce on Female Economic Status and Labor Supply,
+by Firstborn Age"
+knitr::kable(table5, digits = 3, format.args = list(big.mark = ','), format = "pandoc", caption = title)
 ```
 
 
