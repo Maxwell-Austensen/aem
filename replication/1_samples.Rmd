@@ -27,7 +27,7 @@ clean_ <- "/Users/Maxwell/Box Sync/aem/replication/data/clean/"
 
 ```{r}
 # load function to assign poverty threshold
-source("get_pov_threshold_99.R")
+source("get_pov_threshold_1990.R")
 ```
 
 ```{r}
@@ -44,43 +44,42 @@ raw %>% select(noquote(order(colnames(raw)))) %>% glimpse()
 mothers <- 
   raw %>%
   group_by(serial) %>% 
-  mutate( # Create standardized household income - needs info on all hh members
-          hh_adults = sum(age >= 18, na.rm = TRUE),
-          hh_children = sum(age < 18, na.rm = TRUE),
-          hh_head_65p = if_else(pernum == 1, if_else(age >= 65, 1, 0), NA_real_) %>% sum(na.rm = TRUE),
-          inc_adjuster = (hh_adults + (0.7 * hh_children)) ^ 0.7,
-          hh_income_std = hhincome / inc_adjuster) %>% 
+  # Create variables that require info on all ousehold members (eg. standardized household income)
+  mutate(hh_adults = sum(age >= 18, na.rm = TRUE),
+         hh_children = sum(age < 18, na.rm = TRUE),
+         hh_head_65p = if_else(pernum == 1, if_else(age >= 65, 1, 0), NA_real_) %>% sum(na.rm = TRUE),
+         inc_adjuster = (hh_adults + (0.7 * hh_children)) ^ 0.7,
+         hh_income = if_else(hhincome == 9999999, NA_real_, hhincome),
+         hh_income_std = if_else(is.na(hh_income), NA_real_, hh_income / inc_adjuster)) %>% 
   ungroup() %>% 
-  filter( # restrict sample
-          between(bpl, 1, 120), # US born (inc'l us territories etc.)
-          race == 1, # white
-          sex == 2, # female
-          between(age, 21, 40), # age 21-40
-          between(marrno, 1, 2), # ever married
-          between(agemarr, 17, 26), # married age 17-26
-          between(chborn, 2, 13), # ever child
-          between(marst, 1, 4), # ever married but not widow
-          qage == 0, # not allocated: age
-          qchborn == 0, # not allocated: chilren born
-          qmarrno == 0, # not allocated: married
-          qmarst == 0, # not allocated: marital status
-          qagemarr== 0, # not allocated: married age
-          qrelate == 0, # not allocated: relation to household head
-          qsex == 0) # not allocated: sex
+  filter(between(bpl, 1, 120), # US born (inc'l us territories etc.)
+         race == 1, # white
+         sex == 2, # female
+         between(age, 21, 40), # age 21-40
+         between(marrno, 1, 2), # ever married
+         between(agemarr, 17, 26), # married age 17-26
+         between(chborn, 2, 13), # ever child
+         between(marst, 1, 4), # ever married but not widow
+         qage == 0, # not allocated: age
+         qchborn == 0, # not allocated: chilren born
+         qmarrno == 0, # not allocated: married
+         qmarst == 0, # not allocated: marital status
+         qagemarr== 0, # not allocated: married age
+         qrelate == 0, # not allocated: relation to household head
+         qsex == 0) # not allocated: sex
 ```
 
 ```{r}
 children <-
   raw %>% 
-  filter(momloc != 0) %>% 
+  filter(momloc != 0,
+         stepmom == 0) %>% 
   group_by(serial, momloc) %>% 
   mutate(children_mom  = n()) %>% # number of mother's children in household
   filter(age == max(age)) %>% # Keep only the oldest (can be multiple oldest if same age in years)
   mutate(max_age = max(age),
          same_qtr = sum(birthqtr == lag(birthqtr), na.rm = TRUE),
-         twin1 = if_else(n() > 1, 1, 0), # twin based only on age in years
-         twin2 = if_else(same_qtr > 0, 1, 0)) %>% # twin based on age in years and quarter
-         # note: "twin" also includes other multiples (eg. triplets) 
+         twin = if_else(same_qtr > 0, 1, 0)) %>%
   arrange(serial, desc(age), birthqtr) %>% 
   filter(row_number() == 1) %>% # keep only one child if twin
   ungroup()
@@ -97,9 +96,9 @@ sample1 <-
          is.na(qsex_c) | qsex_c == 0, # not allocated: child's sex
          is.na(qrelate_c) | qrelate_c == 0, # not allocated: child's relation to head of household
          is.na(qbirthmo_c) | qbirthmo_c == 0) %>% # not allocated: child's birth month
-  filter(# bpl <= 56,
-         # bpl %in% c(1:56, 110),
-         raced == 100) %>%
+  filter(bpl <= 56,
+         gq == 1,
+         !is.na(hh_income)) %>% 
   mutate(marriage_ended = if_else(marst %in% c(3, 4) | marrno == 2, 1, 0),
          firstborn_girl = if_else(sex_c == 2, 1, 0),
          educ_yrs = if_else(higrade < 4, 0, higrade - 3),
@@ -109,13 +108,12 @@ sample1 <-
          urban = if_else(metarea == 0, 0, 1),
          n_children = if_else(chborn <= 1, 0, chborn - 1),
          children_mom = children_mom_c,
-         hh_income = hhincome,
-         hh_income_99 = hh_income * 2.314,
-         pov_threshold_99 = pmap_dbl(list(hh_adults, hh_children, hh_head_65p), get_pov_treshold_99),
-         poverty_status = if_else(hh_income_99 < pov_threshold_99, 1, 0),
-         nonwoman_inc = hhincome - inctot,
-         woman_inc = inctot,
-         woman_earn = incwage,
+         hh_income_1990 = hh_income * 1.72,
+         pov_threshold_1990 = pmap_dbl(list(hh_adults, hh_children, hh_head_65p), get_pov_treshold_1990),
+         poverty_status = if_else(hh_income_1990 < pov_threshold_1990, 1, 0),
+         woman_inc = if_else(inctot == 9999999, NA_real_, if_else(inctot == -009995, -9900, inctot)),
+         nonwoman_inc = hh_income - woman_inc,
+         woman_earn = if_else(incwage %in% c(999999, 999998), NA_real_, incwage),
          employed = if_else(empstat == 1, 1, 0),
          weeks_worked = wkswork1,
          hours_worked = uhrswork,
@@ -141,8 +139,8 @@ sample1 <-
          children_mom,
          hh_income_std,
          hh_income,
-         hh_income_99,
-         pov_threshold_99,
+         hh_income_1990,
+         pov_threshold_1990,
          poverty_status,
          nonwoman_inc,
          woman_inc,
@@ -150,11 +148,9 @@ sample1 <-
          employed,
          weeks_worked,
          hours_worked,
-         chborn,
          age,
          age_c,
-         twin1_c,
-         twin2_c)
+         twin_c)
 
 # get_dupes(sample1, serial) # no dupes
 
@@ -167,7 +163,7 @@ sample2 <-
   sample1 %>% 
   filter(n_children == children_mom, 
          age_c < 18, 
-         twin2_c != 1)
+         twin_c != 1)
 
 # Paper results: 535,887
 nrow(sample2)
