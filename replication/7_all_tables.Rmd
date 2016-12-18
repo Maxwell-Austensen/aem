@@ -11,23 +11,6 @@ subtitle: AEM Replication
 
 ***
 
-```{r, message=FALSE, warning=FALSE, include=FALSE}
-# Install packages if needed
-package_list <- c("tidyverse", "stringr", "feather", "knitr", "rmarkdown")
-new_packages <- package_list[!package_list %in% installed.packages()[,"Package"]]
-if(length(new_packages)) install.packages(new_packages)
-
-library(stringr)
-library(tidyverse)
-library(feather)
-library(xtable)
-library(knitr)
-
-# Set directories
-clean_ <- "/Users/Maxwell/Box Sync/aem/replication/data/clean/"
-```
-
-
 ```{r, echo=FALSE}
 table1 <- read_feather(str_c(clean_, "table1.feather"))
 table2 <- read_feather(str_c(clean_, "table2.feather"))
@@ -72,15 +55,10 @@ table3 %>%
 
 ```{r, echo=FALSE}
 title4 <- "Table 4: The Effect of Divorce on Female Economic Status and Labor Supply"
-
-t4 <- table4 %>% 
+table4 %>% 
   mutate(variable = if_else(str_detect(variable, "_se"), "", variable),
          variable = str_replace(variable, "_est", "")) %>% 
   kable(caption = title4, digits = 3)
-
-t4[19] <- "|Includes fertility and current marital status  | No | No | No | Yes|"
-
-t4
 ```
 
 ***
