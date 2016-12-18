@@ -4,6 +4,13 @@
 # NYU Wagner
 # 19-12-2016
 
+library(tidyverse)
+library(haven)
+library(stringr)
+library(feather)
+library(knitr)
+library(broom)
+library(sandwich)
 
 sample3 <- read_feather(str_c(clean_, "sample3.feather"))
 
@@ -77,11 +84,28 @@ order_vec <- c("marriage_ended_one", "marriage_ended_two", "age_married_one", "a
 table_left <- left_join(means_left, diffs_left, by = "variable")
 table_right <- left_join(means_right, diffs_right, by = "variable")
 
+left_obs <- sample %>%
+  group_by(marriage_ended) %>% 
+  count()
+
+right_obs <- sample %>%
+  group_by(firstborn_girl) %>% 
+  count()
+
+obs_row <- data_frame(variable = "Sample Size",
+                     `Never-divorced` = left_obs[[1, 2]],
+                     `Ever-divorced` = left_obs[[2, 2]],
+                     Difference_divorce = nrow(sample),
+                     `Firstborn Girl` = right_obs[[1, 2]],
+                     `Firstborn Boy` = right_obs[[2, 2]],
+                     Difference_firstborn = nrow(sample))
+
 table3 <- 
   full_join(table_left, table_right, by = "variable", suffix = c("_divorce", "_firstborn")) %>% 
   select(variable, `Never-divorced`, `Ever-divorced`, Difference_divorce, 
         `Firstborn Girl`, `Firstborn Boy`, Difference_firstborn) %>% 
   mutate(variable = ordered(variable, levels = order_vec)) %>% 
-  arrange(variable)
+  arrange(variable) %>% 
+  bind_rows(obs_row)
   
 write_feather(table3, str_c(clean_, "/table3.feather"))
