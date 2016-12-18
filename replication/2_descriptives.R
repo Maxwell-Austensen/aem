@@ -4,6 +4,13 @@
 # NYU Wagner
 # 19-12-2016
 
+library(tidyverse)
+library(haven)
+library(stringr)
+library(feather)
+library(knitr)
+library(broom)
+library(sandwich)
 
 load_sample <- function(n){
   read_feather(str_interp("${clean_}sample${n}.feather")) %>% mutate(sample = str_c("sample", n))
@@ -23,7 +30,7 @@ table_top <-
   group_by(sample) %>% 
   select(marriage_ended, age_married, firstborn_girl, n_children, age_birth, age, educ_yrs, urban, 
          hh_income_std, poverty_status, nonwoman_inc, woman_inc, woman_earn) %>% 
-  summarise_all(funs(mean, sd)) %>%
+  summarise_all(funs(mean, sd), na.rm = TRUE) %>%
   gather("variable", "value", -sample) %>% 
   spread(sample, value) %>% 
   mutate(variable = ordered(variable, levels = order_vec)) %>% 
@@ -37,6 +44,7 @@ obs_row <- data_frame(variable = "Sample Size",
 table1 <-  
   table_top %>% 
   bind_rows(obs_row) %>% 
+  mutate(sample1 = if_else(str_detect(variable, "age_birth|firstborn_girl"), NA_real_, sample1)) %>% 
   rename(`Ever-Married with Children` = sample1,
          `All Children Live in Household` = sample2,
          `1st Child Born Within 5 Years of 1st Marriage` = sample3)
