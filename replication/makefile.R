@@ -62,3 +62,4 @@ rmarkdown::render(input = str_c(root_, "7_all_tables.Rmd"),
                   output_file = "all_tables.html",
                   output_dir = clean_, 
                   knit_root_dir = root_)
+

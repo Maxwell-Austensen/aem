@@ -4,6 +4,13 @@
 # NYU Wagner
 # 19-12-2016
 
+library(tidyverse)
+library(haven)
+library(stringr)
+library(feather)
+library(knitr)
+library(broom)
+library(sandwich)
 
 sample3 <- read_feather(str_c(clean_, "sample3.feather"))
 
