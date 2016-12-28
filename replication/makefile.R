@@ -6,6 +6,9 @@
 
 # Set directories ---------------------------------------------------------
 
+# This will all work on Mac or Windows
+
+# Note: these paths need to use forward slashes "/"
 
 # Set location of all code files
 root_ <- "/Users/Maxwell/repos/aem/replication/"
