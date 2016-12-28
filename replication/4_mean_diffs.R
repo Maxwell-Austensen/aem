@@ -84,13 +84,8 @@ order_vec <- c("marriage_ended_one", "marriage_ended_two", "age_married_one", "a
 table_left <- left_join(means_left, diffs_left, by = "variable")
 table_right <- left_join(means_right, diffs_right, by = "variable")
 
-left_obs <- sample %>%
-  group_by(marriage_ended) %>% 
-  count()
-
-right_obs <- sample %>%
-  group_by(firstborn_girl) %>% 
-  count()
+left_obs <- sample %>% group_by(marriage_ended) %>% count()
+right_obs <- sample %>% group_by(firstborn_girl) %>% count()
 
 obs_row <- data_frame(variable = "Sample Size",
                      `Never-divorced` = left_obs[[1, 2]],
